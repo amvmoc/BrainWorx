@@ -1,0 +1,398 @@
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Mail, Link2, RotateCcw, Briefcase, Users, Brain, Baby, UserCheck } from 'lucide-react';
+import { Questionnaire } from './Questionnaire';
+import { HardwiresInfo } from './HardwiresInfo';
+import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
+import { supabase } from '../lib/supabase';
+import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
+
+interface GetStartedOptionsProps {
+  onClose: () => void;
+  franchiseCode?: string | null;
+}
+
+export function GetStartedOptions({ onClose, franchiseCode }: GetStartedOptionsProps) {
+  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'hardwires_info' | 'questionnaire' | 'self_assessment'>('options');
+  const [coachLink, setCoachLink] = useState(franchiseCode || '');
+  const [email, setEmail] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
+  const [previousStep, setPreviousStep] = useState<'coach_link' | 'email' | 'resume'>('coach_link');
+  const [resumeEmail, setResumeEmail] = useState('');
+  const [checkingProgress, setCheckingProgress] = useState(false);
+  const [noProgressFound, setNoProgressFound] = useState(false);
+  const [selectedAssessmentType, setSelectedAssessmentType] = useState<SelfAssessmentType | null>(null);
+  const [franchiseOwnerId, setFranchiseOwnerId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (franchiseCode || coachLink) {
+      lookupFranchiseOwner(franchiseCode || coachLink);
+    }
+  }, [franchiseCode]);
+
+  const lookupFranchiseOwner = async (code: string) => {
+    if (!code) return;
+
+    const { data } = await supabase
+      .from('franchise_owners')
+      .select('id')
+      .eq('unique_link_code', code)
+      .maybeSingle();
+
+    if (data) {
+      setFranchiseOwnerId(data.id);
+    }
+  };
+
+  const handleCoachLinkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (coachLink.trim()) {
+      await lookupFranchiseOwner(coachLink.trim());
+      setPreviousStep('coach_link');
+      setStep('hardwires_info');
+    }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setPreviousStep('email');
+      setStep('hardwires_info');
+    }
+  };
+
+  const handleResumeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCheckingProgress(true);
+    setNoProgressFound(false);
+
+    const { data: existingResponse, error } = await supabase
+      .from('responses')
+      .select('*')
+      .eq('customer_email', resumeEmail)
+      .eq('status', 'in_progress')
+      .is('parent_response_id', null)
+      .order('last_activity_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    setCheckingProgress(false);
+
+    if (error) {
+      console.error('Error checking for progress:', error);
+      alert('Error checking for saved progress. Please try again.');
+      return;
+    }
+
+    if (existingResponse) {
+      setEmail(resumeEmail);
+      setPreviousStep('resume');
+      setStep('questionnaire');
+    } else {
+      setNoProgressFound(true);
+    }
+  };
+
+  if (step === 'hardwires_info') {
+    return (
+      <HardwiresInfo
+        onBack={() => setStep(previousStep)}
+        onContinue={() => setStep('questionnaire')}
+      />
+    );
+  }
+
+  if (step === 'questionnaire') {
+    return (
+      <Questionnaire
+        onClose={onClose}
+        coachLink={coachLink}
+        email={email}
+        franchiseOwnerId={franchiseOwnerId}
+      />
+    );
+  }
+
+  if (step === 'self_assessment' && selectedAssessmentType) {
+    return (
+      <SelfAssessmentQuestionnaire
+        onClose={onClose}
+        assessmentType={selectedAssessmentType}
+        coachLink={coachLink}
+        email={email}
+        franchiseOwnerId={franchiseOwnerId}
+      />
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative my-8">
+        <button
+          onClick={step === 'options' ? onClose : () => setStep(step === 'coach_link' || step === 'email' ? 'options' : 'options')}
+          className="absolute top-4 left-4 text-gray-400 hover:text-gray-600"
+        >
+          <ArrowLeft size={24} />
+        </button>
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+        >
+          ✕
+        </button>
+
+        {step === 'options' && (
+          <div className="pt-4">
+            <h2 className="text-3xl font-bold text-[#0A2A5E] mb-2">Get Started</h2>
+            <p className="text-gray-600 mb-6">
+              Choose the assessment type that best fits your needs
+            </p>
+
+            <div className="space-y-4">
+              <button
+                onClick={() => setStep('assessment_type')}
+                className="w-full p-4 border-2 border-[#3DB3E3] rounded-lg hover:bg-[#3DB3E3]/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Brain className="text-[#3DB3E3] group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Full NIP™ Assessment</h3>
+                    <p className="text-sm text-gray-600">344 questions • Comprehensive neural imprint profile</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedAssessmentType(selfAssessmentTypes[0]);
+                  setStep('self_assessment');
+                }}
+                className="w-full p-4 border-2 border-[#1FAFA3] rounded-lg hover:bg-[#1FAFA3]/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Briefcase className="text-[#1FAFA3] group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Teen Career & Future Assessment</h3>
+                    <p className="text-sm text-gray-600">60 questions • For teens planning work/study path</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedAssessmentType(selfAssessmentTypes[1]);
+                  setStep('self_assessment');
+                }}
+                className="w-full p-4 border-2 border-purple-500 rounded-lg hover:bg-purple-500/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Baby className="text-purple-500 group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Teen ADHD-Linked Screener</h3>
+                    <p className="text-sm text-gray-600">48 questions • Self-report for teens 12-18</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedAssessmentType(selfAssessmentTypes[2]);
+                  setStep('self_assessment');
+                }}
+                className="w-full p-4 border-2 border-blue-500 rounded-lg hover:bg-blue-500/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <UserCheck className="text-blue-500 group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Parent/Caregiver ADHD Screener</h3>
+                    <p className="text-sm text-gray-600">48 questions • For parents of teens 12-18</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setStep('resume')}
+                className="w-full p-4 border-2 border-orange-500 rounded-lg hover:bg-orange-500/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <RotateCcw className="text-orange-500 group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Resume Assessment</h3>
+                    <p className="text-sm text-gray-600">Continue from where you left off</p>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mt-6 text-center">
+              All assessments provide detailed neural imprint analysis
+            </p>
+          </div>
+        )}
+
+        {step === 'assessment_type' && (
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Full Assessment - Choose Entry Method</h2>
+            <p className="text-gray-600 mb-6">
+              How would you like to proceed?
+            </p>
+
+            <div className="space-y-4">
+              <button
+                onClick={() => setStep('coach_link')}
+                className="w-full p-4 border-2 border-[#3DB3E3] rounded-lg hover:bg-[#3DB3E3]/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Link2 className="text-[#3DB3E3] group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">I Have a Coach Link</h3>
+                    <p className="text-sm text-gray-600">Enter your coach's referral link</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setStep('email')}
+                className="w-full p-4 border-2 border-[#1FAFA3] rounded-lg hover:bg-[#1FAFA3]/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Mail className="text-[#1FAFA3] group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">I'm a Random Visitor</h3>
+                    <p className="text-sm text-gray-600">Enter your email to receive verification link</p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 'coach_link' && (
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Enter Coach Link</h2>
+            <form onSubmit={handleCoachLinkSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Coach Referral Link or Code
+                </label>
+                <input
+                  type="text"
+                  value={coachLink}
+                  onChange={(e) => setCoachLink(e.target.value)}
+                  placeholder="Enter your coach's code (e.g., COACH123ABC)"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Your coach provided this code to you
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={!coachLink.trim()}
+                className="w-full bg-[#0A2A5E] text-white py-3 rounded-lg hover:bg-[#3DB3E3] disabled:opacity-50 transition-colors font-medium"
+              >
+                Continue to Assessment
+              </button>
+            </form>
+          </div>
+        )}
+
+        {step === 'email' && !emailSent && (
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Verify Your Email</h2>
+            <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                  required
+                />
+              </div>
+
+              <p className="text-sm text-gray-600 bg-[#E6E9EF] p-3 rounded-lg">
+                We'll send you a verification link to confirm your email and access the assessment.
+              </p>
+
+              <button
+                type="submit"
+                disabled={!email.trim()}
+                className="w-full bg-[#0A2A5E] text-white py-3 rounded-lg hover:bg-[#3DB3E3] disabled:opacity-50 transition-colors font-medium"
+              >
+                Send Verification Link
+              </button>
+            </form>
+          </div>
+        )}
+
+        {step === 'resume' && (
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Resume Your Assessment</h2>
+            <p className="text-gray-600 mb-4">
+              Enter the email address you used to start the assessment.
+            </p>
+            <form onSubmit={handleResumeSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={resumeEmail}
+                  onChange={(e) => {
+                    setResumeEmail(e.target.value);
+                    setNoProgressFound(false);
+                  }}
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                  required
+                />
+              </div>
+
+              {noProgressFound && (
+                <div className="bg-orange-50 border border-orange-200 text-orange-800 p-3 rounded-lg text-sm">
+                  No in-progress assessment found for this email. Please start a new assessment.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={!resumeEmail.trim() || checkingProgress}
+                className="w-full bg-[#0A2A5E] text-white py-3 rounded-lg hover:bg-[#3DB3E3] disabled:opacity-50 transition-colors font-medium"
+              >
+                {checkingProgress ? 'Checking...' : 'Find My Assessment'}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {step === 'email' && emailSent && (
+          <div className="pt-4 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+              <Mail className="text-green-600" size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-[#0A2A5E] mb-2">Check Your Email</h3>
+            <p className="text-gray-600 mb-4">
+              We've sent a verification link to <strong>{email}</strong>
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Click the link in the email to verify your address and access the assessment.
+            </p>
+            <button
+              onClick={() => onClose()}
+              className="w-full bg-[#0A2A5E] text-white py-3 rounded-lg hover:bg-[#3DB3E3] transition-colors font-medium"
+            >
+              Close
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
