@@ -21,14 +21,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
-    storage: window.localStorage,
-    storageKey: 'brainworx-auth',
-    flowType: 'pkce'
-  },
-  global: {
-    headers: {
-      'X-Client-Info': 'brainworx-web'
-    }
+    detectSessionInUrl: true
   }
 });
