@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard } from 'lucide-react';
+import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard, Mail, FileCheck } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
+import { ClientReport } from './ClientReport';
+import { generateClientReportData } from '../utils/clientReportScoring';
 
 interface Response {
   id: string;
@@ -11,6 +13,7 @@ interface Response {
   analysis_results: any;
   completed_at: string;
   entry_type: string;
+  answers: Record<string, string>;
 }
 
 interface FranchiseDashboardProps {
@@ -33,6 +36,10 @@ export function FranchiseDashboard({
   const [selectedResponse, setSelectedResponse] = useState<Response | null>(null);
   const [copied, setCopied] = useState(false);
   const [currentView, setCurrentView] = useState<'dashboard' | 'invoices'>('dashboard');
+  const [showClientReport, setShowClientReport] = useState(false);
+  const [clientReportData, setClientReportData] = useState<any>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const coachLink = `${window.location.origin}?fh=${franchiseOwnerCode}`;
 
@@ -66,6 +73,57 @@ export function FranchiseDashboard({
     navigator.clipboard.writeText(coachLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const viewClientReport = (response: Response) => {
+    const reportData = generateClientReportData(
+      response.customer_name,
+      response.answers,
+      new Date(response.completed_at),
+      Object.keys(response.answers).length
+    );
+    setClientReportData(reportData);
+    setShowClientReport(true);
+    setSelectedResponse(null);
+  };
+
+  const sendClientReport = async (response: Response) => {
+    setSendingEmail(true);
+    setEmailSent(false);
+
+    try {
+      const reportData = generateClientReportData(
+        response.customer_name,
+        response.answers,
+        new Date(response.completed_at),
+        Object.keys(response.answers).length
+      );
+
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-client-report`;
+
+      await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerName: response.customer_name,
+          customerEmail: response.customer_email,
+          assessmentDate: reportData.client.date,
+          totalQuestions: reportData.client.totalQuestions,
+          patterns: reportData.patterns
+        })
+      });
+
+      setEmailSent(true);
+      setTimeout(() => setEmailSent(false), 3000);
+    } catch (error) {
+      console.error('Error sending client report:', error);
+      alert('Failed to send report. Please try again.');
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const stats = {
@@ -302,7 +360,42 @@ export function FranchiseDashboard({
                   </div>
                 </div>
               )}
+
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={() => viewClientReport(selectedResponse)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#3DB3E3] to-[#1FAFA3] text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all font-semibold"
+                >
+                  <FileCheck size={20} />
+                  View Full Client Report
+                </button>
+                <button
+                  onClick={() => sendClientReport(selectedResponse)}
+                  disabled={sendingEmail}
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#0A2A5E] text-white px-6 py-3 rounded-lg hover:bg-[#3DB3E3] transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Mail size={20} />
+                  {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Send Report via Email'}
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showClientReport && clientReportData && (
+        <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
+          <div className="relative">
+            <button
+              onClick={() => setShowClientReport(false)}
+              className="fixed top-4 right-4 z-50 bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
+              title="Close report"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <ClientReport results={clientReportData} showActions={true} />
           </div>
         </div>
       )}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Printer, Download } from "lucide-react";
 
 type PatternData = {
   score: number;
@@ -153,13 +154,22 @@ const getCategory = (score: number) => {
 
 const ClientReport: React.FC<{
   results?: AssessmentResults;
-}> = ({ results = sampleAssessmentResults }) => {
+  showActions?: boolean;
+}> = ({ results = sampleAssessmentResults, showActions = true }) => {
   const [animateBars, setAnimateBars] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setAnimateBars(true), 100);
     return () => clearTimeout(t);
   }, []);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = () => {
+    window.print();
+  };
 
   const patternsArray = Object.entries(results.patterns).sort(
     (a, b) => b[1].score - a[1].score
@@ -224,7 +234,28 @@ const ClientReport: React.FC<{
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-cyan-700 p-5 print:bg-white print:p-0">
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden print:shadow-none print:rounded-none">
+      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden print:shadow-none print:rounded-none relative">
+        {showActions && (
+          <div className="absolute top-4 right-4 flex gap-2 print:hidden z-10">
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg shadow-lg hover:shadow-xl transition-all font-semibold border-2 border-blue-600"
+              title="Print or save as PDF"
+            >
+              <Printer size={20} />
+              Print/PDF
+            </button>
+            <button
+              onClick={handleDownloadPDF}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all font-semibold"
+              title="Download as PDF"
+            >
+              <Download size={20} />
+              Download
+            </button>
+          </div>
+        )}
+
         <header className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-center px-6 py-10">
           <div className="mb-6">
             <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
@@ -497,4 +528,5 @@ const ClientReport: React.FC<{
   );
 };
 
+export { ClientReport };
 export default ClientReport;
