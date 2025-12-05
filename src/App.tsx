@@ -60,13 +60,23 @@ function App() {
   }, []);
 
   const loadFranchiseData = async (userId: string) => {
-    const { data } = await supabase
-      .from('franchise_owners')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-    setFranchiseData(data);
-    setLoading(false);
+    try {
+      const { data, error } = await supabase
+        .from('franchise_owners')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error loading franchise data:', error);
+      }
+
+      setFranchiseData(data);
+    } catch (err) {
+      console.error('Unexpected error loading franchise data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -826,10 +836,13 @@ function App() {
             onClose={() => setShowLoginModal(false)}
             onLoginSuccess={async (userId) => {
               setShowLoginModal(false);
+              setLoading(true);
               const { data: session } = await supabase.auth.getSession();
               if (session?.session?.user) {
                 setCurrentUser(session.session.user);
                 await loadFranchiseData(session.session.user.id);
+              } else {
+                setLoading(false);
               }
             }}
           />
