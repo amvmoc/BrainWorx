@@ -353,7 +353,7 @@ export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, res
             </div>
           )}
 
-          {screen === 'assessment' && (
+          {screen === 'assessment' && currentQ && (
             <div className="p-8 md:p-12">
               <div className="mb-8">
                 <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
