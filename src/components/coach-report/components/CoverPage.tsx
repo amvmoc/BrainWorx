@@ -12,7 +12,7 @@ const CoverPage: React.FC<CoverPageProps> = ({ client, assessmentDate }) => {
       <div className="text-center text-white space-y-8">
         <div className="mb-8">
           <img
-            src="/brainworx png for website copy.png"
+            src="/THE REAL PNG LOGO.png"
             alt="BrainWorx Logo"
             className="h-22 mx-auto"
           />

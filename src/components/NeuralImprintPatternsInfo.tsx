@@ -26,7 +26,7 @@ export function NeuralImprintPatternsInfo({ onBack, onContinue }: NeuralImprintP
           <div className="max-h-[75vh] overflow-y-auto px-2">
             <div className="mb-6">
               <div className="flex items-start gap-4 mb-4">
-                <img src="/brainworx-icon.png" alt="BrainWorx Logo" className="w-20 h-20" />
+                <img src="/THE REAL PNG LOGO.png" alt="BrainWorx Logo" className="w-20 h-20" />
                 <div>
                   <h2 className="text-3xl font-bold text-[#0A2A5E] mb-2">Neural Imprint Patterns</h2>
                   <p className="text-gray-700 leading-relaxed">

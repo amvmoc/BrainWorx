@@ -224,7 +224,7 @@ const NeuralAssessmentStandalone: React.FC = () => {
 
         <div className="bg-white px-8 py-8 text-center border-b-4 border-purple-600">
           <img
-            src="/brainworx-logo.png"
+            src="/THE REAL PNG LOGO.png"
             alt="BrainWorx Logo"
             className="w-48 h-auto mx-auto mb-4"
           />

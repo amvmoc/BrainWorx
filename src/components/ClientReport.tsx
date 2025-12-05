@@ -259,7 +259,7 @@ const ClientReport: React.FC<{
         <header className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-center px-6 py-10">
           <div className="mb-6">
             <img
-              src="/brainworx png for website copy.png"
+              src="/THE REAL PNG LOGO.png"
               alt="BrainWorx Logo"
               className="h-16 mx-auto mb-4"
             />

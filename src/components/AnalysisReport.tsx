@@ -304,7 +304,7 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
         <div className="text-center mb-8">
           <div className="mb-6">
             <img
-              src="/brainworx png for website copy.png"
+              src="/THE REAL PNG LOGO.png"
               alt="BrainWorx Logo"
               className="h-16 mx-auto"
             />
