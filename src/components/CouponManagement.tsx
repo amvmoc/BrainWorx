@@ -11,6 +11,9 @@ interface Coupon {
   expires_at: string | null;
   is_active: boolean;
   created_at: string;
+  recipient_name: string | null;
+  recipient_email: string | null;
+  email_sent: boolean;
 }
 
 interface Redemption {
@@ -90,16 +93,55 @@ export function CouponManagement() {
         throw new Error('User not authenticated');
       }
 
-      const { error } = await supabase
+      const { data: couponData, error } = await supabase
         .from('coupon_codes')
         .insert({
           code: newCoupon.code,
           assessment_type: newCoupon.assessmentType,
           max_uses: newCoupon.maxUses,
-          created_by: userId
-        });
+          created_by: userId,
+          recipient_name: newCoupon.name,
+          recipient_email: newCoupon.email,
+          email_sent: false
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      try {
+        const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-coupon-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+          },
+          body: JSON.stringify({
+            recipientName: newCoupon.name,
+            recipientEmail: newCoupon.email,
+            couponCode: newCoupon.code,
+            assessmentType: newCoupon.assessmentType
+          })
+        });
+
+        if (emailResponse.ok) {
+          await supabase
+            .from('coupon_codes')
+            .update({ email_sent: true })
+            .eq('id', couponData.id);
+
+          alert('Coupon created and email sent successfully!');
+        } else {
+          console.error('Failed to send email');
+          alert('Coupon created but email failed to send. You can resend it later.');
+        }
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+        alert('Coupon created but email failed to send. You can resend it later.');
+      }
 
       setShowCreateModal(false);
       setNewCoupon({
@@ -110,7 +152,6 @@ export function CouponManagement() {
         maxUses: 1
       });
       loadCoupons();
-      alert('Coupon created successfully!');
     } catch (error: any) {
       alert(`Error: ${error.message}`);
     }
@@ -185,6 +226,7 @@ export function CouponManagement() {
             <thead className="bg-[#E6E9EF] border-b-2 border-[#0A2A5E]">
               <tr>
                 <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Code</th>
+                <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Recipient</th>
                 <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Assessment</th>
                 <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Uses</th>
                 <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Status</th>
@@ -210,6 +252,15 @@ export function CouponManagement() {
                           <Copy size={16} />
                         )}
                       </button>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">{coupon.recipient_name || '-'}</div>
+                      <div className="text-gray-500">{coupon.recipient_email || '-'}</div>
+                      {coupon.email_sent && (
+                        <div className="text-green-600 text-xs mt-1">✓ Email sent</div>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-600">{coupon.assessment_type}</td>
