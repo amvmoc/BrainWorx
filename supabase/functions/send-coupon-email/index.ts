@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const GMAIL_USER = "payments@brainworx.co.za";
-    const GMAIL_PASSWORD = "Bra14604";
+    const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
 
     const transporter = createTransport({
       host: "smtp.gmail.com",
