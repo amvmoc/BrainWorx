@@ -10,9 +10,10 @@ interface QuestionnaireProps {
   coachLink?: string;
   email?: string;
   franchiseOwnerId?: string | null;
+  resumeResponseId?: string;
 }
 
-export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId }: QuestionnaireProps) {
+export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, resumeResponseId }: QuestionnaireProps) {
   const [screen, setScreen] = useState<'registration' | 'welcome' | 'assessment' | 'results'>('registration');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -23,16 +24,54 @@ export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId }: Q
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responseId, setResponseId] = useState<string | null>(null);
   const [showRound2, setShowRound2] = useState(false);
+  const [isLoadingResume, setIsLoadingResume] = useState(false);
 
   const totalQuestions = 344;
   const questions = questionnaireData;
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
 
   useEffect(() => {
+    if (resumeResponseId && !isLoadingResume && !responseId) {
+      loadResumeData();
+    }
+  }, [resumeResponseId]);
+
+  useEffect(() => {
     if (screen === 'assessment' && responseId) {
       autoSaveProgress();
     }
   }, [answers, currentQuestion, screen, responseId]);
+
+  const loadResumeData = async () => {
+    if (!resumeResponseId) return;
+
+    setIsLoadingResume(true);
+    try {
+      const { data: existingResponse, error } = await supabase
+        .from('responses')
+        .select('*')
+        .eq('id', resumeResponseId)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (existingResponse) {
+        setResponseId(existingResponse.id);
+        setCurrentQuestion(existingResponse.current_question || 0);
+        setAnswers(existingResponse.answers || {});
+        setCustomerInfo({
+          name: existingResponse.customer_name,
+          email: existingResponse.customer_email
+        });
+        setScreen('assessment');
+      }
+    } catch (error) {
+      console.error('Error loading resume data:', error);
+      alert('Failed to load saved progress. Please try again.');
+    } finally {
+      setIsLoadingResume(false);
+    }
+  };
 
   const autoSaveProgress = async () => {
     if (!responseId) return;

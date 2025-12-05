@@ -31,6 +31,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   const [nipaQuestionnaireData, setNipaQuestionnaireData] = useState<{
     email: string;
     franchiseOwnerId: string;
+    responseId: string;
   } | null>(null);
 
   const handleCouponRedemption = (
@@ -118,7 +119,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         setShowChoiceModal(false);
         setNipaQuestionnaireData({
           email: resumeEmail,
-          franchiseOwnerId: existingResponse.franchise_owner_id || ''
+          franchiseOwnerId: existingResponse.franchise_owner_id || '',
+          responseId: existingResponse.id
         });
         setStartNIPAQuestionnaire(true);
       }
@@ -225,6 +227,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         coachLink=""
         email={nipaQuestionnaireData.email}
         franchiseOwnerId={nipaQuestionnaireData.franchiseOwnerId}
+        resumeResponseId={nipaQuestionnaireData.responseId}
       />
     );
   }
