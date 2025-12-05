@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Users, TrendingUp, FileText, DollarSign, LayoutDashboard, Eye, Search, UserPlus, Mail, Shield, Edit2, Loader, RefreshCw } from 'lucide-react';
+import { LogOut, Users, TrendingUp, FileText, DollarSign, LayoutDashboard, Eye, Search, UserPlus, Mail, Shield, Edit2, Loader, RefreshCw, Ticket } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { SelfAssessmentsPage } from './SelfAssessmentsPage';
 import { LibraryManagement } from './LibraryManagement';
+import { CouponManagement } from './CouponManagement';
 
 interface SuperAdminDashboardProps {
   franchiseOwnerName: string;
@@ -26,7 +27,7 @@ interface SalesLog {
 }
 
 export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdminDashboardProps) {
-  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'invoices' | 'self_assessments' | 'users' | 'library'>('overview');
+  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'invoices' | 'self_assessments' | 'users' | 'library' | 'coupons'>('overview');
   const [salesLogs, setSalesLogs] = useState<SalesLog[]>([]);
   const [responses, setResponses] = useState<any[]>([]);
   const [selfAssessments, setSelfAssessments] = useState<any[]>([]);
@@ -280,6 +281,17 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
               <FileText size={20} />
               Library
             </button>
+            <button
+              onClick={() => setCurrentView('coupons')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                currentView === 'coupons'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <Ticket size={20} />
+              Coupons
+            </button>
           </div>
         </div>
       </nav>
@@ -524,6 +536,10 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
 
         {currentView === 'library' && (
           <LibraryManagement />
+        )}
+
+        {currentView === 'coupons' && (
+          <CouponManagement />
         )}
       </div>
 

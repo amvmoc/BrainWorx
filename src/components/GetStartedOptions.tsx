@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Mail, Link2, RotateCcw, Briefcase, Users, Brain, Baby, UserCheck } from 'lucide-react';
+import { ArrowLeft, Mail, Link2, RotateCcw, Briefcase, Users, Brain, Baby, UserCheck, Ticket } from 'lucide-react';
 import { Questionnaire } from './Questionnaire';
 import { NeuralImprintPatternsInfo } from './NeuralImprintPatternsInfo';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
+import { CouponRedemption } from './CouponRedemption';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
 
@@ -24,6 +25,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   const [noProgressFound, setNoProgressFound] = useState(false);
   const [selectedAssessmentType, setSelectedAssessmentType] = useState<SelfAssessmentType | null>(null);
   const [franchiseOwnerId, setFranchiseOwnerId] = useState<string | null>(null);
+  const [showCouponModal, setShowCouponModal] = useState(false);
 
   useEffect(() => {
     if (franchiseCode || coachLink) {
@@ -92,6 +94,20 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     } else {
       setNoProgressFound(true);
     }
+  };
+
+  const handleCouponRedemption = (
+    assessmentType: string,
+    couponId: string,
+    couponFranchiseOwnerId: string,
+    userName: string,
+    userEmail: string
+  ) => {
+    setEmail(userEmail);
+    setFranchiseOwnerId(couponFranchiseOwnerId);
+    setShowCouponModal(false);
+    setPreviousStep('email');
+    setStep('patterns_info');
   };
 
   if (step === 'patterns_info') {
@@ -236,6 +252,19 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <div>
                     <h3 className="font-bold text-[#0A2A5E]">Resume Assessment</h3>
                     <p className="text-sm text-gray-600">Continue from where you left off</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setShowCouponModal(true)}
+                className="w-full p-4 border-2 border-green-500 rounded-lg hover:bg-green-500/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Ticket className="text-green-500 group-hover:scale-110 transition-transform" size={24} />
+                  <div>
+                    <h3 className="font-bold text-[#0A2A5E]">Have a Coupon Code?</h3>
+                    <p className="text-sm text-gray-600">Redeem a free access code</p>
                   </div>
                 </div>
               </button>
@@ -517,6 +546,13 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
           </div>
         )}
       </div>
+
+      {showCouponModal && (
+        <CouponRedemption
+          onRedemptionSuccess={handleCouponRedemption}
+          onCancel={() => setShowCouponModal(false)}
+        />
+      )}
     </div>
   );
 }
