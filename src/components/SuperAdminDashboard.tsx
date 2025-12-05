@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Users, TrendingUp, FileText, DollarSign, LayoutDashboard, Eye, Search, UserPlus, Mail, Shield, Edit2, Loader } from 'lucide-react';
+import { LogOut, Users, TrendingUp, FileText, DollarSign, LayoutDashboard, Eye, Search, UserPlus, Mail, Shield, Edit2, Loader, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { SelfAssessmentsPage } from './SelfAssessmentsPage';
@@ -48,6 +48,15 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
   useEffect(() => {
     loadAllData();
   }, []);
+
+  const generateUniqueCode = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  };
 
   const loadAllData = async () => {
     setLoading(true);
@@ -456,7 +465,16 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-[#0A2A5E]">Manage Franchise Users</h2>
               <button
-                onClick={() => setShowAddUserModal(true)}
+                onClick={() => {
+                  setNewUser({
+                    email: '',
+                    password: '',
+                    name: '',
+                    uniqueLinkCode: generateUniqueCode(),
+                    isSuperAdmin: false
+                  });
+                  setShowAddUserModal(true);
+                }}
                 className="flex items-center gap-2 bg-[#0A2A5E] text-white px-4 py-2 rounded-lg hover:bg-[#3DB3E3] transition-all"
               >
                 <UserPlus size={20} />
@@ -562,14 +580,25 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Unique Link Code
                 </label>
-                <input
-                  type="text"
-                  value={newUser.uniqueLinkCode}
-                  onChange={(e) => setNewUser({ ...newUser, uniqueLinkCode: e.target.value.toUpperCase() })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
-                  placeholder="JOHNDOE"
-                  required
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newUser.uniqueLinkCode}
+                    onChange={(e) => setNewUser({ ...newUser, uniqueLinkCode: e.target.value.toUpperCase() })}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                    placeholder="AUTO-GENERATED"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setNewUser({ ...newUser, uniqueLinkCode: generateUniqueCode() })}
+                    className="flex items-center gap-2 bg-[#3DB3E3] text-white px-4 py-3 rounded-lg hover:bg-[#0A2A5E] transition-all"
+                    title="Generate new code"
+                  >
+                    <RefreshCw size={20} />
+                  </button>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">Auto-generated code (you can edit or regenerate)</p>
               </div>
 
               <div className="flex items-center gap-2">
