@@ -108,7 +108,10 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         });
         setStartQuestionnaire(true);
       } else {
-        alert('This assessment type is not supported for resuming from this page.');
+        alert('Assessment found! Redirecting you to continue...');
+        setShowResumeModal(false);
+        setShowChoiceModal(false);
+        window.location.href = `/?email=${encodeURIComponent(resumeEmail)}`;
       }
     } else {
       setNoProgressFound(true);
