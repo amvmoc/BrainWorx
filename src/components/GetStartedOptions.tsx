@@ -11,9 +11,10 @@ interface GetStartedOptionsProps {
   onClose: () => void;
   franchiseCode?: string | null;
   preselectedPaymentType?: 'tcf' | 'tadhd' | 'pcadhd' | null;
+  initialCouponCode?: string | null;
 }
 
-export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType }: GetStartedOptionsProps) {
+export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType, initialCouponCode }: GetStartedOptionsProps) {
   const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
   const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tcf' | 'tadhd' | 'pcadhd' | null>(preselectedPaymentType || null);
   const [coachLink, setCoachLink] = useState(franchiseCode || '');
@@ -25,7 +26,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   const [noProgressFound, setNoProgressFound] = useState(false);
   const [selectedAssessmentType, setSelectedAssessmentType] = useState<SelfAssessmentType | null>(null);
   const [franchiseOwnerId, setFranchiseOwnerId] = useState<string | null>(null);
-  const [showCouponModal, setShowCouponModal] = useState(false);
+  const [showCouponModal, setShowCouponModal] = useState(!!initialCouponCode);
 
   useEffect(() => {
     if (franchiseCode || coachLink) {
@@ -557,6 +558,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
         <CouponRedemption
           onRedemptionSuccess={handleCouponRedemption}
           onCancel={() => setShowCouponModal(false)}
+          initialCouponCode={initialCouponCode || undefined}
         />
       )}
     </div>

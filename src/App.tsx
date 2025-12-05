@@ -29,11 +29,13 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [franchiseCode, setFranchiseCode] = useState<string | null>(null);
   const [preselectedPaymentType, setPreselectedPaymentType] = useState<'tcf' | 'tadhd' | 'pcadhd' | null>(null);
+  const [couponCode, setCouponCode] = useState<string | null>(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const verifyToken = urlParams.get('verify_token');
     const fhCode = urlParams.get('fh');
+    const coupon = urlParams.get('coupon');
 
     if (fhCode) {
       setFranchiseCode(fhCode);
@@ -43,6 +45,11 @@ function App() {
       if (savedCode) {
         setFranchiseCode(savedCode);
       }
+    }
+
+    if (coupon) {
+      setCouponCode(coupon);
+      setShowGetStarted(true);
     }
 
     if (verifyToken) {
@@ -777,9 +784,11 @@ function App() {
           onClose={() => {
             setShowGetStarted(false);
             setPreselectedPaymentType(null);
+            setCouponCode(null);
           }}
           franchiseCode={franchiseCode}
           preselectedPaymentType={preselectedPaymentType}
+          initialCouponCode={couponCode}
         />
       )}
 

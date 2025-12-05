@@ -5,13 +5,14 @@ import { supabase } from '../lib/supabase';
 interface CouponRedemptionProps {
   onRedemptionSuccess: (assessmentType: string, couponId: string, franchiseOwnerId: string, userName: string, userEmail: string) => void;
   onCancel: () => void;
+  initialCouponCode?: string;
 }
 
-export function CouponRedemption({ onRedemptionSuccess, onCancel }: CouponRedemptionProps) {
+export function CouponRedemption({ onRedemptionSuccess, onCancel, initialCouponCode }: CouponRedemptionProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    code: ''
+    code: initialCouponCode || ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
