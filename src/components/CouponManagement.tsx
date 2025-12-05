@@ -364,6 +364,7 @@ export function CouponManagement() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
                   required
                 >
+                  <option value="Full Assessment (343 Questions)">Full Assessment (343 Questions)</option>
                   <option value="Full ADHD Assessment (128 Questions)">Full ADHD Assessment (128 Questions)</option>
                   <option value="Teen Career & Future Direction">Teen Career & Future Direction</option>
                   <option value="Teen ADHD Screener (48 Questions)">Teen ADHD Screener (48 Questions)</option>
