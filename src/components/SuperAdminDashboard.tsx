@@ -5,7 +5,7 @@ import { InvoicesPage } from './InvoicesPage';
 import { SelfAssessmentsPage } from './SelfAssessmentsPage';
 import { LibraryManagement } from './LibraryManagement';
 import { CouponManagement } from './CouponManagement';
-import { GetStartedOptions } from './GetStartedOptions';
+import { HomePage } from './HomePage';
 
 interface SuperAdminDashboardProps {
   franchiseOwnerName: string;
@@ -37,15 +37,24 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false);
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const [addUserLoading, setAddUserLoading] = useState(false);
+  const [editUserLoading, setEditUserLoading] = useState(false);
   const [addUserError, setAddUserError] = useState('');
+  const [editUserError, setEditUserError] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [newPassword, setNewPassword] = useState('');
   const [newUser, setNewUser] = useState({
     email: '',
     password: '',
+    name: '',
+    uniqueLinkCode: '',
+    role: 'franchise_owner' as 'franchise_owner' | 'super_admin'
+  });
+  const [editUser, setEditUser] = useState({
+    email: '',
     name: '',
     uniqueLinkCode: '',
     role: 'franchise_owner' as 'franchise_owner' | 'super_admin'
@@ -142,6 +151,35 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
       setAddUserError(error.message);
     } finally {
       setAddUserLoading(false);
+    }
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditUserError('');
+    setEditUserLoading(true);
+
+    try {
+      const { error: updateError } = await supabase
+        .from('franchise_owners')
+        .update({
+          email: editUser.email,
+          name: editUser.name,
+          unique_link_code: editUser.uniqueLinkCode,
+          is_super_admin: editUser.role === 'super_admin'
+        })
+        .eq('id', selectedUser.id);
+
+      if (updateError) throw updateError;
+
+      setShowEditUserModal(false);
+      setSelectedUser(null);
+      await loadAllData();
+      alert('User updated successfully!');
+    } catch (error: any) {
+      setEditUserError(error.message);
+    } finally {
+      setEditUserLoading(false);
     }
   };
 
@@ -638,6 +676,23 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
                           <button
                             onClick={() => {
                               setSelectedUser(user);
+                              setEditUser({
+                                email: user.email,
+                                name: user.name,
+                                uniqueLinkCode: user.unique_link_code,
+                                role: user.is_super_admin ? 'super_admin' : 'franchise_owner'
+                              });
+                              setEditUserError('');
+                              setShowEditUserModal(true);
+                            }}
+                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                            title="Edit User"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user);
                               setNewPassword('');
                               setShowEditPasswordModal(true);
                             }}
@@ -675,12 +730,15 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
         )}
 
         {currentView === 'visitor_view' && (
-          <GetStartedOptions
-            onClose={() => setCurrentView('overview')}
-            franchiseCode={null}
-            preselectedPaymentType={null}
-            initialCouponCode={null}
-          />
+          <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+            <button
+              onClick={() => setCurrentView('overview')}
+              className="fixed top-4 right-4 z-[60] bg-[#0A2A5E] text-white hover:bg-[#3DB3E3] rounded-full px-6 py-3 shadow-lg font-medium"
+            >
+              Back to Admin
+            </button>
+            <HomePage />
+          </div>
         )}
       </div>
 
@@ -813,6 +871,111 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
                     </>
                   ) : (
                     'Create User'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showEditUserModal && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-6">Edit User</h2>
+
+            <form onSubmit={handleUpdateUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={editUser.name}
+                  onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={editUser.email}
+                  onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                  placeholder="john@example.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Unique Link Code
+                </label>
+                <input
+                  type="text"
+                  value={editUser.uniqueLinkCode}
+                  onChange={(e) => setEditUser({ ...editUser, uniqueLinkCode: e.target.value.toUpperCase() })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                  placeholder="UNIQUE-CODE"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  User Role
+                </label>
+                <select
+                  value={editUser.role}
+                  onChange={(e) => setEditUser({ ...editUser, role: e.target.value as 'franchise_owner' | 'super_admin' })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+                >
+                  <option value="franchise_owner">Franchise Owner</option>
+                  <option value="super_admin">Super Admin</option>
+                </select>
+                <p className="mt-1 text-sm text-gray-500">
+                  {editUser.role === 'super_admin'
+                    ? 'Full access to all data and settings'
+                    : 'Access to own assessments and clients only'}
+                </p>
+              </div>
+
+              {editUserError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {editUserError}
+                </div>
+              )}
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditUserModal(false);
+                    setEditUserError('');
+                    setSelectedUser(null);
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300 transition-all font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editUserLoading}
+                  className="flex-1 bg-[#0A2A5E] text-white px-4 py-3 rounded-lg hover:bg-[#3DB3E3] disabled:opacity-50 transition-all font-medium flex items-center justify-center gap-2"
+                >
+                  {editUserLoading ? (
+                    <>
+                      <Loader className="animate-spin" size={20} />
+                      Updating...
+                    </>
+                  ) : (
+                    'Update User'
                   )}
                 </button>
               </div>
