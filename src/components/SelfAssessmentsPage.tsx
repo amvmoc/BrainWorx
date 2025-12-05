@@ -102,7 +102,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   const nipaCard = {
     id: 'nipa',
     name: 'NIPA - Full Neural Imprint Assessment',
-    description: 'This is our comprehensive client assessment with 344 in-depth questions. Unlike the shorter self-assessments above, NIPA provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 16 Neural Imprint Patterns. This flagship assessment includes a professional 45-minute debrief session to help you understand and apply your results.',
+    description: 'This is our comprehensive client assessment with 344 in-depth questions. Unlike the shorter self-assessments above, NIPA provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 20 Neural Imprint Patterns. This flagship assessment includes a professional 45-minute debrief session to help you understand and apply your results.',
     icon: Brain,
     color: 'from-[#0A2A5E] to-[#3DB3E3]',
     iconColor: 'text-[#0A2A5E]',
@@ -115,7 +115,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     features: [
       'Full 344-question comprehensive assessment',
       'Professional 45-minute debrief session',
-      'Complete profile across all 16 patterns',
+      'Complete profile across all 20 patterns',
       'Two-round assessment process',
       'Detailed personalized recommendations',
       'In-depth cognitive & emotional insights'
@@ -240,7 +240,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                   What Makes NIPA Different?
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
-                  <strong>NIPA is our flagship client assessment</strong> — not a brief self-assessment. While the coach assessments above (48-60 questions) provide focused insights for specific areas, NIPA offers a comprehensive two-round evaluation covering all 16 Neural Imprint Patterns. You'll receive a detailed professional report and a 45-minute one-on-one debrief session to help you understand and apply your results to your life.
+                  <strong>NIPA is our flagship client assessment</strong> — not a brief self-assessment. While the coach assessments above (48-60 questions) provide focused insights for specific areas, NIPA offers a comprehensive two-round evaluation covering all 20 Neural Imprint Patterns. You'll receive a detailed professional report and a 45-minute one-on-one debrief session to help you understand and apply your results to your life.
                 </p>
               </div>
 
