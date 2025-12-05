@@ -20,6 +20,12 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   const [resumeEmail, setResumeEmail] = useState('');
   const [checkingProgress, setCheckingProgress] = useState(false);
   const [noProgressFound, setNoProgressFound] = useState(false);
+  const [startQuestionnaire, setStartQuestionnaire] = useState(false);
+  const [questionnaireData, setQuestionnaireData] = useState<{
+    assessmentType: typeof selfAssessmentTypes[0];
+    email: string;
+    franchiseOwnerId: string;
+  } | null>(null);
 
   const handleCouponRedemption = (
     assessmentType: string,
@@ -29,8 +35,35 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     userEmail: string
   ) => {
     setShowCouponModal(false);
-    alert('Coupon redeemed successfully! You can now start your assessment.');
-    onClose();
+
+    // Map assessment type to the correct assessment
+    const assessmentTypeMap: Record<string, typeof selfAssessmentTypes[0] | 'nipa'> = {
+      'tcf': selfAssessmentTypes[0], // Teen Career/Future
+      'tadhd': selfAssessmentTypes[1], // Teen ADHD
+      'pcadhd': selfAssessmentTypes[2], // Parent/Child ADHD
+      'nipa': 'nipa'
+    };
+
+    const mappedAssessment = assessmentTypeMap[assessmentType.toLowerCase()];
+
+    if (mappedAssessment === 'nipa') {
+      // For NIPA, redirect to GetStartedOptions with the payment type
+      alert('Coupon redeemed successfully! Starting NIPA assessment...');
+      if (onStartPayment) {
+        onStartPayment('nipa');
+      }
+    } else if (mappedAssessment && typeof mappedAssessment !== 'string') {
+      // For self-assessments, start the questionnaire
+      setQuestionnaireData({
+        assessmentType: mappedAssessment,
+        email: userEmail,
+        franchiseOwnerId: franchiseOwnerId
+      });
+      setStartQuestionnaire(true);
+    } else {
+      alert('Coupon redeemed successfully! You can now start your assessment.');
+      onClose();
+    }
   };
 
   const handleResumeSubmit = async (e: React.FormEvent) => {
@@ -142,6 +175,19 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       ]
     }
   ];
+
+  // Show questionnaire after coupon redemption
+  if (startQuestionnaire && questionnaireData) {
+    return (
+      <SelfAssessmentQuestionnaire
+        onClose={onClose}
+        assessmentType={questionnaireData.assessmentType}
+        coachLink=""
+        email={questionnaireData.email}
+        franchiseOwnerId={questionnaireData.franchiseOwnerId}
+      />
+    );
+  }
 
   // Show detailed NIPA assessment info page
   if (selectedNIPA) {
