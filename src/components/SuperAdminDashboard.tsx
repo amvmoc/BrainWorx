@@ -5,6 +5,7 @@ import { InvoicesPage } from './InvoicesPage';
 import { SelfAssessmentsPage } from './SelfAssessmentsPage';
 import { LibraryManagement } from './LibraryManagement';
 import { CouponManagement } from './CouponManagement';
+import { GetStartedOptions } from './GetStartedOptions';
 
 interface SuperAdminDashboardProps {
   franchiseOwnerName: string;
@@ -674,11 +675,12 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
         )}
 
         {currentView === 'visitor_view' && (
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-6">Public Visitor View</h2>
-            <p className="text-gray-600 mb-8">This is how the public-facing webpage appears to visitors.</p>
-            <SelfAssessmentsPage />
-          </div>
+          <GetStartedOptions
+            onClose={() => setCurrentView('overview')}
+            franchiseCode={null}
+            preselectedPaymentType={null}
+            initialCouponCode={null}
+          />
         )}
       </div>
 
