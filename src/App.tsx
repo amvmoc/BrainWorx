@@ -834,16 +834,8 @@ function App() {
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4">
           <LoginModal
             onClose={() => setShowLoginModal(false)}
-            onLoginSuccess={async (userId) => {
-              setShowLoginModal(false);
-              setLoading(true);
-              const { data: session } = await supabase.auth.getSession();
-              if (session?.session?.user) {
-                setCurrentUser(session.session.user);
-                await loadFranchiseData(session.session.user.id);
-              } else {
-                setLoading(false);
-              }
+            onLoginSuccess={() => {
+              window.location.reload();
             }}
           />
         </div>
