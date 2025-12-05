@@ -372,7 +372,7 @@ export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, res
                   Question {currentQuestion + 1} of {totalQuestions}
                 </div>
                 <h3 className="text-xl font-medium text-gray-800 mb-6 leading-relaxed">
-                  {currentQ.question}
+                  {currentQ.text}
                 </h3>
 
                 <div className="space-y-3">
