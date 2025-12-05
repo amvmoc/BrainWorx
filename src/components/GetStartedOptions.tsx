@@ -465,6 +465,20 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
               </div>
             </div>
 
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Have a Coupon Code?
+              </label>
+              <input
+                type="text"
+                placeholder="Enter coupon code (optional)"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Enter your coupon code to proceed without payment
+              </p>
+            </div>
+
             <div className="text-center mb-6">
               {selectedPaymentType === 'nipa' && (
                 <form name="PayFastPayNowForm" action="https://payment.payfast.io/eng/process" method="post">
@@ -473,13 +487,11 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="950" />
                   <input required type="hidden" name="item_name" maxLength={255} value="NIPA" />
                   <input type="hidden" name="item_description" maxLength={255} value="NIPA - Full Neural Imprint Assessment" />
-                  <button type="submit" className="w-full">
-                    <img
-                      src="https://my.payfast.io/images/buttons/BuyNow/Primary-Large-BuyNow.png"
-                      alt="Buy Now with PayFast"
-                      title="Buy Now with PayFast"
-                      className="mx-auto hover:opacity-80 transition-opacity"
-                    />
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Proceed to Payment / Coupon Entry
                   </button>
                 </form>
               )}
@@ -491,13 +503,11 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="850" />
                   <input required type="hidden" name="item_name" maxLength={255} value="TCF" />
                   <input type="hidden" name="item_description" maxLength={255} value=" TCF" />
-                  <button type="submit" className="w-full">
-                    <img
-                      src="https://my.payfast.io/images/buttons/BuyNow/Primary-Large-BuyNow.png"
-                      alt="Buy Now with PayFast"
-                      title="Buy Now with PayFast"
-                      className="mx-auto hover:opacity-80 transition-opacity"
-                    />
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Proceed to Payment / Coupon Entry
                   </button>
                 </form>
               )}
@@ -509,13 +519,11 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="850" />
                   <input required type="hidden" name="item_name" maxLength={255} value="TADHD" />
                   <input type="hidden" name="item_description" maxLength={255} value="TADHD" />
-                  <button type="submit" className="w-full">
-                    <img
-                      src="https://my.payfast.io/images/buttons/BuyNow/Primary-Large-BuyNow.png"
-                      alt="Buy Now with PayFast"
-                      title="Buy Now with PayFast"
-                      className="mx-auto hover:opacity-80 transition-opacity"
-                    />
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Proceed to Payment / Coupon Entry
                   </button>
                 </form>
               )}
@@ -527,13 +535,11 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="850" />
                   <input required type="hidden" name="item_name" maxLength={255} value="PCADHD" />
                   <input type="hidden" name="item_description" maxLength={255} value="PCADHD" />
-                  <button type="submit" className="w-full">
-                    <img
-                      src="https://my.payfast.io/images/buttons/BuyNow/Primary-Large-BuyNow.png"
-                      alt="Buy Now with PayFast"
-                      title="Buy Now with PayFast"
-                      className="mx-auto hover:opacity-80 transition-opacity"
-                    />
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Proceed to Payment / Coupon Entry
                   </button>
                 </form>
               )}
