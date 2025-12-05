@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createTransport } from "npm:nodemailer@6.9.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,10 +39,23 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const GMAIL_USER = "payments@brainworx.co.za";
+    const GMAIL_PASSWORD = "Bra14604";
+
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASSWORD,
+      },
+    });
+
     const baseUrl = Deno.env.get('VITE_APP_URL') || 'http://localhost:5173';
     const redemptionLink = `${baseUrl}?coupon=${couponCode}`;
 
-    console.log('Coupon email prepared for:', recipientEmail);
+    console.log('Sending coupon email to:', recipientEmail);
     console.log('Coupon code:', couponCode);
 
     const emailBody = `
@@ -210,16 +224,22 @@ Deno.serve(async (req: Request) => {
       </html>
     `;
 
-    console.log('Email body prepared (HTML length:', emailBody.length, 'bytes)');
+    await transporter.sendMail({
+      from: `BrainWorx <${GMAIL_USER}>`,
+      to: recipientEmail,
+      subject: `Your BrainWorx Complimentary Assessment Code - ${couponCode}`,
+      html: emailBody,
+    });
+
+    console.log('✅ Coupon email sent successfully to:', recipientEmail);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Coupon email prepared successfully',
+        message: 'Coupon email sent successfully',
         recipientEmail,
         couponCode,
-        redemptionLink,
-        emailPreview: emailBody.substring(0, 200) + '...'
+        redemptionLink
       }),
       {
         headers: {
