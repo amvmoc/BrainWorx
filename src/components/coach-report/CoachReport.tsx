@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { CoachReportData } from './types/coachReport';
 import CoverPage from './components/CoverPage';
 import ExecutiveSummary from './components/ExecutiveSummary';
@@ -15,6 +15,14 @@ interface CoachReportProps {
 }
 
 const CoachReport: React.FC<CoachReportProps> = ({ data }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const container = document.querySelector('.fixed.inset-0.overflow-y-auto');
+    if (container) {
+      container.scrollTop = 0;
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <CoverPage

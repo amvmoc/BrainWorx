@@ -159,6 +159,11 @@ const ClientReport: React.FC<{
   const [animateBars, setAnimateBars] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    const container = document.querySelector('.fixed.inset-0.overflow-y-auto');
+    if (container) {
+      container.scrollTop = 0;
+    }
     const t = setTimeout(() => setAnimateBars(true), 100);
     return () => clearTimeout(t);
   }, []);

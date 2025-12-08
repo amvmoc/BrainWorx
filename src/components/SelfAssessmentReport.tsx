@@ -23,7 +23,19 @@ export function SelfAssessmentReport({
 
   useEffect(() => {
     analyzeResponses();
+    window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (!isAnalyzing) {
+      setTimeout(() => {
+        const container = document.querySelector('.fixed.inset-0.overflow-y-auto');
+        if (container) {
+          container.scrollTop = 0;
+        }
+      }, 100);
+    }
+  }, [isAnalyzing]);
 
   const analyzeResponses = async () => {
     const { data: response } = await supabase
