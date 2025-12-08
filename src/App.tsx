@@ -11,6 +11,7 @@ import NeuralImprintPatterns from './components/NeuralImprintPatterns';
 import { SelfAssessmentsPage } from './components/SelfAssessmentsPage';
 import { DisclaimerPage } from './components/DisclaimerPage';
 import { Library } from './components/Library';
+import { PublicBookingPage } from './components/PublicBookingPage';
 import { supabase } from './lib/supabase';
 
 function App() {
@@ -24,10 +25,12 @@ function App() {
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [franchiseData, setFranchiseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [franchiseCode, setFranchiseCode] = useState<string | null>(null);
+  const [bookingFranchiseCode, setBookingFranchiseCode] = useState<string | null>(null);
   const [preselectedPaymentType, setPreselectedPaymentType] = useState<'tcf' | 'tadhd' | 'pcadhd' | null>(null);
   const [couponCode, setCouponCode] = useState<string | null>(null);
 
@@ -36,6 +39,7 @@ function App() {
     const verifyToken = urlParams.get('verify_token');
     const fhCode = urlParams.get('fh');
     const coupon = urlParams.get('coupon');
+    const bookCode = urlParams.get('book');
 
     if (fhCode) {
       setFranchiseCode(fhCode);
@@ -45,6 +49,12 @@ function App() {
       if (savedCode) {
         setFranchiseCode(savedCode);
       }
+    }
+
+    if (bookCode) {
+      setBookingFranchiseCode(bookCode);
+      setShowBooking(true);
+      return;
     }
 
     if (coupon) {
@@ -219,6 +229,19 @@ function App() {
       description: 'Transform young minds through experiential learning and cognitive training.'
     }
   ];
+
+  if (showBooking && bookingFranchiseCode) {
+    return (
+      <PublicBookingPage
+        franchiseCode={bookingFranchiseCode}
+        onBack={() => {
+          setShowBooking(false);
+          setBookingFranchiseCode(null);
+          window.history.pushState({}, '', window.location.pathname);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">

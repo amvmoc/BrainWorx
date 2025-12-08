@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard, Mail, FileCheck } from 'lucide-react';
+import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard, Mail, FileCheck, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { ClientReport } from './ClientReport';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
 import CoachReport from './coach-report/CoachReport';
+import { CalendarManagement } from './CalendarManagement';
+import { BookingManagement } from './BookingManagement';
 import { generateClientReportData } from '../utils/clientReportScoring';
 import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
@@ -41,7 +43,8 @@ export function FranchiseDashboard({
   const [loading, setLoading] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState<Response | null>(null);
   const [copied, setCopied] = useState(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices' | 'tests'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices' | 'tests' | 'calendar'>('dashboard');
+  const [calendarTab, setCalendarTab] = useState<'availability' | 'bookings'>('bookings');
   const [showClientReport, setShowClientReport] = useState(false);
   const [clientReportData, setClientReportData] = useState<any>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
@@ -227,6 +230,17 @@ export function FranchiseDashboard({
               <FileText size={20} />
               Invoices
             </button>
+            <button
+              onClick={() => setCurrentView('calendar')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                currentView === 'calendar'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <Calendar size={20} />
+              Calendar & Bookings
+            </button>
           </div>
         </div>
       </nav>
@@ -234,6 +248,39 @@ export function FranchiseDashboard({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentView === 'invoices' ? (
           <InvoicesPage franchiseOwnerId={franchiseOwnerId} />
+        ) : currentView === 'calendar' ? (
+          <div className="space-y-6">
+            <div className="flex gap-4 mb-6">
+              <button
+                onClick={() => setCalendarTab('bookings')}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  calendarTab === 'bookings'
+                    ? 'bg-[#0A2A5E] text-white'
+                    : 'bg-white text-[#0A2A5E] hover:bg-gray-100'
+                }`}
+              >
+                Bookings
+              </button>
+              <button
+                onClick={() => setCalendarTab('availability')}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  calendarTab === 'availability'
+                    ? 'bg-[#0A2A5E] text-white'
+                    : 'bg-white text-[#0A2A5E] hover:bg-gray-100'
+                }`}
+              >
+                Manage Availability
+              </button>
+            </div>
+            {calendarTab === 'bookings' ? (
+              <BookingManagement franchiseOwnerId={franchiseOwnerId} />
+            ) : (
+              <CalendarManagement
+                franchiseOwnerId={franchiseOwnerId}
+                franchiseOwnerCode={franchiseOwnerCode}
+              />
+            )}
+          </div>
         ) : currentView === 'tests' ? (
           <div className="bg-white rounded-xl p-6 shadow-lg">
             <h2 className="text-2xl font-bold text-[#0A2A5E] mb-6">Completed Test Results</h2>
