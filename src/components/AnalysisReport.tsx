@@ -58,16 +58,22 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
   useEffect(() => {
     analyzeResponses();
     window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, []);
 
   useEffect(() => {
     if (!isAnalyzing) {
       setTimeout(() => {
-        const container = document.querySelector('.fixed.inset-0.overflow-y-auto');
-        if (container) {
-          container.scrollTop = 0;
+        const modalContainer = document.querySelector('.analysis-modal-container');
+        if (modalContainer) {
+          modalContainer.scrollTop = 0;
         }
-      }, 100);
+        window.scrollTo(0, 0);
+      }, 50);
     }
   }, [isAnalyzing]);
 
@@ -80,6 +86,7 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
 
     if (response) {
       const answers = response.answers as Record<string, string>;
+      const totalAnswers = Object.keys(answers).length;
 
       const neuralImprintPatternScores: NeuralImprintPatternScore[] = NEURAL_IMPRINT_PATTERN_DEFINITIONS.map((hw, index) => {
         const relevantAnswers = Object.entries(answers)
@@ -291,7 +298,7 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
           <Loader className="animate-spin text-[#3DB3E3] mx-auto mb-4" size={48} />
           <h3 className="text-2xl font-bold text-[#0A2A5E] mb-2">Analyzing Your Results</h3>
           <p className="text-gray-600">
-            Processing your 50 responses and mapping your unique NIP™ profile...
+            Processing your responses and mapping your unique NIP™ profile...
           </p>
         </div>
       </div>
@@ -301,8 +308,9 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
   if (!analysis) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full p-8 relative my-8">
+    <div className="analysis-modal-container fixed inset-0 bg-black/50 backdrop-blur-sm z-50 overflow-y-auto">
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full p-8 relative my-8">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 hover:border-gray-400"
@@ -539,34 +547,7 @@ export function AnalysisReport({ responseId, customerEmail, onClose, onStartRoun
             </div>
           )}
 
-          {!isRound2 && onStartRound2 && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="bg-gradient-to-r from-[#3DB3E3] to-[#1FAFA3] rounded-xl p-6 text-white text-center">
-                <h4 className="text-xl font-bold mb-2">Continue Your Assessment</h4>
-                <p className="text-white/90 mb-4">
-                  Complete the next 50 questions for a more comprehensive analysis and deeper insights into your NIP™ profile.
-                </p>
-                <button
-                  onClick={onStartRound2}
-                  className="bg-white text-[#0A2A5E] px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-bold"
-                >
-                  Start Round 2 (Questions 51-100)
-                </button>
-              </div>
-            </div>
-          )}
-
-          {isRound2 && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
-                <CheckCircle className="text-green-600 mx-auto mb-3" size={48} />
-                <h4 className="text-xl font-bold text-[#0A2A5E] mb-2">Round 2 Complete!</h4>
-                <p className="text-gray-600">
-                  You've completed 100 questions total. This analysis reflects your responses to questions 51-100.
-                </p>
-              </div>
-            </div>
-          )}
+        </div>
         </div>
       </div>
     </div>
