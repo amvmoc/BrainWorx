@@ -27,6 +27,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     assessmentType: typeof selfAssessmentTypes[0];
     email: string;
     franchiseOwnerId: string;
+    couponId?: string;
   } | null>(null);
   const [nipaQuestionnaireData, setNipaQuestionnaireData] = useState<{
     email: string;
@@ -46,7 +47,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     const assessmentNameMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
-      'Teen Career & Future Direction': 'career',
+      'Teen Career & Future Direction': 'teen-career',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
       'Parent ADHD Screener (48 Questions)': 'parent-adhd'
     };
@@ -64,7 +65,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         setQuestionnaireData({
           assessmentType: selectedAssessment,
           email: userEmail,
-          franchiseOwnerId: franchiseOwnerId
+          franchiseOwnerId: franchiseOwnerId,
+          couponId: couponId
         });
         setStartQuestionnaire(true);
       }
@@ -213,6 +215,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         coachLink=""
         email={questionnaireData.email}
         franchiseOwnerId={questionnaireData.franchiseOwnerId}
+        couponId={questionnaireData.couponId || null}
       />
     );
   }
