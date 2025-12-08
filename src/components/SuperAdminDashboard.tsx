@@ -8,7 +8,9 @@ import { CouponManagement } from './CouponManagement';
 import { HomePage } from './HomePage';
 import { ClientReport } from './ClientReport';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
+import CoachReport from './coach-report/CoachReport';
 import { generateClientReportData } from '../utils/clientReportScoring';
+import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface SuperAdminDashboardProps {
@@ -104,6 +106,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
         supabase
           .from('responses')
           .select('*')
+          .in('status', ['analyzed', 'sent'])
           .order('created_at', { ascending: false }),
         supabase
           .from('self_assessment_responses')
@@ -295,7 +298,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
     totalRevenue: salesLogs
       .filter(log => log.status === 'paid')
       .reduce((sum, log) => sum + Number(log.amount), 0),
-    completedAssessments: responses.filter(r => r.status === 'analyzed').length + selfAssessments.filter(s => s.status === 'completed').length,
+    completedAssessments: responses.filter(r => r.status === 'analyzed' || r.status === 'sent').length + selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed').length,
     pendingAssessments: responses.filter(r => r.status === 'in_progress').length + selfAssessments.filter(s => s.status === 'in_progress').length
   };
 
@@ -767,7 +770,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
               </div>
             ) : (
               <>
-                {[...responses.filter(r => r.status === 'analyzed'), ...selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed')].length === 0 ? (
+                {[...responses.filter(r => r.status === 'analyzed' || r.status === 'sent'), ...selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed')].length === 0 ? (
                   <div className="text-center py-8">
                     <Users className="mx-auto text-gray-300 mb-2" size={48} />
                     <p className="text-gray-600">No completed tests yet</p>
@@ -788,7 +791,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
                       </thead>
                       <tbody>
                         {[
-                          ...responses.filter(r => r.status === 'analyzed').map(r => ({ ...r, type: 'nipa' })),
+                          ...responses.filter(r => r.status === 'analyzed' || r.status === 'sent').map(r => ({ ...r, type: 'nipa' })),
                           ...selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed').map(s => ({ ...s, type: 'self' }))
                         ]
                           .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
@@ -1214,21 +1217,20 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
               <div className="relative min-h-screen">
                 <button
                   onClick={() => setViewingTestReport(null)}
-                  className="sticky top-4 left-full mr-4 z-[110] bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
+                  className="fixed top-4 right-4 z-[110] bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
                   title="Close report"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <ClientReport
-                  results={generateClientReportData(
+                <CoachReport
+                  data={generateCoachReportData(
                     viewingTestReport.customer_name,
                     viewingTestReport.answers,
                     new Date(viewingTestReport.completed_at),
                     Object.keys(viewingTestReport.answers).length
                   )}
-                  showActions={true}
                 />
               </div>
             </div>

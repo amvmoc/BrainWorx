@@ -4,7 +4,9 @@ import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { ClientReport } from './ClientReport';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
+import CoachReport from './coach-report/CoachReport';
 import { generateClientReportData } from '../utils/clientReportScoring';
+import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface Response {
@@ -70,7 +72,7 @@ export function FranchiseDashboard({
       let nipaQuery = supabase
         .from('responses')
         .select('*')
-        .eq('status', 'analyzed');
+        .in('status', ['analyzed', 'sent']);
 
       let selfAssessmentQuery = supabase
         .from('self_assessment_responses')
@@ -168,7 +170,7 @@ export function FranchiseDashboard({
 
   const stats = {
     total: responses.length,
-    completed: responses.filter(r => r.status === 'analyzed').length,
+    completed: responses.filter(r => r.status === 'analyzed' || r.status === 'sent').length,
     viaCoach: responses.filter(r => r.entry_type === 'coach_link').length,
     viaEmail: responses.filter(r => r.entry_type === 'random_visitor').length
   };
@@ -580,21 +582,20 @@ export function FranchiseDashboard({
               <div className="relative min-h-screen">
                 <button
                   onClick={() => setViewingTestReport(null)}
-                  className="sticky top-4 left-full mr-4 z-[110] bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
+                  className="fixed top-4 right-4 z-[110] bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
                   title="Close report"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <ClientReport
-                  results={generateClientReportData(
+                <CoachReport
+                  data={generateCoachReportData(
                     viewingTestReport.customer_name,
                     viewingTestReport.answers,
                     new Date(viewingTestReport.completed_at),
                     Object.keys(viewingTestReport.answers).length
                   )}
-                  showActions={true}
                 />
               </div>
             </div>
