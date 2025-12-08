@@ -118,7 +118,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     const assessmentTypeMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
-      'Teen Career & Future Direction': 'career',
+      'Teen Career & Future Direction': 'teen-career',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
       'Parent ADHD Screener (48 Questions)': 'parent-adhd'
     };
@@ -127,7 +127,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
 
     if (mappedType === 'nipa') {
       setStep('patterns_info');
-    } else if (mappedType === 'career') {
+    } else if (mappedType === 'teen-career') {
       setStep('career_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
