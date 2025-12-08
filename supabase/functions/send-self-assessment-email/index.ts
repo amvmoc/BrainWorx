@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createTransport } from "npm:nodemailer@6.9.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -45,7 +46,6 @@ Deno.serve(async (req: Request) => {
     let resultsUrl = '';
     let bookingUrl = SITE_URL;
 
-    // Fetch share token and franchise code if responseId is provided
     if (responseId) {
       const { createClient } = await import('npm:@supabase/supabase-js@2.39.0');
       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -191,33 +191,27 @@ Deno.serve(async (req: Request) => {
       </html>
     `;
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const GMAIL_USER = "payments@brainworx.co.za";
+    const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
 
-    if (!RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is not configured");
-    }
-
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASSWORD,
       },
-      body: JSON.stringify({
-        from: "BrainWorx <noreply@brainworx.co.za>",
-        to: [customerEmail],
-        subject: `Your ${assessmentType} Results - BrainWorx`,
-        html: htmlContent,
-      }),
     });
 
-    const data = await res.json();
+    await transporter.sendMail({
+      from: `BrainWorx <${GMAIL_USER}>`,
+      to: customerEmail,
+      subject: `Your ${assessmentType} Results - BrainWorx`,
+      html: htmlContent,
+    });
 
-    if (!res.ok) {
-      throw new Error(`Failed to send email: ${JSON.stringify(data)}`);
-    }
-
-    return new Response(JSON.stringify({ success: true, messageId: data.id }), {
+    return new Response(JSON.stringify({ success: true }), {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
