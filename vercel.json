@@ -6,7 +6,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/results/:token",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
