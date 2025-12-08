@@ -3,6 +3,7 @@ import { ArrowLeft, Mail, Link2, RotateCcw, Briefcase, Users, Brain, Baby, UserC
 import { Questionnaire } from './Questionnaire';
 import { NeuralImprintPatternsInfo } from './NeuralImprintPatternsInfo';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
+import { CareerAssessment } from './CareerAssessment';
 import { CouponRedemption } from './CouponRedemption';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
@@ -15,7 +16,7 @@ interface GetStartedOptionsProps {
 }
 
 export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType, initialCouponCode }: GetStartedOptionsProps) {
-  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
+  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'career_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
   const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tcf' | 'tadhd' | 'pcadhd' | null>(preselectedPaymentType || null);
   const [coachLink, setCoachLink] = useState(franchiseCode || '');
   const [email, setEmail] = useState('');
@@ -27,6 +28,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   const [selectedAssessmentType, setSelectedAssessmentType] = useState<SelfAssessmentType | null>(null);
   const [franchiseOwnerId, setFranchiseOwnerId] = useState<string | null>(null);
   const [showCouponModal, setShowCouponModal] = useState(!!initialCouponCode);
+  const [customerName, setCustomerName] = useState('');
 
   useEffect(() => {
     if (franchiseCode || coachLink) {
@@ -105,6 +107,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     userEmail: string
   ) => {
     setEmail(userEmail);
+    setCustomerName(userName);
     setFranchiseOwnerId(couponFranchiseOwnerId);
     setShowCouponModal(false);
     setPreviousStep('email');
@@ -121,6 +124,8 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
 
     if (mappedType === 'nipa') {
       setStep('patterns_info');
+    } else if (mappedType === 'career') {
+      setStep('career_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       if (selectedAssessment) {
@@ -157,6 +162,17 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
         assessmentType={selectedAssessmentType}
         coachLink={coachLink}
         email={email}
+        franchiseOwnerId={franchiseOwnerId}
+      />
+    );
+  }
+
+  if (step === 'career_assessment') {
+    return (
+      <CareerAssessment
+        onClose={onClose}
+        email={email}
+        customerName={customerName}
         franchiseOwnerId={franchiseOwnerId}
       />
     );
