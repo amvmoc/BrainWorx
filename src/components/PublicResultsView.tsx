@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Download, Calendar, User } from 'lucide-react';
+import { X, Download, Calendar, User, FileText } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { generateClientReportData } from '../utils/clientReportScoring';
+import { downloadHTMLReport } from '../utils/htmlReportGenerator';
 import ClientReport from './ClientReport';
 
 interface PublicResultsViewProps {
@@ -95,6 +96,52 @@ export function PublicResultsView({ shareToken }: PublicResultsViewProps) {
     Object.keys(responseData.answers).length
   );
 
+  const handleDownloadHTML = () => {
+    const patterns = Object.entries(reportData.patterns);
+
+    const overallScore = Math.round(
+      patterns.reduce((sum, [_, data]) => sum + data.score, 0) / patterns.length
+    );
+
+    const topPatterns = patterns
+      .sort(([, a], [, b]) => b.score - a.score)
+      .slice(0, 5)
+      .map(([name, data]) => ({
+        pattern: name,
+        score: data.score,
+        description: data.description,
+      }));
+
+    const categoryScores = patterns.map(([name, data]) => ({
+      category: name,
+      score: data.score,
+      severity:
+        data.score >= 70 ? 'High' : data.score >= 40 ? 'Moderate' : 'Low',
+      description: data.description,
+    }));
+
+    const interpretation = `Based on this comprehensive neural imprint assessment, the profile shows an overall intensity score of ${overallScore}%. ${
+      overallScore >= 70
+        ? 'This indicates significant patterns that may benefit from professional support and intervention.'
+        : overallScore >= 40
+        ? 'This reveals moderate patterns that could be addressed through coaching and personal development strategies.'
+        : 'This suggests a relatively balanced profile with manageable patterns.'
+    } The most prominent patterns identified include ${topPatterns
+      .slice(0, 3)
+      .map((p) => p.pattern)
+      .join(', ')}. These patterns provide valuable insights for personal growth and development.`;
+
+    downloadHTMLReport({
+      customerName: reportData.client.name,
+      completedAt: new Date(reportData.client.date),
+      questionCount: reportData.client.totalQuestions,
+      overallScore,
+      categoryScores,
+      topPatterns,
+      interpretation,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E6E9EF] to-white">
       <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -136,13 +183,22 @@ export function PublicResultsView({ shareToken }: PublicResultsViewProps) {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => window.print()}
-                className="inline-flex items-center bg-[#3DB3E3] text-white px-6 py-3 rounded-lg hover:bg-[#1FAFA3] transition-colors"
-              >
-                <Download size={20} className="mr-2" />
-                Download PDF
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDownloadHTML}
+                  className="inline-flex items-center bg-[#3DB3E3] text-white px-6 py-3 rounded-lg hover:bg-[#1FAFA3] transition-colors font-medium"
+                >
+                  <FileText size={20} className="mr-2" />
+                  Download Report
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="inline-flex items-center border-2 border-[#3DB3E3] text-[#3DB3E3] px-6 py-3 rounded-lg hover:bg-[#3DB3E3] hover:text-white transition-colors font-medium"
+                >
+                  <Download size={20} className="mr-2" />
+                  Print PDF
+                </button>
+              </div>
             </div>
 
             <div className="border-t border-gray-200 pt-6">
