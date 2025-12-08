@@ -3,7 +3,9 @@ import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutD
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { ClientReport } from './ClientReport';
+import { SelfAssessmentReport } from './SelfAssessmentReport';
 import { generateClientReportData } from '../utils/clientReportScoring';
+import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface Response {
   id: string;
@@ -37,11 +39,12 @@ export function FranchiseDashboard({
   const [loading, setLoading] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState<Response | null>(null);
   const [copied, setCopied] = useState(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices' | 'tests'>('dashboard');
   const [showClientReport, setShowClientReport] = useState(false);
   const [clientReportData, setClientReportData] = useState<any>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [viewingTestReport, setViewingTestReport] = useState<Response | null>(null);
 
   const coachLink = `${window.location.origin}?fh=${franchiseOwnerCode}`;
 
@@ -189,6 +192,17 @@ export function FranchiseDashboard({
               Dashboard
             </button>
             <button
+              onClick={() => setCurrentView('tests')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                currentView === 'tests'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <FileCheck size={20} />
+              Tests
+            </button>
+            <button
               onClick={() => setCurrentView('invoices')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 currentView === 'invoices'
@@ -206,6 +220,69 @@ export function FranchiseDashboard({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentView === 'invoices' ? (
           <InvoicesPage franchiseOwnerId={franchiseOwnerId} />
+        ) : currentView === 'tests' ? (
+          <div className="bg-white rounded-xl p-6 shadow-lg">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-6">Completed Test Results</h2>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">Loading test results...</p>
+              </div>
+            ) : responses.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="mx-auto text-gray-300 mb-2" size={48} />
+                <p className="text-gray-600">No completed tests yet</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-[#E6E9EF] border-b-2 border-[#0A2A5E]">
+                    <tr>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Client Name</th>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Email</th>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Assessment Type</th>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Score</th>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Completed</th>
+                      <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {responses.map((response) => (
+                      <tr key={`${response.response_type}-${response.id}`} className="border-b hover:bg-gray-50">
+                        <td className="px-6 py-4 font-medium text-[#0A2A5E]">{response.customer_name}</td>
+                        <td className="px-6 py-4 text-gray-600">{response.customer_email}</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            response.response_type === 'nipa'
+                              ? 'bg-purple-100 text-purple-800'
+                              : 'bg-orange-100 text-orange-800'
+                          }`}>
+                            {response.response_type === 'nipa' ? 'NIPA Full' : response.assessment_type || 'Self Assessment'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="font-bold text-[#3DB3E3]">
+                            {response.analysis_results?.overallScore || 'N/A'}%
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {new Date(response.completed_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => setViewingTestReport(response)}
+                            className="bg-[#3DB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#1FAFA3] transition-colors font-medium"
+                          >
+                            View Report
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         ) : (
           <>
         <div className="grid md:grid-cols-4 gap-6 mb-8">
@@ -482,6 +559,42 @@ export function FranchiseDashboard({
             <ClientReport results={clientReportData} showActions={true} />
           </div>
         </div>
+      )}
+
+      {viewingTestReport && (
+        <>
+          {viewingTestReport.response_type === 'nipa' ? (
+            <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
+              <div className="relative">
+                <button
+                  onClick={() => setViewingTestReport(null)}
+                  className="fixed top-4 right-4 z-50 bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
+                  title="Close report"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <ClientReport
+                  results={generateClientReportData(
+                    viewingTestReport.customer_name,
+                    viewingTestReport.answers,
+                    new Date(viewingTestReport.completed_at),
+                    Object.keys(viewingTestReport.answers).length
+                  )}
+                  showActions={true}
+                />
+              </div>
+            </div>
+          ) : (
+            <SelfAssessmentReport
+              responseId={viewingTestReport.id}
+              assessmentType={selfAssessmentTypes.find(t => t.id === viewingTestReport.assessment_type) || selfAssessmentTypes[0]}
+              customerEmail={viewingTestReport.customer_email}
+              onClose={() => setViewingTestReport(null)}
+            />
+          )}
+        </>
       )}
           </>
         )}

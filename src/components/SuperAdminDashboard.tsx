@@ -6,6 +6,10 @@ import { SelfAssessmentsPage } from './SelfAssessmentsPage';
 import { LibraryManagement } from './LibraryManagement';
 import { CouponManagement } from './CouponManagement';
 import { HomePage } from './HomePage';
+import { ClientReport } from './ClientReport';
+import { SelfAssessmentReport } from './SelfAssessmentReport';
+import { generateClientReportData } from '../utils/clientReportScoring';
+import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface SuperAdminDashboardProps {
   franchiseOwnerName: string;
@@ -28,7 +32,7 @@ interface SalesLog {
 }
 
 export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdminDashboardProps) {
-  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'invoices' | 'self_assessments' | 'users' | 'library' | 'coupons' | 'visitor_view'>('overview');
+  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'invoices' | 'self_assessments' | 'users' | 'library' | 'coupons' | 'visitor_view' | 'tests'>('overview');
   const [salesLogs, setSalesLogs] = useState<SalesLog[]>([]);
   const [responses, setResponses] = useState<any[]>([]);
   const [selfAssessments, setSelfAssessments] = useState<any[]>([]);
@@ -36,6 +40,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [viewingTestReport, setViewingTestReport] = useState<any>(null);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false);
@@ -380,6 +385,17 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
             >
               <FileText size={20} />
               Self Assessments
+            </button>
+            <button
+              onClick={() => setCurrentView('tests')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                currentView === 'tests'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <Eye size={20} />
+              Tests
             </button>
             <button
               onClick={() => setCurrentView('invoices')}
@@ -727,6 +743,84 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
 
         {currentView === 'coupons' && (
           <CouponManagement />
+        )}
+
+        {currentView === 'tests' && (
+          <div className="bg-white rounded-xl p-6 shadow-lg">
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-6">All Completed Test Results</h2>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">Loading test results...</p>
+              </div>
+            ) : (
+              <>
+                {[...responses.filter(r => r.status === 'analyzed'), ...selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed')].length === 0 ? (
+                  <div className="text-center py-8">
+                    <Users className="mx-auto text-gray-300 mb-2" size={48} />
+                    <p className="text-gray-600">No completed tests yet</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-[#E6E9EF] border-b-2 border-[#0A2A5E]">
+                        <tr>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Client Name</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Email</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Franchise</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Assessment Type</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Score</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Completed</th>
+                          <th className="px-6 py-3 text-left font-semibold text-[#0A2A5E]">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          ...responses.filter(r => r.status === 'analyzed').map(r => ({ ...r, type: 'nipa' })),
+                          ...selfAssessments.filter(s => s.status === 'completed' || s.status === 'analyzed').map(s => ({ ...s, type: 'self' }))
+                        ]
+                          .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+                          .map((test) => (
+                            <tr key={`${test.type}-${test.id}`} className="border-b hover:bg-gray-50">
+                              <td className="px-6 py-4 font-medium text-[#0A2A5E]">{test.customer_name}</td>
+                              <td className="px-6 py-4 text-gray-600">{test.customer_email}</td>
+                              <td className="px-6 py-4 text-gray-600">
+                                {franchiseUsers.find(f => f.id === test.franchise_owner_id)?.name || 'Unknown'}
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                  test.type === 'nipa'
+                                    ? 'bg-purple-100 text-purple-800'
+                                    : 'bg-orange-100 text-orange-800'
+                                }`}>
+                                  {test.type === 'nipa' ? 'NIPA Full' : test.assessment_type || 'Self Assessment'}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className="font-bold text-[#3DB3E3]">
+                                  {test.analysis_results?.overallScore || 'N/A'}%
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600">
+                                {new Date(test.completed_at).toLocaleDateString()}
+                              </td>
+                              <td className="px-6 py-4">
+                                <button
+                                  onClick={() => setViewingTestReport(test)}
+                                  className="bg-[#3DB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#1FAFA3] transition-colors font-medium"
+                                >
+                                  View Report
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         )}
 
         {currentView === 'visitor_view' && (
@@ -1099,6 +1193,42 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
             </div>
           </div>
         </div>
+      )}
+
+      {viewingTestReport && (
+        <>
+          {viewingTestReport.type === 'nipa' ? (
+            <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
+              <div className="relative">
+                <button
+                  onClick={() => setViewingTestReport(null)}
+                  className="fixed top-4 right-4 z-50 bg-white text-gray-900 rounded-full p-3 shadow-xl hover:shadow-2xl transition-all border-2 border-gray-300 hover:border-gray-500"
+                  title="Close report"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <ClientReport
+                  results={generateClientReportData(
+                    viewingTestReport.customer_name,
+                    viewingTestReport.answers,
+                    new Date(viewingTestReport.completed_at),
+                    Object.keys(viewingTestReport.answers).length
+                  )}
+                  showActions={true}
+                />
+              </div>
+            </div>
+          ) : (
+            <SelfAssessmentReport
+              responseId={viewingTestReport.id}
+              assessmentType={selfAssessmentTypes.find(t => t.id === viewingTestReport.assessment_type) || selfAssessmentTypes[0]}
+              customerEmail={viewingTestReport.customer_email}
+              onClose={() => setViewingTestReport(null)}
+            />
+          )}
+        </>
       )}
     </div>
   );
