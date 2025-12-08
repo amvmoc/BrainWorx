@@ -11,13 +11,15 @@ interface QuestionnaireProps {
   email?: string;
   franchiseOwnerId?: string | null;
   resumeResponseId?: string;
+  customerName?: string;
+  couponId?: string | null;
 }
 
-export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, resumeResponseId }: QuestionnaireProps) {
+export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, resumeResponseId, customerName, couponId }: QuestionnaireProps) {
   const [screen, setScreen] = useState<'registration' | 'welcome' | 'assessment' | 'results'>('registration');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [customerInfo, setCustomerInfo] = useState({ name: '', email: email || '' });
+  const [customerInfo, setCustomerInfo] = useState({ name: customerName || '', email: email || '' });
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [parentalConsent, setParentalConsent] = useState(false);
   const [errors, setErrors] = useState({ name: false, email: false, disclaimer: false, parental: false });
@@ -133,8 +135,9 @@ export function Questionnaire({ onClose, coachLink, email, franchiseOwnerId, res
           customer_email: customerInfo.email,
           status: 'in_progress',
           entry_type: coachLink ? 'coach_link' : 'random_visitor',
-          email_verified: !!coachLink,
+          email_verified: !!coachLink || !!couponId,
           franchise_owner_id: franchiseOwnerId || null,
+          coupon_id: couponId || null,
           current_question: 0,
           last_activity_at: new Date().toISOString()
         })

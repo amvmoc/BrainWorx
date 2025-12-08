@@ -30,6 +30,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   const [showCouponModal, setShowCouponModal] = useState(!!initialCouponCode);
   const [customerName, setCustomerName] = useState('');
   const [couponId, setCouponId] = useState<string | null>(null);
+  const [paymentCouponCode, setPaymentCouponCode] = useState('');
 
   useEffect(() => {
     if (franchiseCode || coachLink) {
@@ -153,6 +154,8 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
         coachLink={coachLink}
         email={email}
         franchiseOwnerId={franchiseOwnerId}
+        customerName={customerName}
+        couponId={couponId}
       />
     );
   }
@@ -509,11 +512,27 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Have a Coupon Code?
               </label>
-              <input
-                type="text"
-                placeholder="Enter coupon code (optional)"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={paymentCouponCode}
+                  onChange={(e) => setPaymentCouponCode(e.target.value.toUpperCase())}
+                  placeholder="Enter coupon code (optional)"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent font-mono uppercase"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (paymentCouponCode.trim()) {
+                      setShowCouponModal(true);
+                    }
+                  }}
+                  disabled={!paymentCouponCode.trim()}
+                  className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+                >
+                  Apply
+                </button>
+              </div>
               <p className="text-xs text-gray-500 mt-2">
                 Enter your coupon code to proceed without payment
               </p>
@@ -521,7 +540,17 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
 
             <div className="text-center mb-6">
               {selectedPaymentType === 'nipa' && (
-                <form name="PayFastPayNowForm" action="https://payment.payfast.io/eng/process" method="post">
+                <form
+                  name="PayFastPayNowForm"
+                  action="https://payment.payfast.io/eng/process"
+                  method="post"
+                  onSubmit={(e) => {
+                    if (paymentCouponCode.trim()) {
+                      e.preventDefault();
+                      setShowCouponModal(true);
+                    }
+                  }}
+                >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
                   <input required type="hidden" name="amount" value="950" />
@@ -531,13 +560,23 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                   >
-                    Proceed to Payment / Coupon Entry
+                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
                   </button>
                 </form>
               )}
 
               {selectedPaymentType === 'tcf' && (
-                <form name="PayFastPayNowForm" action="https://payment.payfast.io/eng/process" method="post">
+                <form
+                  name="PayFastPayNowForm"
+                  action="https://payment.payfast.io/eng/process"
+                  method="post"
+                  onSubmit={(e) => {
+                    if (paymentCouponCode.trim()) {
+                      e.preventDefault();
+                      setShowCouponModal(true);
+                    }
+                  }}
+                >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
                   <input required type="hidden" name="amount" value="850" />
@@ -547,13 +586,23 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                   >
-                    Proceed to Payment / Coupon Entry
+                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
                   </button>
                 </form>
               )}
 
               {selectedPaymentType === 'tadhd' && (
-                <form name="PayFastPayNowForm" action="https://payment.payfast.io/eng/process" method="post">
+                <form
+                  name="PayFastPayNowForm"
+                  action="https://payment.payfast.io/eng/process"
+                  method="post"
+                  onSubmit={(e) => {
+                    if (paymentCouponCode.trim()) {
+                      e.preventDefault();
+                      setShowCouponModal(true);
+                    }
+                  }}
+                >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
                   <input required type="hidden" name="amount" value="850" />
@@ -563,13 +612,23 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                   >
-                    Proceed to Payment / Coupon Entry
+                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
                   </button>
                 </form>
               )}
 
               {selectedPaymentType === 'pcadhd' && (
-                <form name="PayFastPayNowForm" action="https://payment.payfast.io/eng/process" method="post">
+                <form
+                  name="PayFastPayNowForm"
+                  action="https://payment.payfast.io/eng/process"
+                  method="post"
+                  onSubmit={(e) => {
+                    if (paymentCouponCode.trim()) {
+                      e.preventDefault();
+                      setShowCouponModal(true);
+                    }
+                  }}
+                >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
                   <input required type="hidden" name="amount" value="850" />
@@ -579,7 +638,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                   >
-                    Proceed to Payment / Coupon Entry
+                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
                   </button>
                 </form>
               )}
@@ -596,8 +655,11 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
       {showCouponModal && (
         <CouponRedemption
           onRedemptionSuccess={handleCouponRedemption}
-          onCancel={() => setShowCouponModal(false)}
-          initialCouponCode={initialCouponCode || undefined}
+          onCancel={() => {
+            setShowCouponModal(false);
+            setPaymentCouponCode('');
+          }}
+          initialCouponCode={paymentCouponCode || initialCouponCode || undefined}
         />
       )}
     </div>
