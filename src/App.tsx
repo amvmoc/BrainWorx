@@ -13,6 +13,7 @@ import { DisclaimerPage } from './components/DisclaimerPage';
 import { Library } from './components/Library';
 import { PublicBookingPage } from './components/PublicBookingPage';
 import { PublicResultsView } from './components/PublicResultsView';
+import NIP2Assessment from './components/NIP2Assessment';
 import { supabase } from './lib/supabase';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
+  const [showNIP2, setShowNIP2] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [franchiseData, setFranchiseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -38,6 +40,13 @@ function App() {
 
   useEffect(() => {
     const currentPath = window.location.pathname;
+
+    // Check for NIP2 route
+    if (currentPath === '/nip2' || currentPath === '/nip2/') {
+      setShowNIP2(true);
+      return;
+    }
+
     const resultsMatch = currentPath.match(/\/results\/([a-f0-9-]+)/);
 
     if (resultsMatch && resultsMatch[1]) {
@@ -884,6 +893,12 @@ function App() {
               window.location.reload();
             }}
           />
+        </div>
+      )}
+
+      {showNIP2 && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-white">
+          <NIP2Assessment />
         </div>
       )}
     </div>
