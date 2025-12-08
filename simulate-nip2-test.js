@@ -124,8 +124,8 @@ function calculateResults(answers, questions) {
 async function runSimulation() {
   console.log('\n🧪 Starting NIP2 Assessment Simulation...\n');
 
-  const testEmail = 'test-simulation@brainworx.com';
-  const testName = 'Test Simulation User';
+  const testEmail = 'andrimocke@gmail.com';
+  const testName = 'Andri Mocke';
 
   try {
     // Step 1: Create response
