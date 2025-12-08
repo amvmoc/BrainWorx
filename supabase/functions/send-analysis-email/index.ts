@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createTransport } from "npm:nodemailer@6.9.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -276,31 +277,19 @@ Deno.serve(async (req: Request) => {
       </html>
     `;
 
-    const emailsSent = {
-      customer: customerEmail,
-      franchiseOwner: franchiseOwnerEmail || 'N/A',
-      brainworx: BRAINWORX_EMAIL
-    };
+    // Setup Gmail transporter
+    const GMAIL_USER = "payments@brainworx.co.za";
+    const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-
-    if (!RESEND_API_KEY) {
-      console.warn('RESEND_API_KEY not configured - emails will not be sent');
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: 'Email service not configured. Please set RESEND_API_KEY.',
-          links: { resultsUrl, bookingUrl }
-        }),
-        {
-          status: 500,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-    }
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASSWORD,
+      },
+    });
 
     const emailResults = {
       customer: { sent: false, error: null as string | null },
@@ -310,28 +299,15 @@ Deno.serve(async (req: Request) => {
 
     // Send customer email
     try {
-      const customerRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: "BrainWorx <noreply@brainworx.co.za>",
-          to: [customerEmail],
-          subject: "Your BrainWorx Assessment Results",
-          html: customerEmailBody,
-        }),
+      await transporter.sendMail({
+        from: `BrainWorx <${GMAIL_USER}>`,
+        to: customerEmail,
+        subject: "Your BrainWorx Assessment Results",
+        html: customerEmailBody,
       });
 
-      if (customerRes.ok) {
-        emailResults.customer.sent = true;
-        console.log('✓ Customer email sent to:', customerEmail);
-      } else {
-        const error = await customerRes.text();
-        emailResults.customer.error = error;
-        console.error('✗ Failed to send customer email:', error);
-      }
+      emailResults.customer.sent = true;
+      console.log('✓ Customer email sent to:', customerEmail);
     } catch (error) {
       emailResults.customer.error = error.message;
       console.error('✗ Error sending customer email:', error);
@@ -340,28 +316,15 @@ Deno.serve(async (req: Request) => {
     // Send franchise owner email
     if (franchiseOwnerEmail) {
       try {
-        const franchiseRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: "BrainWorx <noreply@brainworx.co.za>",
-            to: [franchiseOwnerEmail],
-            subject: "New Prospect Assessment Completed",
-            html: franchiseEmailBody,
-          }),
+        await transporter.sendMail({
+          from: `BrainWorx <${GMAIL_USER}>`,
+          to: franchiseOwnerEmail,
+          subject: "New Prospect Assessment Completed",
+          html: franchiseEmailBody,
         });
 
-        if (franchiseRes.ok) {
-          emailResults.franchiseOwner.sent = true;
-          console.log('✓ Franchise owner email sent to:', franchiseOwnerEmail);
-        } else {
-          const error = await franchiseRes.text();
-          emailResults.franchiseOwner.error = error;
-          console.error('✗ Failed to send franchise owner email:', error);
-        }
+        emailResults.franchiseOwner.sent = true;
+        console.log('✓ Franchise owner email sent to:', franchiseOwnerEmail);
       } catch (error) {
         emailResults.franchiseOwner.error = error.message;
         console.error('✗ Error sending franchise owner email:', error);
@@ -370,28 +333,15 @@ Deno.serve(async (req: Request) => {
 
     // Send BrainWorx admin email
     try {
-      const adminRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: "BrainWorx <noreply@brainworx.co.za>",
-          to: [BRAINWORX_EMAIL],
-          subject: "New Assessment Completed - System Notification",
-          html: brainworxEmailBody,
-        }),
+      await transporter.sendMail({
+        from: `BrainWorx <${GMAIL_USER}>`,
+        to: BRAINWORX_EMAIL,
+        subject: "New Assessment Completed - System Notification",
+        html: brainworxEmailBody,
       });
 
-      if (adminRes.ok) {
-        emailResults.brainworx.sent = true;
-        console.log('✓ Admin email sent to:', BRAINWORX_EMAIL);
-      } else {
-        const error = await adminRes.text();
-        emailResults.brainworx.error = error;
-        console.error('✗ Failed to send admin email:', error);
-      }
+      emailResults.brainworx.sent = true;
+      console.log('✓ Admin email sent to:', BRAINWORX_EMAIL);
     } catch (error) {
       emailResults.brainworx.error = error.message;
       console.error('✗ Error sending admin email:', error);
