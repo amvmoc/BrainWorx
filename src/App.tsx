@@ -13,7 +13,7 @@ import { DisclaimerPage } from './components/DisclaimerPage';
 import { Library } from './components/Library';
 import { PublicBookingPage } from './components/PublicBookingPage';
 import { PublicResultsView } from './components/PublicResultsView';
-import NIP2Assessment from './components/NIP2Assessment';
+import NIP3Assessment from './components/NIP3Assessment';
 import { supabase } from './lib/supabase';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
-  const [showNIP2, setShowNIP2] = useState(false);
+  const [showNIP3, setShowNIP3] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [franchiseData, setFranchiseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -41,9 +41,9 @@ function App() {
   useEffect(() => {
     const currentPath = window.location.pathname;
 
-    // Check for NIP2 route
-    if (currentPath === '/nip2' || currentPath === '/nip2/') {
-      setShowNIP2(true);
+    // Check for NIP3 route
+    if (currentPath === '/nip3' || currentPath === '/nip3/') {
+      setShowNIP3(true);
       return;
     }
 
@@ -896,9 +896,12 @@ function App() {
         </div>
       )}
 
-      {showNIP2 && (
+      {showNIP3 && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-white">
-          <NIP2Assessment />
+          <NIP3Assessment onClose={() => {
+            setShowNIP3(false);
+            window.history.pushState({}, '', window.location.pathname.replace('/nip3', ''));
+          }} />
         </div>
       )}
     </div>

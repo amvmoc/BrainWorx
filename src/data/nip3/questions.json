@@ -1,0 +1,2063 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "I compare my material status unfavorably to others",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 2,
+      "text": "I believe others control my destiny",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 3,
+      "text": "I perceive limited capacity to alter my circumstances",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 4,
+      "text": "I classify humans hierarchically",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 5,
+      "text": "I perceive circumstances as beyond my control",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 6,
+      "text": "My professional or educational setting addresses performance deficiencies constructively",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 7,
+      "text": "I manage finances responsibly",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 8,
+      "text": "Others' opinions regarding me hold significant weight in my self-perception",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 9,
+      "text": "I anticipate recognition for my contributions without solicitation",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 10,
+      "text": "I experience remorse for causing harm",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 11,
+      "text": "I consider myself superior to majority of acquaintances",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 12,
+      "text": "I judge those with differing viewpoints harshly",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 13,
+      "text": "Individuals outside my group possess equal worth",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 14,
+      "text": "I blame others for my difficulties",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 15,
+      "text": "I manipulate information to serve personal objectives",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 16,
+      "text": "I demonstrate intellectual humility",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 17,
+      "text": "I engage in status-driven consumption",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 18,
+      "text": "The institutional mission and objectives resonate with me",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 19,
+      "text": "I experience sustained emotional wellbeing",
+      "nipCode": "NIP09",
+      "reverseScored": true
+    },
+    {
+      "id": 20,
+      "text": "My professional or educational setting exhibits favoritism",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 21,
+      "text": "My professional or educational setting provides comprehensive support systems",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 22,
+      "text": "I recognize when habitual behaviors become detrimental",
+      "nipCode": "NIP18",
+      "reverseScored": true
+    },
+    {
+      "id": 23,
+      "text": "I expect preferential treatment in various contexts",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 24,
+      "text": "My caregiver expressed affection inconsistently",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 25,
+      "text": "I use substances to manage stress",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 26,
+      "text": "My professional or educational setting addresses underperformance swiftly and supportively",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 27,
+      "text": "I replay past offenses mentally",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 28,
+      "text": "I engage in unnecessary expenditure",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 29,
+      "text": "I evade activities outside my established patterns",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 30,
+      "text": "I engage in tobacco or electronic cigarette use",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 31,
+      "text": "My consumption of sweet substances exceeds healthy parameters",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 32,
+      "text": "I appear aged beyond my years",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 33,
+      "text": "Rapid financial gain opportunities attract me",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 34,
+      "text": "I recognize personal agency in outcome creation",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 35,
+      "text": "I accept scientific consensus on established matters",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 36,
+      "text": "I embrace novel perspectives that challenge existing beliefs",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 37,
+      "text": "I perceive financial adequacy in my circumstances",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 38,
+      "text": "I believe my perspectives merit greater consideration than others'",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 39,
+      "text": "I deceive to avoid consequences",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 40,
+      "text": "I experience overwhelming stress",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 41,
+      "text": "My developmental environment promoted secure attachment",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 42,
+      "text": "Intended actions slip from memory immediately after conception",
+      "nipCode": "NIP15",
+      "reverseScored": false
+    },
+    {
+      "id": 43,
+      "text": "My developmental needs went unrecognized",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 44,
+      "text": "I maintain emotional equilibrium consistently",
+      "nipCode": "NIP09",
+      "reverseScored": true
+    },
+    {
+      "id": 45,
+      "text": "I experience difficulty finding motivation",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 46,
+      "text": "Maintaining emotional equilibrium proves challenging",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 47,
+      "text": "My focus shifts unexpectedly during verbal exchanges",
+      "nipCode": "NIP15",
+      "reverseScored": false
+    },
+    {
+      "id": 48,
+      "text": "I maintain belief in inherent unworthiness",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 49,
+      "text": "I distort reality to fit preferred narrative",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 50,
+      "text": "I justify harmful actions through rationalization",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 51,
+      "text": "I commit before considering obligations",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 52,
+      "text": "I make purchases without financial consideration",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 53,
+      "text": "Attention to minute particulars often obscures my grasp of broader objectives",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 54,
+      "text": "I engage in high-risk behaviors without contemplating ramifications",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 55,
+      "text": "I disregard established protocols",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 56,
+      "text": "I release resentment rather than harboring it",
+      "nipCode": "NIP10",
+      "reverseScored": true
+    },
+    {
+      "id": 57,
+      "text": "I construct favorable impressions to mask underlying motives",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 58,
+      "text": "My professional or educational setting's decision-making accounts for wellbeing implications",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 59,
+      "text": "I balance analytical precision with conceptual breadth",
+      "nipCode": "NIP14",
+      "reverseScored": true
+    },
+    {
+      "id": 60,
+      "text": "I experience difficulty releasing grievances",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 61,
+      "text": "I recognize my agency in shaping life direction",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 62,
+      "text": "I miss deadlines frequently",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 63,
+      "text": "I establish distance from emotional intensity",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 64,
+      "text": "I acknowledge errors transparently",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 65,
+      "text": "I manage time effectively",
+      "nipCode": "NIP03",
+      "reverseScored": true
+    },
+    {
+      "id": 66,
+      "text": "I influence outcomes through deliberate effort",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 67,
+      "text": "I exploit others for personal advantage",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 68,
+      "text": "I attribute relationship difficulties to others' failings rather than mutual factors",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 69,
+      "text": "Parental figures demonstrated inconsistent discipline",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 70,
+      "text": "I maintain healthy boundaries regarding material concerns",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 71,
+      "text": "I assume appropriate responsibility for relationship dynamics",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 72,
+      "text": "I recognize situations where victimhood narratives emerge",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 73,
+      "text": "My professional or educational setting exhibits high turnover",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 74,
+      "text": "I disconnect from painful emotions",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 75,
+      "text": "I view others' pain with indifference",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 76,
+      "text": "My caregiver validated my autonomous choices",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 77,
+      "text": "I attribute success to fortunate circumstances",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 78,
+      "text": "I demonstrate fiscal irresponsibility",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 79,
+      "text": "I willingly forgo comforts to provide for others' needs",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 80,
+      "text": "I recognize propaganda techniques readily",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 81,
+      "text": "I fantasize about exceptional achievement recognition",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 82,
+      "text": "My professional or educational setting features defensive leadership",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 83,
+      "text": "I consider collective wellbeing in decision-making",
+      "nipCode": "NIP17",
+      "reverseScored": true
+    },
+    {
+      "id": 84,
+      "text": "My professional or educational setting exhibits systemic dysfunction",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 85,
+      "text": "I engage authentically without pretense",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 86,
+      "text": "I possess aptitude for transforming discarded items into improved versions",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 87,
+      "text": "I cooperate when expectations align with my values",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 88,
+      "text": "I depend on external substances for emotional regulation",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 89,
+      "text": "External circumstances predominantly determine my life trajectory",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 90,
+      "text": "I demonstrate concern for others' suffering",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 91,
+      "text": "Parental figures showed limited emotional attunement",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 92,
+      "text": "Ideological framework offers universal value regardless of demographic",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 93,
+      "text": "Historical texts require contextual interpretation",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 94,
+      "text": "I maintain awareness of contextual frameworks while addressing specifics",
+      "nipCode": "NIP14",
+      "reverseScored": true
+    },
+    {
+      "id": 95,
+      "text": "I demonstrate cognitive flexibility",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 96,
+      "text": "My professional or educational setting tolerates interpersonal toxicity",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 97,
+      "text": "I fabricate narratives to elicit sympathy",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 98,
+      "text": "I accept feedback from supervisors constructively",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 99,
+      "text": "My professional or educational setting operates chaotically",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 100,
+      "text": "Parental figures exhibited emotional unavailability",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 101,
+      "text": "I exercise meaningful influence over life outcomes",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 102,
+      "text": "I undermine leadership initiatives",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 103,
+      "text": "I dismiss perspectives from outside my tradition",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 104,
+      "text": "I maintain fiscal discipline in expenditure decisions",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 105,
+      "text": "My contentment depends upon receiving affection from an ideal partner",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 106,
+      "text": "I monopolize conversational space",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 107,
+      "text": "I recognize personal responsibility in relationship patterns",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 108,
+      "text": "I harbor intense animosity toward certain individuals",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 109,
+      "text": "I recognize patterns where I assume victim status inappropriately",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 110,
+      "text": "I experience diminished capacity for pleasure",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 111,
+      "text": "I require ideological conformity from others",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 112,
+      "text": "I engage authentically with emotional experiences",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 113,
+      "text": "I project false confidence to mask insecurity",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 114,
+      "text": "I hold myself in positive regard",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 115,
+      "text": "I impose my belief system on others",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 116,
+      "text": "I demonstrate consideration for others' needs",
+      "nipCode": "NIP17",
+      "reverseScored": true
+    },
+    {
+      "id": 117,
+      "text": "I possess inherent worth independent of achievement",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 118,
+      "text": "I internalize criticism disproportionately",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 119,
+      "text": "I maintain stable self-worth independent of external validation",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 120,
+      "text": "I harbor resentment toward authority figures from past",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 121,
+      "text": "I demonstrate limited empathy for others' struggles",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 122,
+      "text": "I ruminate on past transgressions against me",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 123,
+      "text": "My professional or educational setting lacks structured conflict resolution mechanisms",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 124,
+      "text": "I engage in problematic gaming patterns",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 125,
+      "text": "I maintain financial reserves for unforeseen circumstances",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 126,
+      "text": "I misrepresent my qualifications",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 127,
+      "text": "My professional or educational setting features individuals who embrace flexibility and innovation",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 128,
+      "text": "I operate in survival mode persistently",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 129,
+      "text": "I struggle integrating detailed information into coherent frameworks",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 130,
+      "text": "I downplay emotional wounds instead of acknowledging their profound impact",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 131,
+      "text": "I maintain convictions despite contradictory evidence",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 132,
+      "text": "My sense of worth fluctuates based on others' validation",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 133,
+      "text": "I maintained self-worth despite childhood adversity",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 134,
+      "text": "I emphasize strategic vision over operational details",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 135,
+      "text": "I concentrate on minute details rather than overarching concepts",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 136,
+      "text": "My developmental experiences fostered healthy autonomy",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 137,
+      "text": "Authority figures in my professional or educational setting shield me from harmful conduct",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 138,
+      "text": "Thought acceleration occurs beyond my capacity for deceleration",
+      "nipCode": "NIP05",
+      "reverseScored": false
+    },
+    {
+      "id": 139,
+      "text": "I disconnect from emotional pain through intellectualization",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 140,
+      "text": "Caregivers validated my emotional experiences",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 141,
+      "text": "My caregivers imposed excessive restrictions",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 142,
+      "text": "I present false persona to gain acceptance",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 143,
+      "text": "My worldview derives from unexamined assumptions",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 144,
+      "text": "I experience depleted energy reserves",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 145,
+      "text": "I maintain intellectual curiosity across domains",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 146,
+      "text": "My professional or educational setting provides psychological security",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 147,
+      "text": "I hold that virtuous individuals shouldn't love someone like me",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 148,
+      "text": "I expect special consideration",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 149,
+      "text": "I experience compulsion to oppose prevailing norms",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 150,
+      "text": "I shape my environment through intentional action",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 151,
+      "text": "I perceive destiny as predetermined",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 152,
+      "text": "I perceive myself as inherently flawed",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 153,
+      "text": "I process and release anger constructively",
+      "nipCode": "NIP10",
+      "reverseScored": true
+    },
+    {
+      "id": 154,
+      "text": "Concentration on overarching frameworks causes me to overlook specific elements",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 155,
+      "text": "I require continuous external validation",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 156,
+      "text": "I overlook crucial details in pursuit of conceptual understanding",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 157,
+      "text": "I challenge directives from authority figures",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 158,
+      "text": "I present idealized self-image on social platforms",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 159,
+      "text": "I frequently initiate actions without adequate forethought",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 160,
+      "text": "I act on impulse without deliberation",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 161,
+      "text": "I recognize when my conduct causes harm to others",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 162,
+      "text": "I struggle to maintain systematic organization",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 163,
+      "text": "I make hasty commitments I later regret",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 164,
+      "text": "I interpret neutral feedback as harsh criticism",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 165,
+      "text": "Parental figures demonstrated conditional affection contingent on compliance",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 166,
+      "text": "I harbor concerns regarding financial security",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 167,
+      "text": "I process grievances and achieve emotional resolution",
+      "nipCode": "NIP10",
+      "reverseScored": true
+    },
+    {
+      "id": 168,
+      "text": "My primary caregiver provided stable presence",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 169,
+      "text": "I experience financial anxiety despite adequacy",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 170,
+      "text": "I perceive myself as regularly subjected to unfair treatment",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 171,
+      "text": "I challenge authority appropriately when warranted",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 172,
+      "text": "My professional or educational setting cultivates mutual respect",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 173,
+      "text": "I experience frequent anger eruptions",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 174,
+      "text": "I misrepresent circumstances to appear favorable",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 175,
+      "text": "I pressure others toward my ideological position",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 176,
+      "text": "I acknowledge personal strengths readily",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 177,
+      "text": "I acknowledge personal agency in relationship outcomes",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 178,
+      "text": "I pause to consider consequences before acting",
+      "nipCode": "NIP07",
+      "reverseScored": true
+    },
+    {
+      "id": 179,
+      "text": "I periodically engage in deliberate self-harm behaviors",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 180,
+      "text": "My self-perception depends heavily on external affirmation",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 181,
+      "text": "I resist feedback from supervisors",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 182,
+      "text": "Financial contributions to relatives stem from obligation rather than choice",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 183,
+      "text": "I struggle with concentration",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 184,
+      "text": "I deliberate thoroughly before acting",
+      "nipCode": "NIP07",
+      "reverseScored": true
+    },
+    {
+      "id": 185,
+      "text": "My caffeine consumption reaches excessive levels",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 186,
+      "text": "I experience chronic emotional heaviness",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 187,
+      "text": "I engage compulsively in behaviors despite negative consequences",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 188,
+      "text": "I experience contentment with available resources",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 189,
+      "text": "I experience anxiety regarding financial status",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 190,
+      "text": "Parental figures demonstrated reliable support",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 191,
+      "text": "I maintain transparent communication",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 192,
+      "text": "I ruminate on embarrassing past incidents",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 193,
+      "text": "I adhere to established practices without questioning their validity",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 194,
+      "text": "I perceive my resources as inferior to those of my peers",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 195,
+      "text": "My guardian demonstrated empathetic understanding",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 196,
+      "text": "Impulse to express my ideas causes me to intrude on others' speech",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 197,
+      "text": "Parental figures modeled healthy relationship dynamics",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 198,
+      "text": "My professional or educational setting features competent leadership",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 199,
+      "text": "I exhibit tolerance for ambiguity",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 200,
+      "text": "I evaluate information sources for credibility",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 201,
+      "text": "I push beyond sustainable limits regularly",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 202,
+      "text": "My upbringing provided consistent emotional support",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 203,
+      "text": "I dominate group dynamics",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 204,
+      "text": "I perpetuate harmful relationship dynamics unconsciously",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 205,
+      "text": "I deflect responsibility for interpersonal discord",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 206,
+      "text": "My cognitive processes operate at accelerated velocity",
+      "nipCode": "NIP05",
+      "reverseScored": false
+    },
+    {
+      "id": 207,
+      "text": "I struggle completing multi-step tasks",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 208,
+      "text": "I fabricate accomplishments in conversation",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 209,
+      "text": "I prioritize my interests above collective welfare",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 210,
+      "text": "I withhold information strategically",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 211,
+      "text": "I exercise restraint in decision-making processes",
+      "nipCode": "NIP07",
+      "reverseScored": true
+    },
+    {
+      "id": 212,
+      "text": "I aspire to achieve superiority across all domains",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 213,
+      "text": "I believe others perceive me as inadequate",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 214,
+      "text": "I exercise control over behavioral responses",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 215,
+      "text": "My professional or educational setting supports professional development",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 216,
+      "text": "Fear of social ostracism inhibits my conviction expression",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 217,
+      "text": "I manipulate through strategic emotional displays",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 218,
+      "text": "I require admiration to maintain self-concept",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 219,
+      "text": "Aggressive behavior toward others is permissible if they appear to enjoy it",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 220,
+      "text": "My professional or educational setting offers belonging and recognition",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 221,
+      "text": "I conform to peer expectations despite personal misgivings",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 222,
+      "text": "I perceive vulnerability as weakness",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 223,
+      "text": "I engage in behavioral patterns that harm wellbeing",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 224,
+      "text": "Parental figures encouraged autonomous decision-making",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 225,
+      "text": "I hold beliefs inherited without examination",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 226,
+      "text": "I resist reconsidering longstanding convictions",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 227,
+      "text": "Physical tension persists despite relaxation attempts",
+      "nipCode": "NIP05",
+      "reverseScored": false
+    },
+    {
+      "id": 228,
+      "text": "Adherence to traditional interpretation supersedes individual conscience",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 229,
+      "text": "I admit wrongdoing without deflection",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 230,
+      "text": "I sabotage collaborative efforts",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 231,
+      "text": "My professional or educational setting lacks clear communication",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 232,
+      "text": "I maintained positive self-concept despite adversity",
+      "nipCode": "NIP02",
+      "reverseScored": true
+    },
+    {
+      "id": 233,
+      "text": "I struggle with temporal management",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 234,
+      "text": "I access and express emotions appropriately",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 235,
+      "text": "I resist ideological evolution",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 236,
+      "text": "I notice when adopting powerless positioning",
+      "nipCode": "NIP12",
+      "reverseScored": true
+    },
+    {
+      "id": 237,
+      "text": "Authority figures in my professional or educational setting react defensively to corrective input",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 238,
+      "text": "I experience pervasive worry",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 239,
+      "text": "I enforce rigid adherence to traditional frameworks",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 240,
+      "text": "I create conflict with authority figures",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 241,
+      "text": "I experienced trauma from sexual violation",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 242,
+      "text": "I consider others' perspectives equal to mine",
+      "nipCode": "NIP17",
+      "reverseScored": true
+    },
+    {
+      "id": 243,
+      "text": "I blame circumstances rather than examining personal contribution",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 244,
+      "text": "I lack confidence in personal agency",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 245,
+      "text": "I encounter those holding different values with curiosity",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 246,
+      "text": "I require ideological purity from associates",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 247,
+      "text": "I adhere rigidly to familiar methodologies",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 248,
+      "text": "I maintain openness to paradigm revision",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 249,
+      "text": "I respect established guidelines",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 250,
+      "text": "I feel helpless to improve situations",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 251,
+      "text": "I maintain anger toward former romantic partners",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 252,
+      "text": "I perceive recurring betrayal patterns",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 253,
+      "text": "Donations to faith or cultural institutions arise from duty rather than desire",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 254,
+      "text": "I dismiss evidence contradicting established beliefs",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 255,
+      "text": "I prioritize logic over emotional awareness",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 256,
+      "text": "I experience compassion for those experiencing hardship",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 257,
+      "text": "I dismiss others' emotional expressions as excessive",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 258,
+      "text": "I procrastinate on essential responsibilities",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 259,
+      "text": "I exercise control over my responses to circumstances",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 260,
+      "text": "I feel powerless to change negative patterns",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 261,
+      "text": "I attract individuals who exploit my generosity",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 262,
+      "text": "I interrupt others due to impatience",
+      "nipCode": "NIP07",
+      "reverseScored": false
+    },
+    {
+      "id": 263,
+      "text": "Excessive stimulation triggers irritability in me",
+      "nipCode": "NIP05",
+      "reverseScored": false
+    },
+    {
+      "id": 264,
+      "text": "I distort facts to avoid accountability",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 265,
+      "text": "I maintain perpetual alertness for potential threats",
+      "nipCode": "NIP05",
+      "reverseScored": false
+    },
+    {
+      "id": 266,
+      "text": "I lack structured approach to responsibilities",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 267,
+      "text": "Acquiring premium possessions holds significance for me",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 268,
+      "text": "I experience mood instability",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 269,
+      "text": "I exaggerate accomplishments habitually",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 270,
+      "text": "I acknowledge emotional states openly",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 271,
+      "text": "I employ deception strategically in negotiations",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 272,
+      "text": "Comprehensive examination of all elements precedes my viewpoint formation",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 273,
+      "text": "I engage constructively with legitimate authority",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 274,
+      "text": "I achieve restful states readily",
+      "nipCode": "NIP05",
+      "reverseScored": true
+    },
+    {
+      "id": 275,
+      "text": "I become overwhelmed by organizational demands",
+      "nipCode": "NIP03",
+      "reverseScored": false
+    },
+    {
+      "id": 276,
+      "text": "I reflexively oppose institutional directives",
+      "nipCode": "NIP16",
+      "reverseScored": false
+    },
+    {
+      "id": 277,
+      "text": "I adopt helpless stance reflexively",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 278,
+      "text": "My caregivers prioritized their needs over mine",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 279,
+      "text": "I conduct myself with genuine integrity",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 280,
+      "text": "I pursue addictive patterns compulsively",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 281,
+      "text": "I mentally compose vindictive communications",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 282,
+      "text": "My professional or educational setting prioritizes authentic communication",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 283,
+      "text": "Absence of consistent sleep aid availability triggers distress",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 284,
+      "text": "I pursue objectives with minimal regard for interpersonal impact",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 285,
+      "text": "Resource maintenance falls outside my perceived responsibilities",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 286,
+      "text": "I maintain emotional availability in relationships",
+      "nipCode": "NIP08",
+      "reverseScored": true
+    },
+    {
+      "id": 287,
+      "text": "I experience scarcity mentality",
+      "nipCode": "NIP13",
+      "reverseScored": false
+    },
+    {
+      "id": 288,
+      "text": "I maintain grudges for extended periods",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 289,
+      "text": "I synthesize information from diverse sources effectively",
+      "nipCode": "NIP14",
+      "reverseScored": true
+    },
+    {
+      "id": 290,
+      "text": "I experience persistent melancholy",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 291,
+      "text": "I acknowledge personal shortcomings honestly",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 292,
+      "text": "I believe myself unworthy of love",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 293,
+      "text": "I manipulate others through selective truth-telling",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 294,
+      "text": "Sacred texts merit literal interpretation exclusively",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 295,
+      "text": "My professional or educational setting fosters psychological safety",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 296,
+      "text": "I rehearse angry confrontations mentally",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 297,
+      "text": "I maintain sustained attention on designated tasks",
+      "nipCode": "NIP15",
+      "reverseScored": true
+    },
+    {
+      "id": 298,
+      "text": "I acknowledge personal failings readily",
+      "nipCode": "NIP20",
+      "reverseScored": true
+    },
+    {
+      "id": 299,
+      "text": "I comply with directives willingly",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 300,
+      "text": "I question my deservingness of positive regard",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 301,
+      "text": "I exhibit signs of chronic exhaustion",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 302,
+      "text": "I become paralyzed by excessive detail analysis",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 303,
+      "text": "I avoid vulnerable emotional expression",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 304,
+      "text": "I attribute outcomes to factors within my sphere of influence",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 305,
+      "text": "I miss forest for trees habitually",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 306,
+      "text": "I experience acute anxiety episodes",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 307,
+      "text": "Maintaining concentration during extended informational exposure proves challenging",
+      "nipCode": "NIP15",
+      "reverseScored": false
+    },
+    {
+      "id": 308,
+      "text": "My professional or educational setting lacks accountability",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 309,
+      "text": "I fixate on minutiae while missing broader implications",
+      "nipCode": "NIP14",
+      "reverseScored": false
+    },
+    {
+      "id": 310,
+      "text": "I welcome perspectives that challenge my worldview",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 311,
+      "text": "I possess adequate capabilities and resources for competent task execution",
+      "nipCode": "NIP01",
+      "reverseScored": true
+    },
+    {
+      "id": 312,
+      "text": "I seek vengeance for perceived wrongs",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 313,
+      "text": "My capacity for experiencing pleasure appears to be diminishing",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 314,
+      "text": "I exhibit responsible stewardship of resources",
+      "nipCode": "NIP13",
+      "reverseScored": true
+    },
+    {
+      "id": 315,
+      "text": "My professional or educational setting features individuals resistant to alternative approaches",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 316,
+      "text": "I doubt my capabilities persistently",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 317,
+      "text": "I excel at persuading others to acknowledge their errors",
+      "nipCode": "NIP17",
+      "reverseScored": false
+    },
+    {
+      "id": 318,
+      "text": "I prioritize others' emotional needs over acknowledging mine",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 319,
+      "text": "I suppress emotional responses habitually",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 320,
+      "text": "Parental figures demonstrated conditional acceptance",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 321,
+      "text": "I initiate numerous activities yet seldom finish prior to transitioning elsewhere",
+      "nipCode": "NIP15",
+      "reverseScored": false
+    },
+    {
+      "id": 322,
+      "text": "I perceive myself as perpetually disadvantaged",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 323,
+      "text": "I engage with ideological opponents respectfully",
+      "nipCode": "NIP06",
+      "reverseScored": true
+    },
+    {
+      "id": 324,
+      "text": "I possess agency to modify adverse circumstances",
+      "nipCode": "NIP11",
+      "reverseScored": true
+    },
+    {
+      "id": 325,
+      "text": "Investigating underlying workplace or academic discord sources depletes my capacity",
+      "nipCode": "NIP01",
+      "reverseScored": false
+    },
+    {
+      "id": 326,
+      "text": "I lack emotional response to others' distress",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 327,
+      "text": "I attribute life outcomes primarily to external forces",
+      "nipCode": "NIP11",
+      "reverseScored": false
+    },
+    {
+      "id": 328,
+      "text": "I perceive myself as fundamentally inadequate",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 329,
+      "text": "I effectively prioritize competing demands",
+      "nipCode": "NIP03",
+      "reverseScored": true
+    },
+    {
+      "id": 330,
+      "text": "I experience fatigue disproportionate to my chronological age",
+      "nipCode": "NIP19",
+      "reverseScored": false
+    },
+    {
+      "id": 331,
+      "text": "I harbor persistent resentment toward specific individuals",
+      "nipCode": "NIP10",
+      "reverseScored": false
+    },
+    {
+      "id": 332,
+      "text": "I experience shame regarding appearance",
+      "nipCode": "NIP02",
+      "reverseScored": false
+    },
+    {
+      "id": 333,
+      "text": "My analgesic consumption occasionally exceeds prescribed limits",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    },
+    {
+      "id": 334,
+      "text": "Caregivers established appropriate behavioral boundaries",
+      "nipCode": "NIP04",
+      "reverseScored": true
+    },
+    {
+      "id": 335,
+      "text": "I demonstrate appropriate deference",
+      "nipCode": "NIP16",
+      "reverseScored": true
+    },
+    {
+      "id": 336,
+      "text": "I exhibit resistance to paradigm shifts",
+      "nipCode": "NIP06",
+      "reverseScored": false
+    },
+    {
+      "id": 337,
+      "text": "I implement effective organizational systems",
+      "nipCode": "NIP03",
+      "reverseScored": true
+    },
+    {
+      "id": 338,
+      "text": "I pursue immediate gratification through substances or behaviors",
+      "nipCode": "NIP18",
+      "reverseScored": false
+    },
+    {
+      "id": 339,
+      "text": "I adopt powerless stance in conflicts",
+      "nipCode": "NIP12",
+      "reverseScored": false
+    },
+    {
+      "id": 340,
+      "text": "I maintain emotional guardedness in relationships",
+      "nipCode": "NIP08",
+      "reverseScored": false
+    },
+    {
+      "id": 341,
+      "text": "My guardian figures imposed their aspirations upon me",
+      "nipCode": "NIP04",
+      "reverseScored": false
+    },
+    {
+      "id": 342,
+      "text": "I project authenticity while concealing true intentions",
+      "nipCode": "NIP20",
+      "reverseScored": false
+    },
+    {
+      "id": 343,
+      "text": "Achieving restful sleep proves difficult",
+      "nipCode": "NIP09",
+      "reverseScored": false
+    }
+  ],
+  "totalQuestions": 343
+}
