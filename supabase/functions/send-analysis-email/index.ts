@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createTransport } from "npm:nodemailer@6.9.7";
+import { generateComprehensiveCoachReport } from "./comprehensive-coach-report.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -180,132 +181,15 @@ Deno.serve(async (req: Request) => {
       </html>
     `;
 
-    const generateCoachReportForEmail = () => {
-      return `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>BrainWorx Assessment - Coach Notification</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f1f5f9;">
-          <div style="max-width: 800px; margin: 0 auto; background: white;">
-
-            <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); color: white; padding: 40px; text-align: center;">
-              <div style="font-size: 36px; margin-bottom: 12px;">🧠</div>
-              <h1 style="margin: 0 0 12px 0; font-size: 32px; font-weight: 800;">New Assessment Completed</h1>
-              <p style="margin: 0; font-size: 18px; opacity: 0.9;">BrainWorx Neural Imprint Pattern Assessment</p>
-            </div>
-
-            <div style="padding: 32px; background: #f8fafc;">
-              <h2 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #0f172a;">Client Information</h2>
-              <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                  <div>
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">CLIENT NAME</div>
-                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${customerName}</div>
-                  </div>
-                  <div>
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">CLIENT EMAIL</div>
-                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${customerEmail}</div>
-                  </div>
-                  ${franchiseOwnerEmail ? `
-                  <div>
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">FRANCHISE OWNER</div>
-                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${franchiseOwnerName}</div>
-                  </div>
-                  ` : ''}
-                  <div>
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">COMPLETION DATE</div>
-                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${new Date().toLocaleDateString()}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style="padding: 32px;">
-              <div style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); color: white; border-radius: 16px; padding: 32px; text-align: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
-                <h2 style="margin: 0 0 16px 0; font-size: 20px; opacity: 0.95;">Overall Performance Score</h2>
-                <div style="font-size: 56px; font-weight: 800; line-height: 1;">${analysis.overallScore}%</div>
-                <p style="margin: 12px 0 0 0; font-size: 16px; opacity: 0.9;">
-                  ${analysis.overallScore >= 70 ? 'High Intensity Profile' : analysis.overallScore >= 40 ? 'Moderate Intensity Profile' : 'Balanced Profile'}
-                </p>
-              </div>
-            </div>
-
-            <div style="padding: 0 32px 32px 32px;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                <div style="background: #dcfce7; border-radius: 12px; padding: 20px; border: 2px solid #86efac;">
-                  <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #14532d;">✓ Top Strengths</h3>
-                  <ul style="margin: 0; padding-left: 20px; color: #15803d;">
-                    ${analysis.strengths.map(s => `<li style="margin-bottom: 6px;">${s}</li>`).join('')}
-                  </ul>
-                </div>
-                <div style="background: #fee2e2; border-radius: 12px; padding: 20px; border: 2px solid #fca5a5;">
-                  <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #7f1d1d;">→ Areas for Growth</h3>
-                  <ul style="margin: 0; padding-left: 20px; color: #991b1b;">
-                    ${analysis.areasForGrowth.map(a => `<li style="margin-bottom: 6px;">${a}</li>`).join('')}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div style="padding: 0 32px 32px 32px;">
-              <div style="background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 24px;">
-                <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #78350f;">📋 Key Recommendations</h3>
-                <ul style="margin: 0; padding-left: 20px; color: #78350f;">
-                  ${analysis.recommendations.map(r => `<li style="margin-bottom: 6px;">${r}</li>`).join('')}
-                </ul>
-              </div>
-            </div>
-
-            <div style="padding: 0 32px 32px 32px;">
-              <div style="background: #e0f2fe; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 24px;">
-                <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #1e40af;">🎯 Next Steps</h3>
-                <p style="margin: 0 0 12px 0; color: #1e3a8a;">This prospect is ready for a consultation. Review their full results and follow up within 24-48 hours for optimal engagement.</p>
-                <div style="text-align: center; margin-top: 20px;">
-                  <a href="${resultsUrl}" style="display: inline-block; padding: 12px 28px; background: #3b82f6; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);">
-                    View Full Assessment Results
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div style="padding: 0 32px 32px 32px;">
-              <div style="background: #fff5e6; border-radius: 8px; padding: 20px;">
-                <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #78350f;">🔗 Important Links</h3>
-                <div style="margin-bottom: 8px;">
-                  <div style="font-size: 14px; color: #92400e; font-weight: 600;">Customer Results Link:</div>
-                  <a href="${resultsUrl}" style="color: #3b82f6; word-break: break-all; font-size: 14px;">${resultsUrl}</a>
-                </div>
-                ${bookingUrl !== SITE_URL ? `
-                <div style="margin-top: 12px;">
-                  <div style="font-size: 14px; color: #92400e; font-weight: 600;">Booking Page:</div>
-                  <a href="${bookingUrl}" style="color: #3b82f6; font-size: 14px;">${bookingUrl}</a>
-                </div>
-                ` : ''}
-              </div>
-            </div>
-
-            <div style="background: #0f172a; color: white; padding: 32px; text-align: center;">
-              <div style="font-size: 13px; margin-bottom: 12px; opacity: 0.9;">
-                <strong>PROFESSIONAL NOTIFICATION</strong><br>
-                This assessment has been completed and is ready for your review.
-              </div>
-              <div style="font-size: 11px; opacity: 0.7;">
-                © ${new Date().getFullYear()} BrainWorx. All rights reserved.<br>
-                Transform Your Mind, Reach The World
-              </div>
-            </div>
-
-          </div>
-        </body>
-        </html>
-      `;
-    };
-
-    const franchiseEmailBody = generateCoachReportForEmail();
+    const franchiseEmailBody = generateComprehensiveCoachReport(
+      customerName,
+      customerEmail,
+      franchiseOwnerName,
+      analysis,
+      resultsUrl,
+      bookingUrl,
+      SITE_URL
+    );
 
     const GMAIL_USER = "payments@brainworx.co.za";
     const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
@@ -346,7 +230,7 @@ Deno.serve(async (req: Request) => {
         await transporter.sendMail({
           from: `BrainWorx <${GMAIL_USER}>`,
           to: franchiseOwnerEmail,
-          subject: "New Prospect Assessment Completed",
+          subject: `NIP Assessment Report - ${customerName} - Comprehensive Coach Analysis`,
           html: franchiseEmailBody,
         });
 
@@ -362,7 +246,7 @@ Deno.serve(async (req: Request) => {
       await transporter.sendMail({
         from: `BrainWorx <${GMAIL_USER}>`,
         to: BRAINWORX_EMAIL,
-        subject: "New Prospect Assessment Completed",
+        subject: `NIP Assessment Report - ${customerName} - Comprehensive Coach Analysis`,
         html: franchiseEmailBody,
       });
 
@@ -377,7 +261,7 @@ Deno.serve(async (req: Request) => {
       await transporter.sendMail({
         from: `BrainWorx <${GMAIL_USER}>`,
         to: 'kobus@brainworx.co.za',
-        subject: "New Prospect Assessment Completed",
+        subject: `NIP Assessment Report - ${customerName} - Comprehensive Coach Analysis`,
         html: franchiseEmailBody,
       });
 
