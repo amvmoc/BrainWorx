@@ -54,6 +54,14 @@ function App() {
       return;
     }
 
+    // Check for booking link with path-based routing
+    const bookingMatch = currentPath.match(/\/book\/([a-zA-Z0-9]+)/);
+    if (bookingMatch && bookingMatch[1]) {
+      setBookingFranchiseCode(bookingMatch[1]);
+      setShowBooking(true);
+      return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const verifyToken = urlParams.get('verify_token');
     const fhCode = urlParams.get('fh');

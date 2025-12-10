@@ -128,11 +128,19 @@ Deno.serve(async (req: Request) => {
       day: 'numeric'
     });
 
+    // CRITICAL: Generate PDF report - this MUST always be included in the customer email
+    console.log('Generating PDF report for:', customerName);
     const pdfBuffer = await generateAdvancedPDF(
       customerName,
       analysis,
       completionDate
     );
+
+    if (!pdfBuffer || pdfBuffer.length === 0) {
+      throw new Error('PDF generation failed - buffer is empty');
+    }
+
+    console.log('✓ PDF generated successfully. Size:', pdfBuffer.length, 'bytes');
 
     const GMAIL_USER = "payments@brainworx.co.za";
     const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
@@ -154,7 +162,11 @@ Deno.serve(async (req: Request) => {
       brainworxClient: { sent: false, error: null as string | null }
     };
 
+    // CRITICAL: Send customer email with PDF attachment
     try {
+      const pdfFilename = `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`;
+      console.log('Sending customer email with PDF attachment:', pdfFilename);
+
       await transporter.sendMail({
         from: `BrainWorx <${GMAIL_USER}>`,
         to: customerEmail,
@@ -162,7 +174,7 @@ Deno.serve(async (req: Request) => {
         html: customerEmailBody,
         attachments: [
           {
-            filename: `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`,
+            filename: pdfFilename,
             content: pdfBuffer,
             contentType: 'application/pdf'
           }
@@ -170,7 +182,8 @@ Deno.serve(async (req: Request) => {
       });
 
       emailResults.customer.sent = true;
-      console.log('✓ Customer email sent to:', customerEmail);
+      console.log('✓ Customer email sent successfully to:', customerEmail);
+      console.log('✓ PDF attachment included:', pdfFilename);
     } catch (error) {
       emailResults.customer.error = error.message;
       console.error('✗ Error sending customer email:', error);
@@ -208,7 +221,11 @@ Deno.serve(async (req: Request) => {
       console.error('✗ Error sending admin coach report email:', error);
     }
 
+    // CRITICAL: Send admin client report with PDF attachment
     try {
+      const pdfFilename = `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`;
+      console.log('Sending admin client report with PDF attachment:', pdfFilename);
+
       await transporter.sendMail({
         from: `BrainWorx <${GMAIL_USER}>`,
         to: BRAINWORX_EMAIL,
@@ -216,7 +233,7 @@ Deno.serve(async (req: Request) => {
         html: customerEmailBody,
         attachments: [
           {
-            filename: `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`,
+            filename: pdfFilename,
             content: pdfBuffer,
             contentType: 'application/pdf'
           }
@@ -225,6 +242,7 @@ Deno.serve(async (req: Request) => {
 
       emailResults.brainworxClient.sent = true;
       console.log('✓ Admin client report email sent to:', BRAINWORX_EMAIL);
+      console.log('✓ PDF attachment included:', pdfFilename);
     } catch (error) {
       emailResults.brainworxClient.error = error.message;
       console.error('✗ Error sending admin client report email:', error);
