@@ -152,6 +152,23 @@ export function CustomerBookingCalendar({ franchiseOwnerId, franchiseOwnerName, 
 
     setSubmitting(true);
     try {
+      // Check if customer already has a booking with this franchise owner
+      const { data: existingBookings, error: checkError } = await supabase
+        .from('bookings')
+        .select('id, booking_date, start_time, status')
+        .eq('franchise_owner_id', franchiseOwnerId)
+        .eq('customer_email', formData.customer_email.toLowerCase().trim())
+        .in('status', ['pending', 'confirmed']);
+
+      if (checkError) throw checkError;
+
+      if (existingBookings && existingBookings.length > 0) {
+        const booking = existingBookings[0];
+        alert(`You already have a booking scheduled for ${booking.booking_date} at ${booking.start_time}. Each customer can only have one active booking at a time. Please contact us if you need to reschedule.`);
+        setSubmitting(false);
+        return;
+      }
+
       const dateStr = selectedDate.toISOString().split('T')[0];
       const startTime = selectedTimeSlot;
       const [hours] = startTime.split(':');
@@ -174,8 +191,8 @@ export function CustomerBookingCalendar({ franchiseOwnerId, franchiseOwnerName, 
         .from('bookings')
         .insert({
           franchise_owner_id: franchiseOwnerId,
-          customer_name: formData.customer_name,
-          customer_email: formData.customer_email,
+          customer_name: formData.customer_name.trim(),
+          customer_email: formData.customer_email.toLowerCase().trim(),
           customer_phone: formData.customer_phone || null,
           booking_date: dateStr,
           start_time: startTime,
