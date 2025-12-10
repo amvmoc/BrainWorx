@@ -54,11 +54,18 @@ export function InvoicesPage({ franchiseOwnerId }: InvoicesPageProps) {
   const loadInvoices = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from('invoices')
-        .select('*')
-        .eq('franchise_owner_id', franchiseOwnerId)
-        .order('created_at', { ascending: false });
+        .select('*');
+
+      // Super admin sees all invoices, regular users see only their own
+      if (franchiseOwnerId !== 'super_admin_all') {
+        query = query.eq('franchise_owner_id', franchiseOwnerId);
+      }
+
+      query = query.order('created_at', { ascending: false });
+
+      const { data, error } = await query;
 
       if (error) throw error;
       setInvoices(data || []);
