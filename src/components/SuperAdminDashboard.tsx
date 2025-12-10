@@ -671,9 +671,9 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
               </button>
             </div>
             {calendarTab === 'bookings' ? (
-              <BookingManagement franchiseOwnerId={franchiseOwnerId} />
+              <BookingManagement franchiseOwnerId="super_admin_all" />
             ) : (
-              <CalendarManagement franchiseOwnerId={franchiseOwnerId} />
+              <CalendarManagement franchiseOwnerId="super_admin_all" />
             )}
           </div>
         )}
