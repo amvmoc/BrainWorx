@@ -168,6 +168,7 @@ function App() {
     if (franchiseData.is_super_admin) {
       return (
         <SuperAdminDashboard
+          franchiseOwnerId={currentUser.id}
           franchiseOwnerName={franchiseData.name}
           onLogout={() => {
             supabase.auth.signOut();

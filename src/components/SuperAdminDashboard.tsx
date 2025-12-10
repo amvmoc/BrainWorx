@@ -15,6 +15,7 @@ import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface SuperAdminDashboardProps {
+  franchiseOwnerId: string;
   franchiseOwnerName: string;
   onLogout: () => void;
 }
@@ -34,7 +35,7 @@ interface SalesLog {
   };
 }
 
-export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdminDashboardProps) {
+export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLogout }: SuperAdminDashboardProps) {
   const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'invoices' | 'calendar' | 'users' | 'library' | 'coupons' | 'visitor_view' | 'tests'>('overview');
   const [calendarTab, setCalendarTab] = useState<'availability' | 'bookings'>('bookings');
   const [salesLogs, setSalesLogs] = useState<SalesLog[]>([]);
@@ -670,9 +671,9 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
               </button>
             </div>
             {calendarTab === 'bookings' ? (
-              <BookingManagement franchiseOwnerId="super_admin_all" />
+              <BookingManagement franchiseOwnerId={franchiseOwnerId} />
             ) : (
-              <CalendarManagement franchiseOwnerId="super_admin_all" />
+              <CalendarManagement franchiseOwnerId={franchiseOwnerId} />
             )}
           </div>
         )}
