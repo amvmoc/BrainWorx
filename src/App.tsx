@@ -44,6 +44,7 @@ function App() {
     // Check for NIP3 route
     if (currentPath === '/nip3' || currentPath === '/nip3/') {
       setShowNIP3(true);
+      setLoading(false);
       return;
     }
 
@@ -51,6 +52,7 @@ function App() {
 
     if (resultsMatch && resultsMatch[1]) {
       setShareToken(resultsMatch[1]);
+      setLoading(false);
       return;
     }
 
@@ -59,6 +61,7 @@ function App() {
     if (bookingMatch && bookingMatch[1]) {
       setBookingFranchiseCode(bookingMatch[1]);
       setShowBooking(true);
+      setLoading(false);
       return;
     }
 
@@ -81,6 +84,7 @@ function App() {
     if (bookCode) {
       setBookingFranchiseCode(bookCode);
       setShowBooking(true);
+      setLoading(false);
       return;
     }
 
