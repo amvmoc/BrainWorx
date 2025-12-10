@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createTransport } from "npm:nodemailer@6.9.7";
 import { generateComprehensiveCoachReport } from "./comprehensive-coach-report.ts";
 import { generateClientReport } from "./client-report.ts";
+import { generateAdvancedPDF } from "./pdf-generator.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -121,6 +122,18 @@ Deno.serve(async (req: Request) => {
       SITE_URL
     );
 
+    const completionDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const pdfBuffer = await generateAdvancedPDF(
+      customerName,
+      analysis,
+      completionDate
+    );
+
     const GMAIL_USER = "payments@brainworx.co.za";
     const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
 
@@ -147,6 +160,13 @@ Deno.serve(async (req: Request) => {
         to: customerEmail,
         subject: "Your BrainWorx Neural Imprint Patterns Assessment Results",
         html: customerEmailBody,
+        attachments: [
+          {
+            filename: `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`,
+            content: pdfBuffer,
+            contentType: 'application/pdf'
+          }
+        ]
       });
 
       emailResults.customer.sent = true;
@@ -194,6 +214,13 @@ Deno.serve(async (req: Request) => {
         to: BRAINWORX_EMAIL,
         subject: `NIP Client Report - ${customerName} - Assessment Results`,
         html: customerEmailBody,
+        attachments: [
+          {
+            filename: `BrainWorx_Report_${customerName.replace(/\s+/g, '_')}.pdf`,
+            content: pdfBuffer,
+            contentType: 'application/pdf'
+          }
+        ]
       });
 
       emailResults.brainworxClient.sent = true;
