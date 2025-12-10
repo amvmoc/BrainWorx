@@ -80,7 +80,8 @@ export async function generateAdvancedPDF(
   doc.setFontSize(10);
   doc.setFont(undefined, 'normal');
 
-  sortedPatterns.slice(0, 10).forEach((pattern: any) => {
+  // Show ALL 20 patterns
+  sortedPatterns.forEach((pattern: any) => {
     if (yPos > 270) {
       doc.addPage();
       yPos = 20;
@@ -88,7 +89,7 @@ export async function generateAdvancedPDF(
 
     // Pattern code and score
     doc.text(`${pattern.code}: ${pattern.score}%`, 25, yPos);
-    
+
     // Draw bar
     const barWidth = (pattern.score / 100) * 150;
     let barColor: [number, number, number] = [200, 200, 200];
@@ -98,7 +99,7 @@ export async function generateAdvancedPDF(
 
     doc.setFillColor(...barColor);
     doc.rect(25, yPos + 2, barWidth, 4, 'F');
-    
+
     yPos += 10;
   });
 
