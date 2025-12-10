@@ -22,6 +22,7 @@ interface CalendarManagementProps {
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export function CalendarManagement({ franchiseOwnerId, franchiseOwnerCode }: CalendarManagementProps) {
+  const isSuperAdmin = franchiseOwnerId === 'super_admin_all';
   const [activeTab, setActiveTab] = useState<'calendar' | 'recurring' | '72hours'>('calendar');
   const [copiedBookingLink, setCopiedBookingLink] = useState(false);
   const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
@@ -37,10 +38,15 @@ export function CalendarManagement({ franchiseOwnerId, franchiseOwnerCode }: Cal
   });
 
   useEffect(() => {
-    loadAvailability();
-  }, [franchiseOwnerId]);
+    if (!isSuperAdmin) {
+      loadAvailability();
+    } else {
+      setLoading(false);
+    }
+  }, [franchiseOwnerId, isSuperAdmin]);
 
   const loadAvailability = async () => {
+    if (isSuperAdmin) return;
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -62,6 +68,11 @@ export function CalendarManagement({ franchiseOwnerId, franchiseOwnerCode }: Cal
   };
 
   const handleAddSlot = async () => {
+    if (isSuperAdmin) {
+      alert('Super admins cannot manage availability. This feature is for franchise owners only.');
+      return;
+    }
+
     if (!newSlot.start_time || !newSlot.end_time) {
       alert('Please fill in all required fields');
       return;
