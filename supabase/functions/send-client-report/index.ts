@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createTransport } from "npm:nodemailer@6.9.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,13 +14,14 @@ interface PatternData {
 }
 
 interface ClientReportRequest {
-  customerName: string;
-  customerEmail: string;
+  customerName?: string;
+  customerEmail?: string;
   franchiseOwnerEmail?: string;
   franchiseOwnerName?: string;
-  assessmentDate: string;
-  totalQuestions: number;
-  patterns: Record<string, PatternData>;
+  assessmentDate?: string;
+  totalQuestions?: number;
+  patterns?: Record<string, PatternData>;
+  responseId?: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -31,15 +33,100 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const {
-      customerName,
-      customerEmail,
-      franchiseOwnerEmail,
-      franchiseOwnerName,
-      assessmentDate,
-      totalQuestions,
-      patterns
-    }: ClientReportRequest = await req.json();
+    const requestData: ClientReportRequest = await req.json();
+
+    let customerName: string;
+    let customerEmail: string;
+    let franchiseOwnerCode: string | null = null;
+    let assessmentDate: string;
+    let totalQuestions: number;
+    let patterns: Record<string, PatternData>;
+
+    if (requestData.responseId) {
+      const { createClient } = await import('npm:@supabase/supabase-js@2.39.0');
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { data: response, error: responseError } = await supabase
+        .from('responses')
+        .select('customer_name, customer_email, answers, completed_at, franchise_owner_id')
+        .eq('id', requestData.responseId)
+        .single();
+
+      if (responseError || !response) {
+        throw new Error('Response not found');
+      }
+
+      customerName = response.customer_name;
+      customerEmail = response.customer_email;
+      assessmentDate = new Date(response.completed_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      totalQuestions = Object.keys(response.answers).length;
+
+      const calculatePatternScore = (answers: any, patternCode: string): number => {
+        const patternAnswers = Object.entries(answers).filter(([key]) =>
+          key.startsWith(patternCode)
+        );
+        if (patternAnswers.length === 0) return 0;
+        const total = patternAnswers.reduce((sum, [, value]) => sum + (value as number), 0);
+        return Math.round((total / (patternAnswers.length * 4)) * 100);
+      };
+
+      const patternNames: Record<string, { name: string; description: string }> = {
+        DIS: { name: 'Distraction', description: 'Difficulty maintaining focus and attention' },
+        HYP: { name: 'Hyperactivity', description: 'Excessive physical or mental restlessness' },
+        ANG: { name: 'Anger', description: 'Difficulty managing angry emotions' },
+        BURN: { name: 'Burnout', description: 'Physical and emotional exhaustion' },
+        ORG: { name: 'Disorganization', description: 'Difficulty with planning and organization' },
+        FOC: { name: 'Focus', description: 'Trouble maintaining concentration' },
+        SHT: { name: 'Short-term Memory', description: 'Difficulty retaining recent information' },
+        TRAP: { name: 'Trapped', description: 'Feeling stuck or unable to move forward' },
+        IMP: { name: 'Impulsivity', description: 'Acting without thinking' },
+        RES: { name: 'Restlessness', description: 'Constant need to be in motion' },
+        CPL: { name: 'Completion', description: 'Difficulty finishing tasks' },
+        NEGP: { name: 'Negative Perception', description: 'Tendency toward negative thinking' },
+        NUH: { name: 'Not Understanding Hardwires', description: 'Lack of self-awareness' },
+        DOG: { name: 'Dogged', description: 'Excessive persistence despite futility' },
+        INFL: { name: 'Inflexibility', description: 'Resistance to change' },
+        BULLY: { name: 'Bullying', description: 'Aggressive or dominating behavior' },
+        LACK: { name: 'Lack of Empathy', description: 'Difficulty understanding others\' feelings' },
+        DIM: { name: 'Diminished Self-worth', description: 'Low self-esteem' },
+        INWF: { name: 'Inward Focus', description: 'Excessive self-preoccupation' },
+        DEC: { name: 'Deception', description: 'Dishonesty or lack of truthfulness' }
+      };
+
+      patterns = {};
+      for (const [code, info] of Object.entries(patternNames)) {
+        const score = calculatePatternScore(response.answers, code);
+        patterns[info.name] = {
+          score,
+          code,
+          description: info.description
+        };
+      }
+
+      if (response.franchise_owner_id) {
+        const { data: franchiseOwner } = await supabase
+          .from('franchise_owners')
+          .select('unique_link_code')
+          .eq('id', response.franchise_owner_id)
+          .single();
+
+        if (franchiseOwner) {
+          franchiseOwnerCode = franchiseOwner.unique_link_code;
+        }
+      }
+    } else {
+      customerName = requestData.customerName!;
+      customerEmail = requestData.customerEmail!;
+      assessmentDate = requestData.assessmentDate!;
+      totalQuestions = requestData.totalQuestions!;
+      patterns = requestData.patterns!;
+    }
 
     const patternsArray = Object.entries(patterns).sort(
       (a, b) => b[1].score - a[1].score
@@ -337,9 +424,15 @@ Deno.serve(async (req: Request) => {
                 ✓ Create a personalized action plan<br>
                 ✓ Get professional guidance and support
               </p>
-              <a href="mailto:support@brainworx.com?subject=FREE 45-Minute Coaching Session" class="cta-button">
+              ${franchiseOwnerCode ? `
+              <a href="${Deno.env.get('SITE_URL') || 'https://brainworx.co.za'}?book=${franchiseOwnerCode}" class="cta-button">
+                Book Your Appointment
+              </a>
+              ` : `
+              <a href="mailto:info@brainworx.co.za?subject=FREE 45-Minute Coaching Session" class="cta-button">
                 Schedule Your FREE Session
               </a>
+              `}
             </div>
 
             <div class="next-steps">
@@ -371,8 +464,8 @@ Deno.serve(async (req: Request) => {
             <div>
               <p style="font-weight: 600; margin: 0 0 8px 0;">Questions? Contact Us:</p>
               <p style="margin: 0;">
-                📧 Email: support@brainworx.com<br>
-                🌐 Website: www.brainworx.com
+                📧 Email: info@brainworx.co.za<br>
+                🌐 Website: www.brainworx.co.za
               </p>
             </div>
 
@@ -391,18 +484,39 @@ Deno.serve(async (req: Request) => {
       </html>
     `;
 
-    console.log('=== Client Report Email Prepared ===');
+    const GMAIL_USER = "info@brainworx.co.za";
+    const GMAIL_PASSWORD = "wpgy kfmt camw ehmk";
+
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `BrainWorx <${GMAIL_USER}>`,
+      to: customerEmail,
+      subject: `Your Neural Imprint Assessment Results - ${customerName}`,
+      html: customerEmailBody,
+    });
+
+    console.log('=== Client Report Email Sent ===');
     console.log('Customer:', customerName, '/', customerEmail);
     console.log('Patterns:', Object.keys(patterns).length);
     console.log('High Priority:', highPatterns.length);
     console.log('Medium Priority:', mediumPatterns.length);
     console.log('Low Priority:', lowPatterns.length);
+    console.log('Booking Link Included:', !!franchiseOwnerCode);
     console.log('===================================');
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Client report email prepared and ready to send',
+        message: 'Client report email sent successfully',
         emailSent: customerEmail,
         stats: {
           totalPatterns: Object.keys(patterns).length,
