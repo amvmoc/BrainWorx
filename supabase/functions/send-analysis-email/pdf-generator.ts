@@ -1,7 +1,7 @@
 // Simple PDF generation using jsPDF
 import { jsPDF } from "npm:jspdf@2.5.2";
 
-export function generatePDFFromHTML(html: string, filename: string): Buffer {
+export function generatePDFFromHTML(html: string, filename: string): Uint8Array {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -19,22 +19,22 @@ export function generatePDFFromHTML(html: string, filename: string): Buffer {
   // Add title
   doc.setFontSize(16);
   doc.text('BrainWorx Neural Imprint Patterns Report', 20, 20);
-  
+
   // Add content with word wrap
   doc.setFontSize(10);
   const lines = doc.splitTextToSize(textContent, 170);
   doc.text(lines, 20, 35);
 
-  // Convert to buffer
+  // Convert to Uint8Array
   const pdfBuffer = doc.output('arraybuffer');
-  return Buffer.from(pdfBuffer);
+  return new Uint8Array(pdfBuffer);
 }
 
 export async function generateAdvancedPDF(
   customerName: string,
   analysis: any,
   completionDate: string
-): Promise<Buffer> {
+): Promise<Uint8Array> {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -175,5 +175,5 @@ export async function generateAdvancedPDF(
   }
 
   const pdfBuffer = doc.output('arraybuffer');
-  return Buffer.from(pdfBuffer);
+  return new Uint8Array(pdfBuffer);
 }
