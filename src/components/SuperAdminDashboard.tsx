@@ -230,7 +230,7 @@ export function SuperAdminDashboard({ franchiseOwnerName, onLogout }: SuperAdmin
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: selectedUser.user_id,
+            userId: selectedUser.id,
             newPassword: newPassword,
           }),
         }

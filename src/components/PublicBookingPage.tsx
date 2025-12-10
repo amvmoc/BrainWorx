@@ -22,7 +22,6 @@ export function PublicBookingPage({ franchiseCode, onBack }: PublicBookingPagePr
   }, [franchiseCode]);
 
   const loadFranchiseOwner = async () => {
-    console.log('Loading franchise owner with code:', franchiseCode);
     setLoading(true);
     setError(null);
     try {
@@ -32,24 +31,18 @@ export function PublicBookingPage({ franchiseCode, onBack }: PublicBookingPagePr
         .eq('unique_link_code', franchiseCode)
         .maybeSingle();
 
-      console.log('Franchise owner data:', data);
-      console.log('Franchise owner error:', fetchError);
-
       if (fetchError) throw fetchError;
 
       if (!data) {
-        console.log('No franchise owner found');
         setError('Franchise holder not found');
         return;
       }
 
-      console.log('Franchise owner loaded successfully:', data);
       setFranchiseOwner(data);
     } catch (err: any) {
       console.error('Error loading franchise owner:', err);
       setError('Failed to load franchise holder information: ' + err.message);
     } finally {
-      console.log('Setting loading to false');
       setLoading(false);
     }
   };

@@ -24,8 +24,6 @@ interface CustomerBookingCalendarProps {
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function CustomerBookingCalendar({ franchiseOwnerId, franchiseOwnerName, onBookingComplete }: CustomerBookingCalendarProps) {
-  console.log('CustomerBookingCalendar rendering with:', { franchiseOwnerId, franchiseOwnerName });
-
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
@@ -41,7 +39,6 @@ export function CustomerBookingCalendar({ franchiseOwnerId, franchiseOwnerName, 
   });
 
   useEffect(() => {
-    console.log('Selected date changed:', selectedDate);
     if (selectedDate) {
       loadAvailableSlots(selectedDate);
     }
