@@ -1,11 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
 const cleanString = (str: string): string => {
-  return str.trim().replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+  // Remove all control characters, non-printable characters, and keep only ASCII
+  return str
+    .trim()
+    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[^\x00-\x7F]/g, ''); // Remove any non-ASCII characters
 };
 
-const supabaseUrl = cleanString(import.meta.env.VITE_SUPABASE_URL || '');
-const supabaseAnonKey = cleanString(import.meta.env.VITE_SUPABASE_ANON_KEY || '');
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
+const supabaseUrl = cleanString(rawUrl);
+const supabaseAnonKey = cleanString(rawKey);
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Missing Supabase environment variables!');
@@ -21,4 +28,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check the console for instructions.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});
