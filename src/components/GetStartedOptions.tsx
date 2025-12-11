@@ -108,6 +108,13 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     userName: string,
     userEmail: string
   ) => {
+    console.log('=== Coupon Redemption Started ===');
+    console.log('Assessment Type:', assessmentType);
+    console.log('Coupon ID:', redemptionCouponId);
+    console.log('Franchise Owner ID:', couponFranchiseOwnerId);
+    console.log('User Name:', userName);
+    console.log('User Email:', userEmail);
+
     setEmail(userEmail);
     setCustomerName(userName);
     setFranchiseOwnerId(couponFranchiseOwnerId);
@@ -124,21 +131,37 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     };
 
     const mappedType = assessmentTypeMap[assessmentType] || assessmentType;
+    console.log('Mapped Type:', mappedType);
 
     if (mappedType === 'nip3') {
+      console.log('Setting step to questionnaire');
       setStep('questionnaire');
     } else if (mappedType === 'teen-career') {
+      console.log('Setting step to career_assessment');
       setStep('career_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       if (selectedAssessment) {
+        console.log('Setting step to self_assessment');
         setSelectedAssessmentType(selectedAssessment);
         setStep('self_assessment');
+      } else {
+        console.error('No matching assessment type found for:', mappedType);
       }
     }
+    console.log('=== Coupon Redemption Completed ===');
   };
 
+  console.log('=== GetStartedOptions Render ===');
+  console.log('Current step:', step);
+  console.log('Show coupon modal:', showCouponModal);
+  console.log('Email:', email);
+  console.log('Customer Name:', customerName);
+  console.log('Franchise Owner ID:', franchiseOwnerId);
+  console.log('Coupon ID:', couponId);
+
   if (step === 'patterns_info') {
+    console.log('Rendering NeuralImprintPatternsInfo');
     return (
       <NeuralImprintPatternsInfo
         onBack={() => setStep(previousStep)}
@@ -148,6 +171,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   }
 
   if (step === 'questionnaire') {
+    console.log('Rendering NIP3Assessment with:', { email, customerName, franchiseOwnerId, couponId });
     return (
       <NIP3Assessment
         onClose={onClose}
@@ -185,13 +209,16 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   }
 
   if (showCouponModal) {
+    console.log('Rendering CouponRedemption');
     return (
       <CouponRedemption
         onRedemptionSuccess={handleCouponRedemption}
         onCancel={() => {
+          console.log('Coupon redemption cancelled');
           setShowCouponModal(false);
           setPaymentCouponCode('');
           if (initialCouponCode) {
+            console.log('Initial coupon code exists, calling onClose');
             onClose();
           }
         }}
