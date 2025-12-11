@@ -16,12 +16,20 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({ onComplete }) =>
     nextQuestion,
     previousQuestion,
     completeAssessment,
+    showResumePrompt
   } = useAssessment();
 
   const currentQuestion = questions[currentQuestionIndex];
   const currentAnswer = answers.get(currentQuestion.id);
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const allAnswered = answers.size === questions.length;
+
+  console.log('QuestionScreen rendering:', {
+    currentQuestionIndex,
+    questionId: currentQuestion?.id,
+    answersCount: answers.size,
+    showResumePrompt
+  });
 
   useEffect(() => {
     // Auto-scroll to top when question changes

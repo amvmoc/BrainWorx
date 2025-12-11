@@ -46,6 +46,14 @@ export default function NIP3Assessment({
     setShowAdmin(!showAdmin);
   };
 
+  console.log('NIP3Assessment rendering:', {
+    currentScreen,
+    email,
+    customerName,
+    franchiseOwnerId,
+    couponId
+  });
+
   return (
     <AssessmentProvider
       initialEmail={email}

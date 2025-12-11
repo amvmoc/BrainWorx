@@ -32,6 +32,13 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   const [couponId, setCouponId] = useState<string | null>(null);
   const [paymentCouponCode, setPaymentCouponCode] = useState('');
 
+  console.log('GetStartedOptions render:', {
+    step,
+    email,
+    customerName,
+    showCouponModal
+  });
+
   useEffect(() => {
     if (franchiseCode || coachLink) {
       lookupFranchiseOwner(franchiseCode || coachLink);
@@ -162,6 +169,12 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
   }
 
   if (step === 'questionnaire') {
+    console.log('GetStartedOptions: Rendering NIP3Assessment', {
+      email,
+      customerName,
+      franchiseOwnerId,
+      couponId
+    });
     return (
       <NIP3Assessment
         onClose={onClose}
