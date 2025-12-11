@@ -151,6 +151,10 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     return (
       <NIP3Assessment
         onClose={onClose}
+        email={email}
+        customerName={customerName}
+        franchiseOwnerId={franchiseOwnerId}
+        couponId={couponId}
       />
     );
   }

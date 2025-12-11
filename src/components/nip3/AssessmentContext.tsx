@@ -16,6 +16,10 @@ interface AssessmentContextType {
   completeAssessment: () => void;
   resetAssessment: () => void;
   progress: number;
+  email?: string;
+  customerName?: string;
+  franchiseOwnerId?: string | null;
+  couponId?: string | null;
 }
 
 const AssessmentContext = createContext<AssessmentContextType | undefined>(undefined);
@@ -30,14 +34,28 @@ export const useAssessment = () => {
 
 interface AssessmentProviderProps {
   children: ReactNode;
+  initialEmail?: string;
+  initialCustomerName?: string;
+  initialFranchiseOwnerId?: string | null;
+  initialCouponId?: string | null;
 }
 
-export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({ children }) => {
+export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
+  children,
+  initialEmail,
+  initialCustomerName,
+  initialFranchiseOwnerId,
+  initialCouponId
+}) => {
   const [questions] = useState<Question[]>(questionsData.questions as Question[]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<number, Answer>>(new Map());
   const [isComplete, setIsComplete] = useState(false);
   const [results, setResults] = useState<AssessmentResults | null>(null);
+  const [email] = useState(initialEmail);
+  const [customerName] = useState(initialCustomerName);
+  const [franchiseOwnerId] = useState(initialFranchiseOwnerId);
+  const [couponId] = useState(initialCouponId);
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -144,6 +162,10 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({ children
         completeAssessment,
         resetAssessment,
         progress,
+        email,
+        customerName,
+        franchiseOwnerId,
+        couponId,
       }}
     >
       {children}

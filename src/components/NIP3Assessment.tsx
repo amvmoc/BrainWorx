@@ -11,9 +11,19 @@ type AppScreen = 'welcome' | 'assessment' | 'results' | 'admin';
 
 interface NIP3AssessmentProps {
   onClose?: () => void;
+  email?: string;
+  customerName?: string;
+  franchiseOwnerId?: string | null;
+  couponId?: string | null;
 }
 
-export default function NIP3Assessment({ onClose }: NIP3AssessmentProps) {
+export default function NIP3Assessment({
+  onClose,
+  email,
+  customerName,
+  franchiseOwnerId,
+  couponId
+}: NIP3AssessmentProps) {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('welcome');
   const [showAdmin, setShowAdmin] = useState(false);
 
@@ -34,7 +44,12 @@ export default function NIP3Assessment({ onClose }: NIP3AssessmentProps) {
   };
 
   return (
-    <AssessmentProvider>
+    <AssessmentProvider
+      initialEmail={email}
+      initialCustomerName={customerName}
+      initialFranchiseOwnerId={franchiseOwnerId}
+      initialCouponId={couponId}
+    >
       <div className="app nip3-container">
         <header className="app-header">
           <div className="container">

@@ -40,6 +40,7 @@ export function CouponRedemption({ onRedemptionSuccess, onCancel, initialCouponC
         return;
       }
 
+      setLoading(false);
       onRedemptionSuccess(
         result.assessment_type,
         result.coupon_id,
