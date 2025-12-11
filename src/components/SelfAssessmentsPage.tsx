@@ -131,8 +131,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
 
   const nipaCard = {
     id: 'nipa',
-    name: 'NIPA - Full Neural Imprint Assessment',
-    description: 'This is our comprehensive client assessment with 344 in-depth questions. Unlike the shorter self-assessments above, NIPA provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 20 Neural Imprint Patterns. This flagship assessment includes a professional 45-minute debrief session to help you understand and apply your results.',
+    name: 'NIP3 - Full Neural Imprint Assessment',
+    description: 'This is our comprehensive client assessment with 344 in-depth questions. Unlike the shorter self-assessments above, NIP3 provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 20 Neural Imprint Patterns. This flagship assessment includes a professional 45-minute debrief session to help you understand and apply your results.',
     icon: Brain,
     color: 'from-[#0A2A5E] to-[#3DB3E3]',
     iconColor: 'text-[#0A2A5E]',
@@ -143,7 +143,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     price: 'R950',
     assessmentType: 'Full Client Assessment',
     features: [
-      'Full 344-question comprehensive assessment',
+      'Full 344-question comprehensive assessment (NIP3)',
       'Professional 45-minute debrief session',
       'Complete profile across all 20 patterns',
       'Two-round assessment process',
@@ -707,6 +707,9 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Choose from our specialized assessments designed to help you understand your neural imprint patterns,
               career preferences, and personal development opportunities.
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Showing {assessmentCards.length} assessments
             </p>
           </div>
 
