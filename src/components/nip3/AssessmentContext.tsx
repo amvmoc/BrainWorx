@@ -58,61 +58,69 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
   const [franchiseOwnerId] = useState(initialFranchiseOwnerId);
   const [couponId] = useState(initialCouponId);
   const [responseId, setResponseId] = useState<string | null>(null);
+  const [existingResponseData, setExistingResponseData] = useState<any>(null);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
 
   // Initialize database record if we have user information
   useEffect(() => {
     const initializeResponse = async () => {
       if (email && customerName) {
-        const { data: existingResponse } = await supabase
-          .from('responses')
-          .select('*')
-          .eq('customer_email', email)
-          .eq('status', 'in_progress')
-          .is('parent_response_id', null)
-          .order('last_activity_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
+        console.log('Initializing assessment for:', email);
 
-        if (existingResponse) {
-          const shouldResume = window.confirm(
-            `We found an in-progress assessment for this email. You were at question ${(existingResponse.current_question || 0) + 1} of ${questions.length}.\n\nWould you like to resume where you left off?`
-          );
+        try {
+          const { data: existingResponse, error: fetchError } = await supabase
+            .from('responses')
+            .select('*')
+            .eq('customer_email', email)
+            .eq('status', 'in_progress')
+            .is('parent_response_id', null)
+            .order('last_activity_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
 
-          if (shouldResume) {
-            setResponseId(existingResponse.id);
-            setCurrentQuestionIndex(existingResponse.current_question || 0);
-
-            const savedAnswers = existingResponse.answers || {};
-            const answersMap = new Map<number, Answer>();
-            Object.entries(savedAnswers).forEach(([key, value]: [string, any]) => {
-              answersMap.set(parseInt(key), value);
-            });
-            setAnswers(answersMap);
-            return;
+          if (fetchError) {
+            console.error('Error fetching existing response:', fetchError);
           }
-        }
 
-        const { data, error } = await supabase
-          .from('responses')
-          .insert({
-            customer_name: customerName,
-            customer_email: email,
-            status: 'in_progress',
-            entry_type: franchiseOwnerId ? 'coach_link' : 'random_visitor',
-            email_verified: !!franchiseOwnerId,
-            franchise_owner_id: franchiseOwnerId || null,
-            coupon_id: couponId || null,
-            current_question: 0,
-            last_activity_at: new Date().toISOString()
-          })
-          .select()
-          .single();
+          if (existingResponse) {
+            console.log('Found existing in-progress assessment:', existingResponse.id);
+            setExistingResponseData(existingResponse);
+            setShowResumePrompt(true);
+            return; // Wait for user decision
+          } else {
+            console.log('No existing in-progress assessment found');
+          }
 
-        if (error) {
-          console.error('Error creating response:', error);
-        } else if (data) {
-          setResponseId(data.id);
+          console.log('Creating new assessment response');
+          const { data, error } = await supabase
+            .from('responses')
+            .insert({
+              customer_name: customerName,
+              customer_email: email,
+              status: 'in_progress',
+              entry_type: franchiseOwnerId ? 'coach_link' : 'random_visitor',
+              email_verified: !!franchiseOwnerId,
+              franchise_owner_id: franchiseOwnerId || null,
+              coupon_id: couponId || null,
+              current_question: 0,
+              last_activity_at: new Date().toISOString()
+            })
+            .select()
+            .single();
+
+          if (error) {
+            console.error('Error creating response:', error);
+            alert('Failed to initialize assessment. Please try again.');
+          } else if (data) {
+            console.log('New assessment created:', data.id);
+            setResponseId(data.id);
+          }
+        } catch (err) {
+          console.error('Unexpected error in initializeResponse:', err);
+          alert('An error occurred while initializing the assessment. Please try again.');
         }
+      } else {
+        console.log('Skipping initialization - email or customerName missing:', { email, customerName });
       }
     };
 
@@ -194,6 +202,57 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
     }
   };
 
+  const handleResumeExisting = async () => {
+    if (existingResponseData) {
+      console.log('Resuming assessment from question:', existingResponseData.current_question);
+      setResponseId(existingResponseData.id);
+      setCurrentQuestionIndex(existingResponseData.current_question || 0);
+
+      const savedAnswers = existingResponseData.answers || {};
+      const answersMap = new Map<number, Answer>();
+      Object.entries(savedAnswers).forEach(([key, value]: [string, any]) => {
+        answersMap.set(parseInt(key), value);
+      });
+      setAnswers(answersMap);
+      setShowResumePrompt(false);
+      setExistingResponseData(null);
+      console.log('Resume complete, loaded', answersMap.size, 'answers');
+    }
+  };
+
+  const handleStartFresh = async () => {
+    console.log('User declined to resume, creating new assessment');
+    setShowResumePrompt(false);
+    setExistingResponseData(null);
+
+    if (email && customerName) {
+      console.log('Creating new assessment response');
+      const { data, error } = await supabase
+        .from('responses')
+        .insert({
+          customer_name: customerName,
+          customer_email: email,
+          status: 'in_progress',
+          entry_type: franchiseOwnerId ? 'coach_link' : 'random_visitor',
+          email_verified: !!franchiseOwnerId,
+          franchise_owner_id: franchiseOwnerId || null,
+          coupon_id: couponId || null,
+          current_question: 0,
+          last_activity_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating response:', error);
+        alert('Failed to initialize assessment. Please try again.');
+      } else if (data) {
+        console.log('New assessment created:', data.id);
+        setResponseId(data.id);
+      }
+    }
+  };
+
   const completeAssessment = async () => {
     if (answers.size === questions.length) {
       const answersArray = Array.from(answers.values());
@@ -267,6 +326,99 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
         couponId,
       }}
     >
+      {showResumePrompt && existingResponseData && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            padding: '32px',
+            maxWidth: '500px',
+            width: '100%',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+          }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              color: '#0A2A5E',
+              marginBottom: '16px'
+            }}>
+              Resume Previous Assessment?
+            </h2>
+            <p style={{
+              fontSize: '16px',
+              color: '#666',
+              marginBottom: '24px',
+              lineHeight: '1.5'
+            }}>
+              We found an in-progress assessment for <strong>{email}</strong>.
+              You were at question <strong>{(existingResponseData.current_question || 0) + 1}</strong> of <strong>{questions.length}</strong>.
+            </p>
+            <p style={{
+              fontSize: '16px',
+              color: '#666',
+              marginBottom: '32px',
+              lineHeight: '1.5'
+            }}>
+              Would you like to resume where you left off, or start a new assessment?
+            </p>
+            <div style={{
+              display: 'flex',
+              gap: '12px'
+            }}>
+              <button
+                onClick={handleStartFresh}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#E5E7EB',
+                  color: '#374151',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#D1D5DB'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#E5E7EB'}
+              >
+                Start Fresh
+              </button>
+              <button
+                onClick={handleResumeExisting}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#0A2A5E',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3DB3E3'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#0A2A5E'}
+              >
+                Resume Assessment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {children}
     </AssessmentContext.Provider>
   );
