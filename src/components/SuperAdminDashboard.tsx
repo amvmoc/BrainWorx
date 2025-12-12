@@ -10,6 +10,7 @@ import { HomePage } from './HomePage';
 import { ClientReport } from './ClientReport';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
 import CoachReport from './coach-report/CoachReport';
+import NIP3CoachReport from './nip3/CoachReport';
 import { generateClientReportData } from '../utils/clientReportScoring';
 import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
@@ -1382,14 +1383,31 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                <CoachReport
-                  data={generateCoachReportData(
-                    viewingTestReport.customer_name,
-                    viewingTestReport.answers,
-                    new Date(viewingTestReport.completed_at),
-                    Object.keys(viewingTestReport.answers).length
-                  )}
-                />
+                {viewingTestReport.analysis_results?.neuralImprintPatternScores ? (
+                  <NIP3CoachReport
+                    results={viewingTestReport.analysis_results.neuralImprintPatternScores.map((nip: any) => ({
+                      nipGroup: nip.code,
+                      score: nip.actualScore,
+                      maxScore: nip.maxScore,
+                      percentage: nip.score,
+                      count: nip.totalQuestions
+                    }))}
+                    completionDate={new Date(viewingTestReport.completed_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  />
+                ) : (
+                  <CoachReport
+                    data={generateCoachReportData(
+                      viewingTestReport.customer_name,
+                      viewingTestReport.answers,
+                      new Date(viewingTestReport.completed_at),
+                      Object.keys(viewingTestReport.answers).length
+                    )}
+                  />
+                )}
               </div>
             </div>
           ) : (
