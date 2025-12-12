@@ -322,6 +322,28 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
             last_activity_at: new Date().toISOString()
           })
           .eq('id', responseId);
+
+        // Send comprehensive coach report email to franchise owner if applicable
+        if (franchiseOwnerId) {
+          try {
+            console.log('Sending comprehensive coach report to franchise owner...');
+            const { error: emailError } = await supabase.functions.invoke('send-comprehensive-coach-report', {
+              body: {
+                responseId,
+                customerName,
+                customerEmail: email
+              }
+            });
+
+            if (emailError) {
+              console.error('Error sending comprehensive coach report:', emailError);
+            } else {
+              console.log('Comprehensive coach report sent successfully!');
+            }
+          } catch (error) {
+            console.error('Failed to send comprehensive coach report:', error);
+          }
+        }
       }
 
       localStorage.setItem('assessment-results', JSON.stringify({
