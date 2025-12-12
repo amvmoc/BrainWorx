@@ -77,19 +77,28 @@ const patternDescriptions: Record<string, { description: string, clinicalSignifi
   }
 };
 
-function convertAnswerToNumber(answer: string): number {
-  const answerLower = answer.toLowerCase();
-  if (answerLower.includes('strongly agree')) return 5;
-  if (answerLower.includes('agree')) return 4;
-  if (answerLower.includes('neutral')) return 3;
-  if (answerLower.includes('disagree') && !answerLower.includes('strongly')) return 2;
-  if (answerLower.includes('strongly disagree')) return 1;
-  return parseInt(answer) || 3;
+function convertAnswerToNumber(answer: any): number {
+  if (typeof answer === 'object' && answer !== null && 'value' in answer) {
+    return answer.value;
+  }
+  if (typeof answer === 'number') {
+    return answer;
+  }
+  if (typeof answer === 'string') {
+    const answerLower = answer.toLowerCase();
+    if (answerLower.includes('strongly agree')) return 5;
+    if (answerLower.includes('agree')) return 4;
+    if (answerLower.includes('neutral')) return 3;
+    if (answerLower.includes('disagree') && !answerLower.includes('strongly')) return 2;
+    if (answerLower.includes('strongly disagree')) return 1;
+    return parseInt(answer) || 3;
+  }
+  return 3;
 }
 
 export function generateCoachReportData(
   customerName: string,
-  answers: Record<string, string>,
+  answers: Record<string, any>,
   completedAt: Date,
   totalQuestions: number
 ): CoachReportData {
