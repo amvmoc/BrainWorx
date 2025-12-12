@@ -313,11 +313,26 @@ export const AssessmentProvider: React.FC<AssessmentProviderProps> = ({
           answersObj[key] = value;
         });
 
+        const analysisResults = {
+          completedAt: new Date().toISOString(),
+          overallScore: Math.round(assessmentResults.overallPercentage),
+          totalQuestions: questions.length,
+          neuralImprintPatternScores: nipResults.map(nip => ({
+            code: nip.code,
+            name: nip.name,
+            score: Math.round(nip.percentage),
+            actualScore: nip.actualScore,
+            maxScore: nip.maxScore,
+            totalQuestions: nip.totalQuestions
+          }))
+        };
+
         await supabase
           .from('responses')
           .update({
             status: 'completed',
             answers: answersObj,
+            analysis_results: analysisResults,
             completed_at: new Date().toISOString(),
             last_activity_at: new Date().toISOString()
           })
