@@ -29,10 +29,11 @@ Deno.serve(async (req: Request) => {
     const topPatterns = results.filter((r: any) => r.percentage >= 50);
     const overallPercentage = (results.reduce((sum: number, r: any) => sum + r.percentage, 0) / results.length).toFixed(2);
 
+    // Generate HTML for ALL 20 patterns (sorted by score)
+    const sortedResults = [...results].sort((a, b) => b.percentage - a.percentage);
     let patternsHtml = '';
-    const top5 = results.slice(0, 5);
 
-    top5.forEach((pattern: any, index: number) => {
+    sortedResults.forEach((pattern: any, index: number) => {
       const getColor = (percentage: number) => {
         if (percentage >= 70) return '#DC2626';
         if (percentage >= 50) return '#EA580C';
@@ -121,13 +122,13 @@ Deno.serve(async (req: Request) => {
     doc.text(`Patterns Analyzed: ${results.length}`, 20, yPos);
     yPos += 15;
 
-    // Top Patterns
+    // All Patterns (sorted by score)
     doc.setFontSize(16);
     doc.setFont(undefined, 'bold');
-    doc.text('Top 5 Patterns', 20, yPos);
+    doc.text('All Neural Imprint Patterns (Ranked by Score)', 20, yPos);
     yPos += 10;
 
-    top5.forEach((pattern: any, index: number) => {
+    sortedResults.forEach((pattern: any, index: number) => {
       if (yPos > 260) {
         doc.addPage();
         yPos = 20;
@@ -175,11 +176,11 @@ Deno.serve(async (req: Request) => {
     const pdfFilename = `BrainWorx_NIP3_Report.pdf`;
 
     const emailPromises = recipients.map((email: string) => {
-      console.log('Sending NIP3 email with PDF attachment to:', email);
+      console.log('Sending NIP3 Coach Report with PDF attachment to:', email);
       return transporter.sendMail({
         from: `BrainWorx Assessment <${GMAIL_USER}>`,
         to: email,
-        subject: 'NIP3 Assessment Results - Test Simulation',
+        subject: 'NIP3 Comprehensive Coach Report - Complete Assessment Results',
         html: `
           <!DOCTYPE html>
           <html>
@@ -193,20 +194,20 @@ Deno.serve(async (req: Request) => {
                 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 48px 32px; text-align: center; border-radius: 20px 20px 0 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
                   <div style="font-size: 48px; margin-bottom: 8px;">🧠</div>
                   <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: 700; letter-spacing: -0.5px;">Neural Imprint Patterns 3.0</h1>
-                  <p style="margin: 0; font-size: 20px; opacity: 0.95; font-weight: 300;">Complete Assessment Report</p>
+                  <p style="margin: 0; font-size: 20px; opacity: 0.95; font-weight: 300;">Comprehensive Coach Report</p>
                 </div>
 
-                <div style="background: #FEF3C7; border-left: 6px solid #F59E0B; padding: 20px 24px; margin: 0;">
-                  <p style="margin: 0; color: #92400E; font-size: 15px; font-weight: 600;">
-                    ⚠️ TEST SIMULATION: This report was generated using randomly selected answers for demonstration purposes.
+                <div style="background: #DBEAFE; border-left: 6px solid #3B82F6; padding: 20px 24px; margin: 0;">
+                  <p style="margin: 0; color: #1E40AF; font-size: 15px; font-weight: 600;">
+                    👨‍💼 COACH REPORT: This comprehensive report includes all 20 Neural Imprint Patterns with detailed scoring and analysis.
                   </p>
                 </div>
 
                 <div style="background: #ffffff; padding: 40px 32px; border-radius: 0 0 20px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
-                  <h2 style="color: #111827; margin: 0 0 16px 0; font-size: 28px; font-weight: 700;">Assessment Results</h2>
+                  <h2 style="color: #111827; margin: 0 0 16px 0; font-size: 28px; font-weight: 700;">Complete Assessment Results</h2>
 
                   <p style="color: #4B5563; font-size: 16px; line-height: 1.8; margin: 0 0 32px 0;">
-                    This is a test simulation of the NIP3 assessment system. The results below are based on randomly generated responses across all 343 questions.
+                    This comprehensive coach report provides a complete analysis of all 20 Neural Imprint Patterns based on 343 questions. Use this detailed breakdown to understand the client's patterns and guide your coaching approach.
                   </p>
 
                   <div style="background: linear-gradient(135deg, #EFF6FF 0%, #F3E8FF 100%); padding: 24px; border-radius: 12px; margin: 0 0 40px 0; border: 1px solid #E0E7FF;">
@@ -236,28 +237,28 @@ Deno.serve(async (req: Request) => {
                   </div>
 
                   <div style="margin: 0 0 24px 0;">
-                    <h3 style="color: #111827; margin: 0 0 8px 0; font-size: 24px; font-weight: 700;">🎯 Top 5 Neural Imprint Patterns</h3>
-                    <p style="color: #6B7280; margin: 0; font-size: 15px;">These patterns show the highest scores in this assessment.</p>
+                    <h3 style="color: #111827; margin: 0 0 8px 0; font-size: 24px; font-weight: 700;">🎯 All 20 Neural Imprint Patterns (Ranked by Score)</h3>
+                    <p style="color: #6B7280; margin: 0; font-size: 15px;">Complete breakdown of all patterns from highest to lowest scoring.</p>
                   </div>
 
                   ${patternsHtml}
 
                   <div style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); padding: 28px; border-radius: 12px; margin: 40px 0 0 0; border-left: 6px solid #10B981;">
-                    <h3 style="color: #065F46; margin: 0 0 16px 0; font-size: 22px; font-weight: 700;">📋 Complete Results</h3>
+                    <h3 style="color: #065F46; margin: 0 0 16px 0; font-size: 22px; font-weight: 700;">📋 Coach Guidance</h3>
                     <p style="color: #047857; margin: 0 0 14px 0; font-size: 15px; line-height: 1.8; font-weight: 500;">
-                      All 20 Neural Imprint Patterns have been analyzed and scored. The complete breakdown includes:
+                      This report provides comprehensive insights for coaching:
                     </p>
                     <ul style="color: #047857; margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.8;">
-                      <li style="margin: 6px 0;">Detailed scoring for each pattern</li>
-                      <li style="margin: 6px 0;">Pattern presence levels (Strongly Present, Moderately Present, Mild, Minimal)</li>
-                      <li style="margin: 6px 0;">Question-by-question analysis</li>
-                      <li style="margin: 6px 0;">Comprehensive percentages and rankings</li>
+                      <li style="margin: 6px 0;">All 20 patterns ranked by intensity</li>
+                      <li style="margin: 6px 0;">Pattern presence levels for prioritization</li>
+                      <li style="margin: 6px 0;">Detailed scoring breakdown per pattern</li>
+                      <li style="margin: 6px 0;">Question-level analysis (343 total questions)</li>
                     </ul>
                   </div>
 
                   <div style="margin: 32px 0 0 0; padding: 20px 0 0 0; border-top: 2px solid #E5E7EB;">
                     <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin: 0;">
-                      <strong style="color: #374151;">Test Notice:</strong> This is a simulated assessment for demonstration and testing purposes. Real assessments require careful, thoughtful responses to provide meaningful insights.
+                      <strong style="color: #374151;">Professional Use:</strong> This report is intended for qualified coaches and practitioners. Use these insights to guide personalized coaching strategies and interventions.
                     </p>
                   </div>
                 </div>

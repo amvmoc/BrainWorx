@@ -907,7 +907,7 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
                                 <td className="px-6 py-4">
                                   <div className="flex gap-2">
                                     <button
-                                      onClick={() => setViewingTestReport({ ...response, type: 'nip3' })}
+                                      onClick={() => setViewingTestReport({ ...response, type: 'nipa' })}
                                       className="bg-[#3DB3E3] text-white px-4 py-2 rounded-lg hover:bg-[#1FAFA3] transition-colors font-medium flex items-center gap-2"
                                     >
                                       <Eye size={16} />
@@ -915,8 +915,8 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
                                     </button>
                                     <button
                                       onClick={() => {
-                                        const report = { ...response, type: 'nip3' };
-                                        window.print();
+                                        setViewingTestReport({ ...response, type: 'nipa' });
+                                        setTimeout(() => window.print(), 500);
                                       }}
                                       className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium flex items-center gap-2"
                                       title="Download report"
@@ -926,7 +926,7 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
                                     </button>
                                     <button
                                       onClick={() => {
-                                        setShareTest({ ...response, type: 'nip3' });
+                                        setShareTest({ ...response, type: 'nipa' });
                                         setShareEmail(franchiseOwner?.email || response.customer_email);
                                         setShowShareModal(true);
                                       }}
