@@ -1,0 +1,167 @@
+{
+  "completedAt": "2025-12-11T18:19:39.343+00:00",
+  "overallScore": 33,
+  "totalQuestions": 343,
+  "neuralImprintPatternScores": [
+    {
+      "code": "NIP05",
+      "name": "Defectiveness/Shame",
+      "score": 83,
+      "actualScore": 15,
+      "maxScore": 18,
+      "totalQuestions": 6
+    },
+    {
+      "code": "NIP19",
+      "name": "Approval-Seeking/Recognition-Seeking",
+      "score": 83,
+      "actualScore": 15,
+      "maxScore": 18,
+      "totalQuestions": 6
+    },
+    {
+      "code": "NIP18",
+      "name": "Punitiveness",
+      "score": 61,
+      "actualScore": 20,
+      "maxScore": 33,
+      "totalQuestions": 11
+    },
+    {
+      "code": "NIP08",
+      "name": "Vulnerability to Harm or Illness",
+      "score": 52,
+      "actualScore": 34,
+      "maxScore": 66,
+      "totalQuestions": 22
+    },
+    {
+      "code": "NIP04",
+      "name": "Social Isolation/Alienation",
+      "score": 48,
+      "actualScore": 30,
+      "maxScore": 63,
+      "totalQuestions": 21
+    },
+    {
+      "code": "NIP01",
+      "name": "Emotional Deprivation",
+      "score": 43,
+      "actualScore": 35,
+      "maxScore": 81,
+      "totalQuestions": 27
+    },
+    {
+      "code": "NIP15",
+      "name": "Insufficient Self-Control/Self-Discipline",
+      "score": 40,
+      "actualScore": 6,
+      "maxScore": 15,
+      "totalQuestions": 5
+    },
+    {
+      "code": "NIP07",
+      "name": "Dependence/Incompetence",
+      "score": 31,
+      "actualScore": 11,
+      "maxScore": 36,
+      "totalQuestions": 12
+    },
+    {
+      "code": "NIP09",
+      "name": "Enmeshment/Undeveloped Self",
+      "score": 31,
+      "actualScore": 15,
+      "maxScore": 48,
+      "totalQuestions": 16
+    },
+    {
+      "code": "NIP17",
+      "name": "Negativity/Pessimism",
+      "score": 30,
+      "actualScore": 17,
+      "maxScore": 57,
+      "totalQuestions": 19
+    },
+    {
+      "code": "NIP14",
+      "name": "Entitlement/Grandiosity",
+      "score": 28,
+      "actualScore": 11,
+      "maxScore": 39,
+      "totalQuestions": 13
+    },
+    {
+      "code": "NIP16",
+      "name": "Approval-Seeking/Recognition-Seeking",
+      "score": 24,
+      "actualScore": 11,
+      "maxScore": 45,
+      "totalQuestions": 15
+    },
+    {
+      "code": "NIP12",
+      "name": "Emotional Inhibition",
+      "score": 22,
+      "actualScore": 11,
+      "maxScore": 51,
+      "totalQuestions": 17
+    },
+    {
+      "code": "NIP13",
+      "name": "Unrelenting Standards/Hypercriticalness",
+      "score": 20,
+      "actualScore": 12,
+      "maxScore": 60,
+      "totalQuestions": 20
+    },
+    {
+      "code": "NIP06",
+      "name": "Failure",
+      "score": 18,
+      "actualScore": 21,
+      "maxScore": 117,
+      "totalQuestions": 39
+    },
+    {
+      "code": "NIP20",
+      "name": "Negativity/Pessimism",
+      "score": 12,
+      "actualScore": 9,
+      "maxScore": 78,
+      "totalQuestions": 26
+    },
+    {
+      "code": "NIP11",
+      "name": "Self-Sacrifice",
+      "score": 11,
+      "actualScore": 6,
+      "maxScore": 54,
+      "totalQuestions": 18
+    },
+    {
+      "code": "NIP02",
+      "name": "Abandonment/Instability",
+      "score": 9,
+      "actualScore": 7,
+      "maxScore": 75,
+      "totalQuestions": 25
+    },
+    {
+      "code": "NIP03",
+      "name": "Mistrust/Abuse",
+      "score": 7,
+      "actualScore": 2,
+      "maxScore": 30,
+      "totalQuestions": 10
+    },
+    {
+      "code": "NIP10",
+      "name": "Subjugation",
+      "score": 7,
+      "actualScore": 3,
+      "maxScore": 45,
+      "totalQuestions": 15
+    }
+  ]
+}
