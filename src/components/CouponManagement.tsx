@@ -86,75 +86,94 @@ export function CouponManagement() {
 
   const handleCreateCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      const userId = session.session?.user.id;
 
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+    let attempts = 0;
+    const maxAttempts = 5;
 
-      const { data: couponData, error } = await supabase
-        .from('coupon_codes')
-        .insert({
-          code: newCoupon.code,
-          assessment_type: newCoupon.assessmentType,
-          max_uses: newCoupon.maxUses,
-          created_by: userId,
-          recipient_name: newCoupon.name,
-          recipient_email: newCoupon.email,
-          email_sent: false
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
+    while (attempts < maxAttempts) {
       try {
-        const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-coupon-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`,
-          },
-          body: JSON.stringify({
-            recipientName: newCoupon.name,
-            recipientEmail: newCoupon.email,
-            couponCode: newCoupon.code,
-            assessmentType: newCoupon.assessmentType
+        const { data: session } = await supabase.auth.getSession();
+        const userId = session.session?.user.id;
+
+        if (!userId) {
+          throw new Error('User not authenticated');
+        }
+
+        const codeToUse = attempts === 0 ? newCoupon.code : generateCode();
+
+        const { data: couponData, error } = await supabase
+          .from('coupon_codes')
+          .insert({
+            code: codeToUse,
+            assessment_type: newCoupon.assessmentType,
+            max_uses: newCoupon.maxUses,
+            created_by: userId,
+            recipient_name: newCoupon.name,
+            recipient_email: newCoupon.email,
+            email_sent: false
           })
-        });
+          .select()
+          .single();
 
-        if (emailResponse.ok) {
-          await supabase
-            .from('coupon_codes')
-            .update({ email_sent: true })
-            .eq('id', couponData.id);
+        if (error) {
+          if (error.code === '23505' && attempts < maxAttempts - 1) {
+            attempts++;
+            continue;
+          }
+          throw error;
+        }
 
-          alert('Coupon created and email sent successfully!');
-        } else {
-          console.error('Failed to send email');
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        try {
+          const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-coupon-email`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${supabaseAnonKey}`,
+            },
+            body: JSON.stringify({
+              recipientName: newCoupon.name,
+              recipientEmail: newCoupon.email,
+              couponCode: codeToUse,
+              assessmentType: newCoupon.assessmentType
+            })
+          });
+
+          if (emailResponse.ok) {
+            await supabase
+              .from('coupon_codes')
+              .update({ email_sent: true })
+              .eq('id', couponData.id);
+
+            alert('Coupon created and email sent successfully!');
+          } else {
+            console.error('Failed to send email');
+            alert('Coupon created but email failed to send. You can resend it later.');
+          }
+        } catch (emailError) {
+          console.error('Error sending email:', emailError);
           alert('Coupon created but email failed to send. You can resend it later.');
         }
-      } catch (emailError) {
-        console.error('Error sending email:', emailError);
-        alert('Coupon created but email failed to send. You can resend it later.');
-      }
 
-      setShowCreateModal(false);
-      setNewCoupon({
-        code: '',
-        name: '',
-        email: '',
-        assessmentType: 'Full ADHD Assessment (128 Questions)',
-        maxUses: 1
-      });
-      loadCoupons();
-    } catch (error: any) {
-      alert(`Error: ${error.message}`);
+        setShowCreateModal(false);
+        setNewCoupon({
+          code: '',
+          name: '',
+          email: '',
+          assessmentType: 'Full ADHD Assessment (128 Questions)',
+          maxUses: 1
+        });
+        loadCoupons();
+        break;
+      } catch (error: any) {
+        if (error.code !== '23505' || attempts >= maxAttempts - 1) {
+          alert(`Error: ${error.message}`);
+          break;
+        }
+        attempts++;
+      }
     }
   };
 
