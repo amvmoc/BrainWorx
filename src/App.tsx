@@ -393,8 +393,8 @@ function App() {
       <main>
         <section id="home" className="pt-32 pb-20 px-6 bg-gradient-to-br from-[#E6E9EF] via-white to-[#E6E9EF]">
           <div className="container mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-start">
-              <div className="space-y-6">
+            <div className="grid md:grid-cols-[1.2fr,0.8fr] gap-8 items-start">
+              <div className="space-y-6 pr-8">
                 <h2 className="text-5xl md:text-6xl font-bold text-[#0A2A5E] leading-tight">
                   We All Have Patterns.
                   <span className="block bg-gradient-to-r from-[#3DB3E3] to-[#1FAFA3] bg-clip-text text-transparent">
