@@ -47,7 +47,6 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     const assessmentNameMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
-      'Teen Career & Future Direction': 'teen-career',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
       'Parent ADHD Screener (48 Questions)': 'parent-adhd'
     };
@@ -543,8 +542,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                   </button>
                   <button
                     onClick={() => {
-                      const paymentTypeMap: Record<string, 'tcf' | 'tadhd' | 'pcadhd'> = {
-                        'teen-career': 'tcf',
+                      const paymentTypeMap: Record<string, 'tadhd' | 'pcadhd'> = {
                         'teen-adhd': 'tadhd',
                         'parent-adhd': 'pcadhd'
                       };

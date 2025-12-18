@@ -3,7 +3,6 @@ import { ArrowLeft, Mail, Link2, RotateCcw, Briefcase, Users, Brain, Baby, UserC
 import NIP3Assessment from './NIP3Assessment';
 import { NeuralImprintPatternsInfo } from './NeuralImprintPatternsInfo';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
-import { CareerAssessment } from './CareerAssessment';
 import { CouponRedemption } from './CouponRedemption';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
@@ -11,13 +10,13 @@ import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQ
 interface GetStartedOptionsProps {
   onClose: () => void;
   franchiseCode?: string | null;
-  preselectedPaymentType?: 'tcf' | 'tadhd' | 'pcadhd' | null;
+  preselectedPaymentType?: 'tadhd' | 'pcadhd' | null;
   initialCouponCode?: string | null;
 }
 
 export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType, initialCouponCode }: GetStartedOptionsProps) {
-  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'career_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
-  const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tcf' | 'tadhd' | 'pcadhd' | null>(preselectedPaymentType || null);
+  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
+  const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tadhd' | 'pcadhd' | null>(preselectedPaymentType || null);
   const [coachLink, setCoachLink] = useState(franchiseCode || '');
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
@@ -126,7 +125,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     const assessmentTypeMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nip3',
       'Full ADHD Assessment (128 Questions)': 'nip3',
-      'Teen Career & Future Direction': 'teen-career',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
       'Parent ADHD Screener (48 Questions)': 'parent-adhd'
     };
@@ -138,10 +136,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
       console.log('Navigating to Full Assessment (NIP3)');
       setShowCouponModal(false);
       setStep('questionnaire');
-    } else if (mappedType === 'teen-career') {
-      console.log('Navigating to Teen Career Assessment');
-      setShowCouponModal(false);
-      setStep('career_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       console.log('Found self-assessment:', selectedAssessment);
@@ -201,20 +195,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     );
   }
 
-  if (step === 'career_assessment') {
-    return (
-      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-        <CareerAssessment
-          onClose={onClose}
-          email={email}
-          customerName={customerName}
-          franchiseOwnerId={franchiseOwnerId}
-          couponId={couponId}
-        />
-      </div>
-    );
-  }
-
   if (showCouponModal) {
     return (
       <CouponRedemption
@@ -271,25 +251,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-[#3DB3E3]">R950</p>
-                  </div>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setSelectedPaymentType('tcf');
-                  setStep('payment');
-                }}
-                className="w-full p-4 border-2 border-[#1FAFA3] rounded-lg hover:bg-[#1FAFA3]/10 transition-all text-left group"
-              >
-                <div className="flex items-center gap-3">
-                  <Briefcase className="text-[#1FAFA3] group-hover:scale-110 transition-transform" size={24} />
-                  <div className="flex-1">
-                    <h3 className="font-bold text-[#0A2A5E]">TCF - Teen Career & Future</h3>
-                    <p className="text-sm text-gray-600">60 questions • For teens planning work/study path</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-[#1FAFA3]">R850</p>
                   </div>
                 </div>
               </button>
@@ -536,7 +497,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                 <p className="text-sm text-gray-600 mb-2">Assessment Type</p>
                 <p className="text-lg font-bold text-[#0A2A5E]">
                   {selectedPaymentType === 'nipa' && 'NIPA - Full Neural Imprint Assessment'}
-                  {selectedPaymentType === 'tcf' && 'TCF - Teen Career & Future Work/Study'}
                   {selectedPaymentType === 'tadhd' && 'TADHD - Teen ADHD-Linked Screener'}
                   {selectedPaymentType === 'pcadhd' && 'PCADHD - Parent/Caregiver ADHD Screener'}
                 </p>
@@ -546,7 +506,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <p className="text-gray-600">Total Amount</p>
                   <p className="text-2xl font-bold text-[#0A2A5E]">
                     {selectedPaymentType === 'nipa' && 'R950.00'}
-                    {selectedPaymentType === 'tcf' && 'R850.00'}
                     {selectedPaymentType === 'tadhd' && 'R850.00'}
                     {selectedPaymentType === 'pcadhd' && 'R850.00'}
                   </p>
@@ -602,32 +561,6 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="950" />
                   <input required type="hidden" name="item_name" maxLength={255} value="NIPA" />
                   <input type="hidden" name="item_description" maxLength={255} value="NIPA - Full Neural Imprint Assessment" />
-                  <button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
-                  >
-                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
-                  </button>
-                </form>
-              )}
-
-              {selectedPaymentType === 'tcf' && (
-                <form
-                  name="PayFastPayNowForm"
-                  action="https://payment.payfast.io/eng/process"
-                  method="post"
-                  onSubmit={(e) => {
-                    if (paymentCouponCode.trim()) {
-                      e.preventDefault();
-                      setShowCouponModal(true);
-                    }
-                  }}
-                >
-                  <input required type="hidden" name="cmd" value="_paynow" />
-                  <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
-                  <input required type="hidden" name="amount" value="850" />
-                  <input required type="hidden" name="item_name" maxLength={255} value="TCF" />
-                  <input type="hidden" name="item_description" maxLength={255} value=" TCF" />
                   <button
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
