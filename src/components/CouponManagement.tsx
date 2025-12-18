@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Ticket, Plus, Trash2, Eye, Copy, Check, X, Mail, Loader } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface Coupon {
   id: string;
@@ -23,7 +24,33 @@ interface Redemption {
   redeemed_at: string;
 }
 
+// Generate assessment options dynamically from selfAssessmentTypes
+const getAssessmentOptions = () => {
+  const options = [
+    { value: 'Full Assessment (343 Questions)', label: 'Full Assessment (343 Questions)' },
+    { value: 'Full ADHD Assessment (128 Questions)', label: 'Full ADHD Assessment (128 Questions)' },
+  ];
+
+  // Dynamically add all self-assessments
+  selfAssessmentTypes.forEach(assessment => {
+    const optionLabel = `${assessment.name} (${assessment.questions.length} Questions)`;
+    options.push({
+      value: optionLabel,
+      label: optionLabel
+    });
+  });
+
+  // Add Teen Career last
+  options.push({
+    value: 'Teen Career & Future Direction',
+    label: 'Teen Career & Future Direction'
+  });
+
+  return options;
+};
+
 export function CouponManagement() {
+  const assessmentOptions = getAssessmentOptions();
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -35,7 +62,7 @@ export function CouponManagement() {
     code: '',
     name: '',
     email: '',
-    assessmentType: 'Full Assessment (343 Questions)',
+    assessmentType: assessmentOptions[0].value,
     maxUses: 1
   });
 
@@ -275,7 +302,7 @@ export function CouponManagement() {
                 code: generateCode(),
                 name: '',
                 email: '',
-                assessmentType: 'Full Assessment (343 Questions)',
+                assessmentType: assessmentOptions[0].value,
                 maxUses: 1
               });
               setShowCreateModal(true);
@@ -448,11 +475,11 @@ export function CouponManagement() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3DB3E3] focus:border-transparent"
                   required
                 >
-                  <option value="Full Assessment (343 Questions)">Full Assessment (343 Questions)</option>
-                  <option value="Full ADHD Assessment (128 Questions)">Full ADHD Assessment (128 Questions)</option>
-                  <option value="Teen ADHD Screener (48 Questions)">Teen ADHD Screener (48 Questions)</option>
-                  <option value="Parent ADHD Screener (48 Questions)">Parent ADHD Screener (48 Questions)</option>
-                  <option value="Teen Career & Future Direction">Teen Career & Future Direction</option>
+                  {assessmentOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 

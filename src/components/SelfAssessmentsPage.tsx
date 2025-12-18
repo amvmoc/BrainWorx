@@ -52,13 +52,18 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   ) => {
     setShowCouponModal(false);
 
+    // Build dynamic mapping from assessment names to IDs
     const assessmentNameMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
-      'Teen ADHD Screener (48 Questions)': 'teen-adhd',
-      'Child Focus & Behaviour Screen (100 Questions)': 'child-adhd-4-6',
       'Teen Career & Future Direction': 'teen-career'
     };
+
+    // Dynamically add all self-assessments from the data file
+    selfAssessmentTypes.forEach(assessment => {
+      const key = `${assessment.name} (${assessment.questions.length} Questions)`;
+      assessmentNameMap[key] = assessment.id;
+    });
 
     const assessmentId = assessmentNameMap[assessmentType] || assessmentType;
 
@@ -113,10 +118,11 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     }
 
     if (existingResponse) {
-      const assessmentTypeMap: Record<string, typeof selfAssessmentTypes[0]> = {
-        'tadhd': selfAssessmentTypes[0],
-        'child-adhd-7-10': selfAssessmentTypes[1]
-      };
+      // Build dynamic mapping from assessment IDs to assessment objects
+      const assessmentTypeMap: Record<string, typeof selfAssessmentTypes[0]> = {};
+      selfAssessmentTypes.forEach(assessment => {
+        assessmentTypeMap[assessment.id] = assessment;
+      });
 
       const mappedAssessment = assessmentTypeMap[existingResponse.assessment_type];
 
