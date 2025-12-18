@@ -761,14 +761,14 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
               return (
                 <div
                   key={index}
-                  className={`bg-white rounded-3xl shadow-xl overflow-hidden border-2 ${card.borderColor} hover:shadow-2xl transition-all duration-300 hover:-translate-y-1`}
+                  className={`bg-white rounded-3xl shadow-xl overflow-hidden border-2 ${card.borderColor} hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full`}
                 >
                   <div className={`bg-gradient-to-r ${card.color} p-8 text-white`}>
                     <div className="flex items-center gap-4 mb-4">
                       <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4">
                         <card.icon size={48} className="text-white" />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <h2 className="text-3xl font-bold">
                           {isNIPA ? card.name : cardData.type.name}
                         </h2>
@@ -795,19 +795,19 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                     </div>
                   </div>
 
-                  <div className="p-8">
+                  <div className="p-8 flex-1 flex flex-col">
                     <div className="mb-6">
-                      <p className="text-gray-700 text-lg leading-relaxed">
+                      <p className="text-gray-700 text-lg leading-relaxed min-h-[120px]">
                         {isNIPA ? card.description : cardData.type.description}
                       </p>
                     </div>
 
-                    <div className={`${card.bgColor} border ${card.borderColor} rounded-xl p-6 mb-6`}>
+                    <div className={`${card.bgColor} border ${card.borderColor} rounded-xl p-6 mb-6 flex-1`}>
                       <h3 className="font-bold text-[#0A2A5E] mb-3 flex items-center gap-2">
                         <CheckCircle size={20} className="text-[#1FAFA3]" />
                         What You'll Discover:
                       </h3>
-                      <ul className="grid md:grid-cols-2 gap-3">
+                      <ul className="grid grid-cols-1 gap-3">
                         {card.features.map((feature, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-gray-700">
                             <span className="text-[#1FAFA3] mt-1">•</span>
@@ -831,7 +831,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                           setSelectedAssessment(cardData.type);
                         }
                       }}
-                      className={`w-full bg-gradient-to-r ${card.color} text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all duration-300 font-bold text-lg flex items-center justify-center gap-2 group`}
+                      className={`w-full bg-gradient-to-r ${card.color} text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all duration-300 font-bold text-lg flex items-center justify-center gap-2 group mt-auto`}
                     >
                       Learn More
                       <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
