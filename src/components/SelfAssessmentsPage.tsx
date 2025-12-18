@@ -56,7 +56,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
-      'Child Focus & Behaviour Screen (100 Questions)': 'child-adhd-7-10',
+      'Child Focus & Behaviour Screen (100 Questions)': 'child-adhd-6-10',
       'Teen Career & Future Direction': 'teen-career'
     };
 
@@ -206,9 +206,9 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       iconColor: 'text-purple-500',
       borderColor: 'border-purple-500',
       bgColor: 'bg-purple-50',
-      targetAudience: 'Children (Ages 7-10)',
+      targetAudience: 'Children (Ages 6-10)',
       features: [
-        'Parent & teacher observations at home and school',
+        'Parent & caregiver observations at home and school',
         'Track attention, activity & impulse patterns',
         'Identify emotional and social challenges',
         'Compare behavior across settings'

@@ -108,8 +108,8 @@ export const careerAssessment: SelfAssessmentType = {
   }
 };
 
-// 7-10 Year Old ADHD Screener (Parent & Teacher)
-export const child710ADHDQuestions: SelfAssessmentQuestion[] = [
+// 6-10 Year Old ADHD Screener (Parent & Caregiver)
+export const child610ADHDQuestions: SelfAssessmentQuestion[] = [
   // FOC - Scattered Focus (Parent perspective)
   { id: 1, text: "[AT HOME] My child has trouble staying focused on homework or chores without getting distracted.", neuralImprint: "FOC", domain: "parent" },
   { id: 2, text: "[AT HOME] My child starts one activity but quickly moves to something else before finishing.", neuralImprint: "FOC", domain: "parent" },
@@ -251,10 +251,10 @@ export const child710ADHDQuestions: SelfAssessmentQuestion[] = [
   { id: 100, text: "[AT SCHOOL] My child seems to attract negative attention from peers.", neuralImprint: "BULLY", domain: "teacher" }
 ];
 
-export const child710ADHDAssessment: SelfAssessmentType = {
-  id: 'child-adhd-7-10',
-  name: 'Child Focus & Behaviour Screen (7–10 years)',
-  description: 'This screening tool helps parents/caregivers and teachers observe ADHD-style patterns in children aged 7-10, covering attention, activity level, impulse control, emotional patterns, and social experiences at home and school.',
+export const child610ADHDAssessment: SelfAssessmentType = {
+  id: 'child-adhd-6-10',
+  name: 'Child Focus & Behaviour Screen (6–10 years)',
+  description: 'This screening tool helps parents/caregivers and teachers observe ADHD-style patterns in children aged 6-10, covering attention, activity level, impulse control, emotional patterns, and social experiences at home and school.',
   instructions: `How to answer:
 • This is about YOUR CHILD, based on your observations.
 • Answer questions marked [AT HOME] based on home observations.
@@ -262,7 +262,7 @@ export const child710ADHDAssessment: SelfAssessmentType = {
 • Think about how your child behaves MOST of the time, not just on their best or worst days.
 • Use the scale: 1 = Never/Not at all, 4 = Very Often/Very Much.`,
   disclaimer: 'This is NOT a diagnosis of ADHD. Only a qualified health professional (such as a paediatrician, psychologist, or psychiatrist) can diagnose ADHD. This tool is designed for parent, caregiver, and teacher observation. It can highlight where a child may benefit from support, strategies, or a professional assessment.',
-  questions: child710ADHDQuestions,
+  questions: child610ADHDQuestions,
   scale: {
     min: 1,
     max: 4,
@@ -273,6 +273,6 @@ export const child710ADHDAssessment: SelfAssessmentType = {
 // Export all assessment types
 export const selfAssessmentTypes: SelfAssessmentType[] = [
   teenADHDAssessment,
-  child710ADHDAssessment,
+  child610ADHDAssessment,
   careerAssessment
 ];

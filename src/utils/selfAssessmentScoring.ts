@@ -43,7 +43,15 @@ const NEURAL_IMPRINT_NAMES: Record<string, string> = {
   'CPL': 'Compulsive Patterns',
   'RES': 'Resistance',
   'NAR': 'Narcissism',
-  'DOG': 'Dogmatic Thinking'
+  'DOG': 'Dogmatic Thinking',
+  // Child ADHD patterns (6-10 years)
+  'FOC': 'Scattered Focus',
+  'HYP': 'High Gear',
+  'IMP': 'Impulse Rush',
+  'ORG': 'Time & Order',
+  'DIM': 'Flexible Focus',
+  'INWF': 'Inward Focus',
+  'BULLY': 'Victim Loops'
 };
 
 export function calculateSelfAssessmentScores(
@@ -174,6 +182,28 @@ function generateRecommendations(
           break;
         case 'NEG':
           recommendations.push('Address unmet emotional needs through therapy and building supportive relationships.');
+          break;
+        // Child ADHD patterns
+        case 'FOC':
+          recommendations.push('Work with your child on attention and focus strategies. Create structured routines and minimize distractions.');
+          break;
+        case 'HYP':
+          recommendations.push('Provide regular movement breaks and physical activity. Channel high energy into structured activities.');
+          break;
+        case 'IMP':
+          recommendations.push('Teach impulse control strategies. Practice waiting, taking turns, and thinking before acting.');
+          break;
+        case 'ORG':
+          recommendations.push('Support organizational skills with visual schedules, checklists, and consistent routines.');
+          break;
+        case 'DIM':
+          recommendations.push('Help your child transition between activities. Use timers and warnings before switching tasks.');
+          break;
+        case 'INWF':
+          recommendations.push('Create safe spaces for your child to express feelings. Consider professional support if anxiety persists.');
+          break;
+        case 'BULLY':
+          recommendations.push('Address social challenges with teachers and peers. Build your child\'s confidence and social skills.');
           break;
       }
     }
