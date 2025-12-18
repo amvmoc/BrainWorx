@@ -123,13 +123,18 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     setCouponId(redemptionCouponId);
     setPreviousStep('email');
 
+    // Build dynamic mapping from assessment names to IDs
     const assessmentTypeMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nip3',
       'Full ADHD Assessment (128 Questions)': 'nip3',
-      'Teen ADHD Screener (48 Questions)': 'teen-adhd',
-      'Parent ADHD Screener (48 Questions)': 'parent-adhd',
       'Teen Career & Future Direction': 'teen-career'
     };
+
+    // Dynamically add all self-assessments from the data file
+    selfAssessmentTypes.forEach(assessment => {
+      const key = `${assessment.name} (${assessment.questions.length} Questions)`;
+      assessmentTypeMap[key] = assessment.id;
+    });
 
     const mappedType = assessmentTypeMap[assessmentType] || assessmentType;
     console.log('Mapped assessment type:', mappedType);
