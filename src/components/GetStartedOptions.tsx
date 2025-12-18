@@ -4,19 +4,20 @@ import NIP3Assessment from './NIP3Assessment';
 import { NeuralImprintPatternsInfo } from './NeuralImprintPatternsInfo';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
 import { CouponRedemption } from './CouponRedemption';
+import { CareerAssessment } from './CareerAssessment';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
 
 interface GetStartedOptionsProps {
   onClose: () => void;
   franchiseCode?: string | null;
-  preselectedPaymentType?: 'tadhd' | 'pcadhd' | null;
+  preselectedPaymentType?: 'tadhd' | 'pcadhd' | 'tcf' | null;
   initialCouponCode?: string | null;
 }
 
 export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType, initialCouponCode }: GetStartedOptionsProps) {
-  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
-  const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tadhd' | 'pcadhd' | null>(preselectedPaymentType || null);
+  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'career_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
+  const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tadhd' | 'pcadhd' | 'tcf' | null>(preselectedPaymentType || null);
   const [coachLink, setCoachLink] = useState(franchiseCode || '');
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
@@ -126,7 +127,8 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
       'Full Assessment (343 Questions)': 'nip3',
       'Full ADHD Assessment (128 Questions)': 'nip3',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
-      'Parent ADHD Screener (48 Questions)': 'parent-adhd'
+      'Parent ADHD Screener (48 Questions)': 'parent-adhd',
+      'Teen Career & Future Direction': 'teen-career'
     };
 
     const mappedType = assessmentTypeMap[assessmentType] || assessmentType;
@@ -136,6 +138,10 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
       console.log('Navigating to Full Assessment (NIP3)');
       setShowCouponModal(false);
       setStep('questionnaire');
+    } else if (mappedType === 'teen-career') {
+      console.log('Navigating to Career Assessment');
+      setShowCouponModal(false);
+      setStep('career_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       console.log('Found self-assessment:', selectedAssessment);
@@ -192,6 +198,20 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
         franchiseOwnerId={franchiseOwnerId}
         couponId={couponId}
       />
+    );
+  }
+
+  if (step === 'career_assessment') {
+    return (
+      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+        <CareerAssessment
+          onClose={onClose}
+          email={email}
+          customerName={customerName}
+          franchiseOwnerId={franchiseOwnerId}
+          couponId={couponId}
+        />
+      </div>
     );
   }
 
@@ -289,6 +309,25 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-blue-500">R850</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedPaymentType('tcf');
+                  setStep('payment');
+                }}
+                className="w-full p-4 border-2 border-amber-500 rounded-lg hover:bg-amber-500/10 transition-all text-left group"
+              >
+                <div className="flex items-center gap-3">
+                  <Briefcase className="text-amber-500 group-hover:scale-110 transition-transform" size={24} />
+                  <div className="flex-1">
+                    <h3 className="font-bold text-[#0A2A5E]">TCF - Teen Career & Future Direction</h3>
+                    <p className="text-sm text-gray-600">132 questions • Career exploration</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-amber-500">R850</p>
                   </div>
                 </div>
               </button>
@@ -499,6 +538,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   {selectedPaymentType === 'nipa' && 'NIPA - Full Neural Imprint Assessment'}
                   {selectedPaymentType === 'tadhd' && 'TADHD - Teen ADHD-Linked Screener'}
                   {selectedPaymentType === 'pcadhd' && 'PCADHD - Parent/Caregiver ADHD Screener'}
+                  {selectedPaymentType === 'tcf' && 'TCF - Teen Career & Future Direction'}
                 </p>
               </div>
               <div className="border-t border-gray-300 pt-4">
@@ -508,6 +548,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     {selectedPaymentType === 'nipa' && 'R950.00'}
                     {selectedPaymentType === 'tadhd' && 'R850.00'}
                     {selectedPaymentType === 'pcadhd' && 'R850.00'}
+                    {selectedPaymentType === 'tcf' && 'R850.00'}
                   </p>
                 </div>
               </div>
@@ -613,6 +654,32 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                   <input required type="hidden" name="amount" value="850" />
                   <input required type="hidden" name="item_name" maxLength={255} value="PCADHD" />
                   <input type="hidden" name="item_description" maxLength={255} value="PCADHD" />
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    {paymentCouponCode.trim() ? 'Proceed with Coupon' : 'Proceed to Payment'}
+                  </button>
+                </form>
+              )}
+
+              {selectedPaymentType === 'tcf' && (
+                <form
+                  name="PayFastPayNowForm"
+                  action="https://payment.payfast.io/eng/process"
+                  method="post"
+                  onSubmit={(e) => {
+                    if (paymentCouponCode.trim()) {
+                      e.preventDefault();
+                      setShowCouponModal(true);
+                    }
+                  }}
+                >
+                  <input required type="hidden" name="cmd" value="_paynow" />
+                  <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
+                  <input required type="hidden" name="amount" value="850" />
+                  <input required type="hidden" name="item_name" maxLength={255} value="TCF" />
+                  <input type="hidden" name="item_description" maxLength={255} value="TCF - Teen Career & Future Direction" />
                   <button
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"

@@ -48,7 +48,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
       'Teen ADHD Screener (48 Questions)': 'teen-adhd',
-      'Parent ADHD Screener (48 Questions)': 'parent-adhd'
+      'Parent ADHD Screener (48 Questions)': 'parent-adhd',
+      'Teen Career & Future Direction': 'teen-career'
     };
 
     const assessmentId = assessmentNameMap[assessmentType] || assessmentType;
@@ -97,9 +98,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
 
     if (existingResponse) {
       const assessmentTypeMap: Record<string, typeof selfAssessmentTypes[0]> = {
-        'tcf': selfAssessmentTypes[0],
-        'tadhd': selfAssessmentTypes[1],
-        'pcadhd': selfAssessmentTypes[2]
+        'tadhd': selfAssessmentTypes[0],
+        'pcadhd': selfAssessmentTypes[1]
       };
 
       const mappedAssessment = assessmentTypeMap[existingResponse.assessment_type];
@@ -160,21 +160,6 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     },
     {
       type: selfAssessmentTypes[0],
-      icon: Briefcase,
-      color: 'from-[#3DB3E3] to-[#1FAFA3]',
-      iconColor: 'text-[#3DB3E3]',
-      borderColor: 'border-[#3DB3E3]',
-      bgColor: 'bg-[#3DB3E3]/10',
-      targetAudience: 'Ages 12-18',
-      features: [
-        'Discover your career interests',
-        'Identify ideal work environments',
-        'Understand your learning style',
-        'Plan your future path'
-      ]
-    },
-    {
-      type: selfAssessmentTypes[1],
       icon: Brain,
       color: 'from-orange-500 to-red-500',
       iconColor: 'text-orange-500',
@@ -189,7 +174,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       ]
     },
     {
-      type: selfAssessmentTypes[2],
+      type: selfAssessmentTypes[1],
       icon: Users,
       color: 'from-purple-500 to-pink-500',
       iconColor: 'text-purple-500',
@@ -542,9 +527,10 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                   </button>
                   <button
                     onClick={() => {
-                      const paymentTypeMap: Record<string, 'tadhd' | 'pcadhd'> = {
+                      const paymentTypeMap: Record<string, 'tadhd' | 'pcadhd' | 'tcf'> = {
                         'teen-adhd': 'tadhd',
-                        'parent-adhd': 'pcadhd'
+                        'parent-adhd': 'pcadhd',
+                        'teen-career': 'tcf'
                       };
                       const paymentType = paymentTypeMap[selectedAssessment.id];
                       if (onStartPayment) {

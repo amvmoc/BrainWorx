@@ -452,6 +452,7 @@ export function CouponManagement() {
                   <option value="Full ADHD Assessment (128 Questions)">Full ADHD Assessment (128 Questions)</option>
                   <option value="Teen ADHD Screener (48 Questions)">Teen ADHD Screener (48 Questions)</option>
                   <option value="Parent ADHD Screener (48 Questions)">Parent ADHD Screener (48 Questions)</option>
+                  <option value="Teen Career & Future Direction">Teen Career & Future Direction</option>
                 </select>
               </div>
 
