@@ -1,11 +1,12 @@
 // Self-assessments with mandatory payment gateway
 import { useState } from 'react';
-import { Briefcase, Users, Brain, Heart, ArrowRight, X, CheckCircle, Clock, Ticket, RotateCcw } from 'lucide-react';
+import { Briefcase, Users, Brain, Heart, ArrowRight, X, CheckCircle, Clock, Ticket, RotateCcw, UserCheck } from 'lucide-react';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
 import NIP3Assessment from './NIP3Assessment';
 import { CouponRedemption } from './CouponRedemption';
 import { CareerAssessment } from './CareerAssessment';
+import ADHDAssessment from './ADHDAssessment';
 import { supabase } from '../lib/supabase';
 
 interface SelfAssessmentsPageProps {
@@ -42,6 +43,11 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     franchiseOwnerId: string;
     couponId?: string;
   } | null>(null);
+  const [startADHDAssessment, setStartADHDAssessment] = useState(false);
+  const [adhdAssessmentData, setADHDAssessmentData] = useState<{
+    assessmentId?: string;
+    respondentType: 'parent' | 'caregiver';
+  } | null>(null);
 
   const handleCouponRedemption = (
     assessmentType: string,
@@ -56,7 +62,8 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     const assessmentNameMap: Record<string, string> = {
       'Full Assessment (343 Questions)': 'nipa',
       'Full ADHD Assessment (128 Questions)': 'nipa',
-      'Teen Career & Future Direction': 'teen-career'
+      'Teen Career & Future Direction': 'teen-career',
+      'ADHD Caregiver Assessment (Parent & Caregiver)': 'adhd-caregiver'
     };
 
     // Dynamically add all self-assessments from the data file
@@ -79,6 +86,11 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         couponId: couponId
       });
       setStartCareerAssessment(true);
+    } else if (assessmentId === 'adhd-caregiver') {
+      setADHDAssessmentData({
+        respondentType: 'parent'
+      });
+      setStartADHDAssessment(true);
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === assessmentId);
 
@@ -185,6 +197,32 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     disclaimer: 'This is a self-reflection and coaching tool, not a clinical diagnostic instrument. It is designed to support personal growth and self-awareness through professional guidance.'
   };
 
+  const adhdCaregiverCard = {
+    id: 'adhd-caregiver',
+    name: 'ADHD Caregiver Assessment',
+    description: 'A comprehensive ADHD assessment that requires BOTH parent/guardian AND teacher/caregiver input. This dual-perspective approach provides a complete picture of behaviors across home and school settings, essential for accurate ADHD evaluation. Each respondent completes their own questionnaire and receives an individual report, while the franchise owner receives a comprehensive combined analysis.',
+    icon: UserCheck,
+    color: 'from-emerald-500 to-teal-500',
+    iconColor: 'text-emerald-500',
+    borderColor: 'border-emerald-500',
+    bgColor: 'bg-emerald-50',
+    targetAudience: 'Children (Ages 4-18)',
+    questionCount: 50,
+    assessmentType: 'ADHD Dual Assessment',
+    features: [
+      'Dual-respondent system (parent + teacher/caregiver)',
+      '50 questions per respondent covering 8 behavioral categories',
+      'Individual reports for each respondent',
+      'Comprehensive combined report with comparison analysis',
+      'Visual charts showing behavior patterns across settings',
+      'Areas of agreement and discrepancy highlighted',
+      'Severity scoring and intervention recommendations',
+      'Shareable results via secure links'
+    ],
+    instructions: 'This assessment requires TWO separate completions: one by a parent/guardian and one by a teacher/caregiver. Each person rates the child\'s behaviors based on their observations in their specific setting. Both assessments must be completed to generate the full comprehensive report. Each assessment takes approximately 15-20 minutes.',
+    disclaimer: 'This is a screening tool for identifying ADHD-related concerns. It does NOT constitute a clinical diagnosis. Only qualified healthcare professionals can diagnose ADHD through comprehensive clinical evaluation.'
+  };
+
   const assessmentCards = [
     {
       type: 'nipa',
@@ -236,8 +274,23 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
         'Structured feedback session included',
         'Study & career path guidance'
       ]
+    },
+    {
+      type: 'adhd-caregiver',
+      ...adhdCaregiverCard
     }
   ];
+
+  // Show ADHD assessment
+  if (startADHDAssessment && adhdAssessmentData) {
+    return (
+      <ADHDAssessment
+        assessmentId={adhdAssessmentData.assessmentId}
+        respondentType={adhdAssessmentData.respondentType}
+        onClose={onClose}
+      />
+    );
+  }
 
   // Show questionnaire after coupon redemption
   if (startQuestionnaire && questionnaireData) {
