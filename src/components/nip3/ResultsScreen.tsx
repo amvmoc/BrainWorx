@@ -12,7 +12,7 @@ type ReportType = 'client' | 'coach' | 'summary';
 
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const { results } = useAssessment();
-  const [reportType, setReportType] = useState<ReportType>('summary');
+  const [reportType, setReportType] = useState<ReportType>('coach');
 
   if (!results) {
     return <div>Loading results...</div>;
