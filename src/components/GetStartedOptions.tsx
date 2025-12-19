@@ -5,6 +5,7 @@ import { NeuralImprintPatternsInfo } from './NeuralImprintPatternsInfo';
 import { SelfAssessmentQuestionnaire } from './SelfAssessmentQuestionnaire';
 import { CouponRedemption } from './CouponRedemption';
 import { CareerAssessment } from './CareerAssessment';
+import ADHDAssessment from './ADHDAssessment';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
 
@@ -16,7 +17,7 @@ interface GetStartedOptionsProps {
 }
 
 export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentType, initialCouponCode }: GetStartedOptionsProps) {
-  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'career_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
+  const [step, setStep] = useState<'options' | 'assessment_type' | 'coach_link' | 'email' | 'resume' | 'patterns_info' | 'questionnaire' | 'self_assessment' | 'career_assessment' | 'adhd_assessment' | 'payment'>(preselectedPaymentType ? 'payment' : 'options');
   const [selectedPaymentType, setSelectedPaymentType] = useState<'nipa' | 'tadhd' | 'pcadhd' | 'tcf' | null>(preselectedPaymentType || null);
   const [coachLink, setCoachLink] = useState(franchiseCode || '');
   const [email, setEmail] = useState('');
@@ -149,10 +150,9 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
       setShowCouponModal(false);
       setStep('career_assessment');
     } else if (mappedType === 'adhd-caregiver') {
-      console.log('ADHD Caregiver Assessment - redirecting to assessments page');
+      console.log('Navigating to ADHD Caregiver Assessment');
       setShowCouponModal(false);
-      alert('This coupon is for the ADHD Caregiver Assessment. Please access this assessment from the Self-Assessments page (Book Your Free Assessment → Self-Assessment).');
-      onClose();
+      setStep('adhd_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       console.log('Found self-assessment:', selectedAssessment);
@@ -221,6 +221,17 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
           customerName={customerName}
           franchiseOwnerId={franchiseOwnerId}
           couponId={couponId}
+        />
+      </div>
+    );
+  }
+
+  if (step === 'adhd_assessment') {
+    return (
+      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+        <ADHDAssessment
+          onClose={onClose}
+          respondentType="parent"
         />
       </div>
     );

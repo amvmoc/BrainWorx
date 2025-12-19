@@ -282,13 +282,14 @@ When a coupon is redeemed:
 2. System validates coupon and checks `assessment_type = 'adhd-caregiver'`
 3. Maps display name to 'adhd-caregiver' ID
 4. Routes appropriately based on redemption location:
-   - **From SelfAssessmentsPage**: Routes to ADHD assessment with parent respondent type
-   - **From GetStartedOptions (homepage)**: Shows message directing user to Self-Assessments page
+   - **From SelfAssessmentsPage**: Sets `startADHDAssessment = true`, renders ADHDAssessment with parent respondent
+   - **From GetStartedOptions (homepage)**: Sets `step = 'adhd_assessment'`, renders ADHDAssessment with parent respondent
 5. Pre-fills franchise_owner_id and coupon_id from coupon data
 
 **Two Redemption Points:**
+Both locations now directly launch the ADHD assessment:
 - **SelfAssessmentsPage.tsx**: Dedicated assessment page with full ADHD flow
-- **GetStartedOptions.tsx**: Homepage modal - redirects to assessment page with helpful message
+- **GetStartedOptions.tsx**: Homepage modal - launches assessment directly (as of latest update)
 
 ### System-Generated Coupons
 Parent creates caregiver invitation:

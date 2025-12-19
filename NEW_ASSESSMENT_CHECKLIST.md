@@ -158,29 +158,74 @@ if (selectedXXX) {
 
 **CRITICAL:** This file handles coupon redemption from the homepage "Get Started" flow. ALL assessment types must be recognized here to prevent "Unknown assessment type" errors.
 
-**Actions:**
-- [ ] Add mapping in `assessmentTypeMap`:
-  ```tsx
-  'Assessment Name (XX Questions)': 'assessment-id'
-  ```
-- [ ] Add handling logic in the if-else chain:
-  ```tsx
-  else if (mappedType === 'assessment-id') {
-    // Option 1: Handle directly if assessment can be started from here
-    setShowCouponModal(false);
-    setStep('assessment_step');
+**Step 1: Import Assessment Component**
+```tsx
+import YourAssessment from './YourAssessment';
+```
+- [ ] Import assessment component at top of file (~line 1-10)
+- [ ] Use default import (no braces) or named import (with braces) as appropriate
 
-    // Option 2: Redirect with helpful message if assessment requires special flow
-    setShowCouponModal(false);
-    alert('This coupon is for [Assessment Name]. Please access this from [Location].');
-    onClose();
-  }
-  ```
-- [ ] Choose appropriate handling based on assessment requirements:
-  - If assessment can be started from homepage → Add new step and render component
-  - If assessment requires specific page/flow → Show message and close modal
+**Step 2: Update Step Type**
+Add your step to the step type union (~line 20):
+```tsx
+const [step, setStep] = useState<'options' | ... | 'your_assessment_step' | 'payment'>(...);
+```
+- [ ] Add new step name to TypeScript union type
+
+**Step 3: Add Mapping**
+Add mapping in `assessmentTypeMap` (~line 127):
+```tsx
+'Assessment Name (XX Questions)': 'assessment-id'
+```
+- [ ] Add display name (from coupon) → database ID mapping
+
+**Step 4: Add Routing Logic**
+Add handling logic in the if-else chain (~line 143-171):
+```tsx
+else if (mappedType === 'assessment-id') {
+  console.log('Navigating to Your Assessment');
+  setShowCouponModal(false);
+  setStep('your_assessment_step');
+}
+```
+- [ ] Add routing condition that sets step to your assessment
+
+**Step 5: Add Rendering Logic**
+Add component rendering before `if (showCouponModal)` (~line 229-238):
+```tsx
+if (step === 'your_assessment_step') {
+  return (
+    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+      <YourAssessment
+        onClose={onClose}
+        email={email}
+        customerName={customerName}
+        franchiseOwnerId={franchiseOwnerId}
+        couponId={couponId}
+      />
+    </div>
+  );
+}
+```
+- [ ] Add rendering condition for your assessment step
+- [ ] Pass appropriate props (check component's interface)
+
+**Step 6: Testing Checklist**
+- [ ] Import assessment component correctly (default vs named export)
+- [ ] Step type includes new assessment step (no TypeScript errors)
+- [ ] Mapping includes display name → assessment ID
+- [ ] Routing logic sets correct step
+- [ ] Rendering logic displays assessment component
 - [ ] Test coupon redemption from homepage
-- [ ] Verify error message is clear and helpful
+- [ ] Verify assessment launches correctly
+- [ ] Check all required props are passed
+- [ ] Verify onClose returns to correct location
+
+**Current Supported Assessments (Reference):**
+- `nip3` → 'questionnaire' → NIP3Assessment
+- `teen-career` → 'career_assessment' → CareerAssessment
+- `adhd-caregiver` → 'adhd_assessment' → ADHDAssessment
+- Self-assessments → 'self_assessment' → SelfAssessmentQuestionnaire
 
 **Why This Matters:**
 Users can redeem coupons from two places:
