@@ -252,7 +252,7 @@ export default function ADHDAssessment({ assessmentId, respondentType, couponCod
           max_uses: 1,
           recipient_email: caregiverEmail,
           recipient_name: caregiverName,
-          valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         })
         .select()
         .single();
@@ -336,17 +336,7 @@ export default function ADHDAssessment({ assessmentId, respondentType, couponCod
 
     return (
       <div className="max-w-4xl mx-auto p-6">
-        {parentResponse && (
-          <div className="mb-8">
-            <ADHDParentReport
-              assessment={assessmentData}
-              response={parentResponse}
-              onClose={onClose}
-            />
-          </div>
-        )}
-
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div className="mb-6">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Invite Caregiver to Complete Assessment
@@ -457,6 +447,16 @@ export default function ADHDAssessment({ assessmentId, respondentType, couponCod
             </div>
           )}
         </div>
+
+        {parentResponse && (
+          <div className="mt-8">
+            <ADHDParentReport
+              assessment={assessmentData}
+              response={parentResponse}
+              onClose={onClose}
+            />
+          </div>
+        )}
       </div>
     );
   }
