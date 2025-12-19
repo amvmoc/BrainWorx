@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard, Mail, FileCheck, Calendar } from 'lucide-react';
+import { LogOut, Users, TrendingUp, Copy, Share2, Eye, EyeOff, FileText, LayoutDashboard, Mail, FileCheck, Calendar, Brain } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { InvoicesPage } from './InvoicesPage';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
@@ -7,6 +7,7 @@ import CoachReport from './coach-report/CoachReport';
 import { CalendarManagement } from './CalendarManagement';
 import { BookingManagement } from './BookingManagement';
 import { FranchiseBookingCalendar } from './FranchiseBookingCalendar';
+import { ADHDAssessmentsManagement } from './ADHDAssessmentsManagement';
 import { generateCoachReportData } from '../utils/coachReportGenerator';
 import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
@@ -60,7 +61,7 @@ export function FranchiseDashboard({
   const [loading, setLoading] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState<Response | null>(null);
   const [copied, setCopied] = useState(false);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices' | 'calendar'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'invoices' | 'calendar' | 'adhd-assessments'>('dashboard');
   const [calendarTab, setCalendarTab] = useState<'availability' | 'bookings'>('bookings');
   const [showCoachReport, setShowCoachReport] = useState(false);
   const [coachReportData, setCoachReportData] = useState<any>(null);
@@ -231,6 +232,17 @@ export function FranchiseDashboard({
               <Calendar size={20} />
               Calendar & Bookings
             </button>
+            <button
+              onClick={() => setCurrentView('adhd-assessments')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                currentView === 'adhd-assessments'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <Brain size={20} />
+              ADHD Assessments
+            </button>
           </div>
         </div>
       </nav>
@@ -238,6 +250,8 @@ export function FranchiseDashboard({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentView === 'invoices' ? (
           <InvoicesPage franchiseOwnerId={franchiseOwnerId} />
+        ) : currentView === 'adhd-assessments' ? (
+          <ADHDAssessmentsManagement franchiseOwnerId={franchiseOwnerId} />
         ) : currentView === 'calendar' ? (
           <div className="space-y-6">
             <div className="flex gap-4 mb-6">
