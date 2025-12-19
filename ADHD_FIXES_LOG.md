@@ -117,6 +117,33 @@ This document tracks all fixes and changes made to the ADHD Assessment system.
 
 ---
 
+## Fix #7: Coupon Redemption Validation Error (2025-12-19)
+
+**Problem:** Caregivers trying to redeem their invitation coupons got error "Invalid coupon data received. Please contact support."
+
+**Root Cause:**
+- ADHD caregiver invitation coupons have `created_by = NULL` (because parents create them without authentication)
+- Coupon redemption validation required `created_by` to be present
+- Code checked: `if (!result.assessment_type || !result.coupon_id || !result.created_by)`
+- NULL values fail JavaScript truthiness checks, causing false validation failures
+
+**Solution:**
+- Modified validation to only require `assessment_type` and `coupon_id`
+- Allow `created_by` to be NULL (pass `null` instead of undefined when missing)
+- Changed check to: `if (!result.assessment_type || !result.coupon_id)`
+- Pass `result.created_by || null` to success callback
+
+**Files Changed:**
+- `src/components/CouponRedemption.tsx` (lines 51-63)
+
+**Why This Works:**
+- System-generated coupons (adhd-caregiver) don't have franchise owners
+- `created_by` is optional metadata, not required for redemption
+- Only assessment type and coupon ID are needed to start the assessment
+- Franchise tracking still works when `created_by` is present
+
+---
+
 ## Summary of All Changes
 
 ### Code Changes
@@ -126,6 +153,7 @@ This document tracks all fixes and changes made to the ADHD Assessment system.
 4. Fixed database column name from valid_until to expires_at
 5. Email sending switched from Resend API to Gmail SMTP (nodemailer)
 6. Email function authentication fixed (verifyJWT: false)
+7. Coupon redemption validation allows NULL created_by field
 
 ### Database Changes
 1. Added RLS policy for adhd-caregiver coupon creation (anon/authenticated)

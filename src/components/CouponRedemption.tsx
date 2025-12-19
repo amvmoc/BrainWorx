@@ -48,7 +48,7 @@ export function CouponRedemption({ onRedemptionSuccess, onCancel, initialCouponC
         return;
       }
 
-      if (!result.assessment_type || !result.coupon_id || !result.created_by) {
+      if (!result.assessment_type || !result.coupon_id) {
         console.error('Missing required fields in coupon response:', result);
         setError('Invalid coupon data received. Please contact support.');
         setLoading(false);
@@ -60,7 +60,7 @@ export function CouponRedemption({ onRedemptionSuccess, onCancel, initialCouponC
       onRedemptionSuccess(
         result.assessment_type,
         result.coupon_id,
-        result.created_by,
+        result.created_by || null,
         formData.name,
         formData.email
       );
