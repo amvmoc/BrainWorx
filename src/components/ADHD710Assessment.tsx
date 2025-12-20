@@ -19,16 +19,23 @@ interface ADHD710AssessmentProps {
   onComplete?: () => void;
 }
 
-export default function ADHD710Assessment({ assessmentId, respondentType, onComplete }: ADHD710AssessmentProps) {
+export default function ADHD710Assessment({ assessmentId: initialAssessmentId, respondentType, onComplete }: ADHD710AssessmentProps) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [assessment, setAssessment] = useState<any>(null);
+  const [assessmentId, setAssessmentId] = useState<string | undefined>(initialAssessmentId);
   const [responses, setResponses] = useState<Record<number, number>>({});
   const [respondentInfo, setRespondentInfo] = useState({
     name: '',
     email: '',
     relationship: ''
   });
+  const [childInfo, setChildInfo] = useState({
+    name: '',
+    age: '',
+    gender: 'male'
+  });
+  const [stage, setStage] = useState<'info' | 'questions'>('info');
   const [currentSection, setCurrentSection] = useState(0);
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -37,28 +44,37 @@ export default function ADHD710Assessment({ assessmentId, respondentType, onComp
   const totalSections = Math.ceil(ADHD710_QUESTIONS.length / questionsPerSection);
 
   useEffect(() => {
-    if (assessmentId) {
+    if (initialAssessmentId) {
       loadAssessment();
     } else {
       setLoading(false);
+      setStage('info');
     }
-  }, [assessmentId]);
+  }, [initialAssessmentId]);
 
   const loadAssessment = async () => {
     try {
       const { data: assessmentData, error: assessmentError } = await supabase
         .from('adhd_assessments')
         .select('*')
-        .eq('id', assessmentId)
+        .eq('id', initialAssessmentId)
         .maybeSingle();
 
       if (assessmentError) throw assessmentError;
       setAssessment(assessmentData);
 
+      if (assessmentData) {
+        setChildInfo({
+          name: assessmentData.child_name || '',
+          age: assessmentData.child_age?.toString() || '',
+          gender: assessmentData.child_gender || 'male'
+        });
+      }
+
       const { data: responseData, error: responseError } = await supabase
         .from('adhd_assessment_responses')
         .select('*')
-        .eq('assessment_id', assessmentId)
+        .eq('assessment_id', initialAssessmentId)
         .eq('respondent_type', respondentType)
         .maybeSingle();
 
@@ -69,7 +85,64 @@ export default function ADHD710Assessment({ assessmentId, respondentType, onComp
           email: responseData.respondent_email || '',
           relationship: responseData.respondent_relationship || ''
         });
+        setStage('questions');
+      } else {
+        setStage('info');
       }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStartAssessment = async () => {
+    if (!childInfo.name || !childInfo.age || !respondentInfo.name || !respondentInfo.email || !respondentInfo.relationship) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      let newAssessmentId = assessmentId;
+
+      // Create assessment record if it doesn't exist
+      if (!newAssessmentId) {
+        const { data: newAssessment, error: assessmentError } = await supabase
+          .from('adhd_assessments')
+          .insert({
+            child_name: childInfo.name,
+            child_age: parseInt(childInfo.age),
+            child_gender: childInfo.gender,
+            created_by_email: respondentInfo.email,
+            status: 'pending'
+          })
+          .select()
+          .single();
+
+        if (assessmentError) throw assessmentError;
+        newAssessmentId = newAssessment.id;
+        setAssessmentId(newAssessmentId);
+        setAssessment(newAssessment);
+      }
+
+      // Create response record
+      const { error: responseError } = await supabase
+        .from('adhd_assessment_responses')
+        .insert({
+          assessment_id: newAssessmentId,
+          respondent_type: respondentType,
+          respondent_name: respondentInfo.name,
+          respondent_email: respondentInfo.email,
+          respondent_relationship: respondentInfo.relationship,
+          responses: {}
+        });
+
+      if (responseError) throw responseError;
+
+      setStage('questions');
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -247,34 +320,86 @@ export default function ADHD710Assessment({ assessmentId, respondentType, onComp
             </div>
           </div>
 
-          {/* Child Information Banner */}
-          {assessment && (
-            <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b-4 border-purple-300">
-              <div className="flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-purple-600 uppercase tracking-wide mb-1">
-                    Assessment For
-                  </p>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    {assessment.child_name}
-                  </h2>
-                  <div className="flex items-center justify-center gap-6 text-gray-700">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">Age:</span>
-                      <span className="text-lg font-bold text-purple-600">{assessment.child_age}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">Gender:</span>
-                      <span className="text-lg font-bold text-purple-600 capitalize">{assessment.child_gender}</span>
+          {/* Info Collection Stage */}
+          {stage === 'info' && (
+            <>
+              {/* Child Information Banner */}
+              {assessment && (
+                <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b-4 border-purple-300">
+                  <div className="flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-purple-600 uppercase tracking-wide mb-1">
+                        Assessment For
+                      </p>
+                      <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                        {assessment.child_name}
+                      </h2>
+                      <div className="flex items-center justify-center gap-6 text-gray-700">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Age:</span>
+                          <span className="text-lg font-bold text-purple-600">{assessment.child_age}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Gender:</span>
+                          <span className="text-lg font-bold text-purple-600 capitalize">{assessment.child_gender}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
+              )}
 
-          {/* Respondent Information */}
-          <div className="p-6 bg-blue-50 border-b">
+              {/* Child Information (for parent starting new assessment) */}
+              {!assessment && (
+                <div className="p-6 border-b">
+                  <h3 className="font-semibold text-gray-900 mb-3">Child Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Child's Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={childInfo.name}
+                        onChange={(e) => setChildInfo({ ...childInfo, name: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Child's Age *
+                      </label>
+                      <input
+                        type="number"
+                        min="7"
+                        max="10"
+                        value={childInfo.age}
+                        onChange={(e) => setChildInfo({ ...childInfo, age: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Child's Gender *
+                      </label>
+                      <select
+                        value={childInfo.gender}
+                        onChange={(e) => setChildInfo({ ...childInfo, gender: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Respondent Information */}
+              <div className="p-6 bg-blue-50 border-b">
             <h3 className="font-semibold text-gray-900 mb-3">Your Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -322,45 +447,105 @@ export default function ADHD710Assessment({ assessmentId, respondentType, onComp
             </div>
           </div>
 
-          {/* Instructions */}
-          <div className="p-6 bg-amber-50 border-b">
-            <h3 className="font-semibold text-gray-900 mb-2">Instructions</h3>
-            <p className="text-sm text-gray-700 mb-2">
-              Rate how true each statement is for this child on a scale of 1-4:
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center font-bold text-green-700">1</div>
-                <span>Not at all true</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center font-bold text-yellow-700">2</div>
-                <span>Somewhat true</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center font-bold text-orange-700">3</div>
-                <span>Mostly true</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center font-bold text-red-700">4</div>
-                <span>Completely true</span>
-              </div>
-            </div>
-          </div>
+              {/* Error Message */}
+              {error && (
+                <div className="mx-6 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-red-900">Error</p>
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              )}
 
-          {/* Error Message */}
-          {error && (
-            <div className="mx-6 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium text-red-900">Error</p>
-                <p className="text-sm text-red-700">{error}</p>
+              {/* Start Button */}
+              <div className="p-6 flex justify-end">
+                <button
+                  onClick={handleStartAssessment}
+                  disabled={loading}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Starting...
+                    </>
+                  ) : (
+                    'Start Assessment'
+                  )}
+                </button>
               </div>
-            </div>
+            </>
           )}
 
-          {/* Questions */}
-          <div className="p-6">
+          {/* Questions Stage */}
+          {stage === 'questions' && (
+            <>
+              {/* Child Information Banner */}
+              {(assessment || childInfo.name) && (
+                <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b-4 border-purple-300">
+                  <div className="flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-purple-600 uppercase tracking-wide mb-1">
+                        Assessment For
+                      </p>
+                      <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                        {assessment?.child_name || childInfo.name}
+                      </h2>
+                      <div className="flex items-center justify-center gap-6 text-gray-700">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Age:</span>
+                          <span className="text-lg font-bold text-purple-600">{assessment?.child_age || childInfo.age}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Gender:</span>
+                          <span className="text-lg font-bold text-purple-600 capitalize">{assessment?.child_gender || childInfo.gender}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Instructions */}
+              <div className="p-6 bg-amber-50 border-b">
+                <h3 className="font-semibold text-gray-900 mb-2">Instructions</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  Rate how true each statement is for this child on a scale of 1-4:
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center font-bold text-green-700">1</div>
+                    <span>Not at all true</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center font-bold text-yellow-700">2</div>
+                    <span>Somewhat true</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center font-bold text-orange-700">3</div>
+                    <span>Mostly true</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center font-bold text-red-700">4</div>
+                    <span>Completely true</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="mx-6 mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-red-900">Error</p>
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Questions */}
+              <div className="p-6">
             <div className="mb-4 text-sm text-gray-600">
               Section {currentSection + 1} of {totalSections}
             </div>
@@ -441,6 +626,8 @@ export default function ADHD710Assessment({ assessmentId, respondentType, onComp
               )}
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>
