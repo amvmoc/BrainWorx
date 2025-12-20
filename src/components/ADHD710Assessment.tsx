@@ -39,6 +39,12 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
   const [currentSection, setCurrentSection] = useState(0);
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [teacherInfo, setTeacherInfo] = useState({
+    name: '',
+    email: '',
+    relationship: 'teacher'
+  });
 
   const questionsPerSection = 20;
   const totalSections = Math.ceil(ADHD710_QUESTIONS.length / questionsPerSection);
@@ -193,6 +199,8 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
     }
 
     setSaving(true);
+    setError('');
+
     try {
       const categoryScores = calculateCategoryScores710(responses);
       const nippScores = calculateNIPPScores(categoryScores);
@@ -216,11 +224,75 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
       if (error) throw error;
 
       setShowSuccess(true);
-      if (onComplete) onComplete();
     } catch (err: any) {
       setError(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleInviteTeacher = async () => {
+    if (!teacherInfo.name || !teacherInfo.email) {
+      setError('Please provide teacher name and email');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const couponCode = `ADHD710-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+
+      const { error: couponError } = await supabase
+        .from('coupon_codes')
+        .insert({
+          code: couponCode,
+          assessment_type: 'adhd-710-caregiver',
+          max_uses: 1,
+          recipient_email: teacherInfo.email,
+          recipient_name: teacherInfo.name,
+          child_name: assessment?.child_name || childInfo.name,
+          child_age: assessment?.child_age || parseInt(childInfo.age),
+          child_gender: assessment?.child_gender || childInfo.gender,
+          caregiver_relationship: teacherInfo.relationship,
+          assessment_id: assessmentId,
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        });
+
+      if (couponError) throw couponError;
+
+      const assessmentUrl = `${window.location.origin}?assessment=${assessmentId}&respondent=caregiver&coupon=${couponCode}`;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-adhd710-teacher-invitation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({
+          teacherName: teacherInfo.name,
+          teacherEmail: teacherInfo.email,
+          teacherRelationship: teacherInfo.relationship,
+          parentName: respondentInfo.name,
+          childName: assessment?.child_name || childInfo.name,
+          childAge: assessment?.child_age || childInfo.age,
+          couponCode,
+          assessmentUrl,
+          assessmentId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send invitation email');
+      }
+
+      setTeacherInfo({ name: '', email: '', relationship: 'teacher' });
+      setShowInviteForm(false);
+      alert('Teacher invitation sent successfully!');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -268,17 +340,151 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
   if (showSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-green-600" />
+        <div className="bg-white rounded-xl shadow-xl p-8 max-w-2xl w-full">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Assessment Complete!</h2>
+            <p className="text-gray-600">
+              Thank you for completing the assessment. Your responses have been saved securely.
+            </p>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Assessment Complete!</h2>
-          <p className="text-gray-600 mb-6">
-            Thank you for completing the assessment. Your responses have been saved securely.
-          </p>
-          <p className="text-sm text-gray-500">
-            The complete report will be sent to your email once both parent and teacher assessments are completed.
-          </p>
+
+          {respondentType === 'parent' ? (
+            <>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <h3 className="font-semibold text-gray-900 mb-2">Next Step: Teacher/Caregiver Assessment</h3>
+                <p className="text-sm text-gray-700 mb-4">
+                  To get a complete picture of {assessment?.child_name || childInfo.name}'s behavior,
+                  we recommend inviting a teacher or caregiver who interacts with the child regularly to complete
+                  a second assessment. This comparison helps identify patterns across different settings.
+                </p>
+
+                {!showInviteForm ? (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowInviteForm(true)}
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                    >
+                      Invite Teacher/Caregiver
+                    </button>
+                    <button
+                      onClick={() => onComplete && onComplete()}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                    >
+                      Done
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={teacherInfo.name}
+                          onChange={(e) => setTeacherInfo({ ...teacherInfo, name: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Teacher's name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          value={teacherInfo.email}
+                          onChange={(e) => setTeacherInfo({ ...teacherInfo, email: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="teacher@school.com"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Relationship *
+                      </label>
+                      <select
+                        value={teacherInfo.relationship}
+                        onChange={(e) => setTeacherInfo({ ...teacherInfo, relationship: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="teacher">Teacher</option>
+                        <option value="counselor">School Counselor</option>
+                        <option value="aide">Teaching Aide</option>
+                        <option value="coach">Coach</option>
+                        <option value="therapist">Therapist</option>
+                        <option value="daycare_provider">Daycare Provider</option>
+                        <option value="other_caregiver">Other Caregiver</option>
+                      </select>
+                    </div>
+
+                    {error && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                        {error}
+                      </div>
+                    )}
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleInviteTeacher}
+                        disabled={loading}
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          'Send Invitation'
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowInviteForm(false);
+                          setTeacherInfo({ name: '', email: '', relationship: 'teacher' });
+                          setError('');
+                        }}
+                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-sm text-gray-500 text-center">
+                You will receive a comprehensive report via email once both assessments are completed.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6">
+                <p className="text-sm text-gray-700 mb-2">
+                  Your assessment has been submitted. The parent/guardian will receive a comprehensive
+                  report comparing observations from both home and school/care settings.
+                </p>
+                <p className="text-sm text-gray-600">
+                  This multi-perspective view provides valuable insights for understanding the child's behavior patterns.
+                </p>
+              </div>
+
+              {onComplete && (
+                <button
+                  onClick={onComplete}
+                  className="w-full px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700"
+                >
+                  Done
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
     );
