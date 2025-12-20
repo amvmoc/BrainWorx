@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createTransport } from "npm:nodemailer@6.9.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,11 +28,6 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    if (!RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is not configured");
-    }
-
     const body: RequestBody = await req.json();
     const { assessmentId, teacherName, teacherEmail, childName, childAge, parentName, assessmentUrl, couponCode } = body;
 
@@ -44,6 +40,20 @@ Deno.serve(async (req: Request) => {
         }
       );
     }
+
+    // Setup Gmail transporter
+    const GMAIL_USER = "payments@brainworx.co.za";
+    const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
+
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASSWORD,
+      },
+    });
 
     // Use the provided assessment URL, or build a default one
     const assessmentLink = assessmentUrl || `${new URL(req.url).origin}?assessment=${assessmentId}&respondent=caregiver&coupon=${couponCode || ''}`;
@@ -204,33 +214,18 @@ Deno.serve(async (req: Request) => {
 </html>
     `;
 
-    // Send email via Resend
-    const resendResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "BrainWorx NIPP <noreply@brainworx.co.za>",
-        to: [teacherEmail],
-        subject: `Teacher Assessment Request for ${childName} - BrainWorx ADHD Screen`,
-        html: htmlContent,
-      }),
+    // Send email via Gmail
+    await transporter.sendMail({
+      from: `BrainWorx Assessments <${GMAIL_USER}>`,
+      to: teacherEmail,
+      subject: `Teacher Assessment Request for ${childName} - BrainWorx ADHD Screen`,
+      html: htmlContent,
     });
-
-    const resendData = await resendResponse.json();
-
-    if (!resendResponse.ok) {
-      console.error("Resend error:", resendData);
-      throw new Error(resendData.message || "Failed to send email");
-    }
 
     return new Response(
       JSON.stringify({
         success: true,
         message: "Teacher invitation sent successfully",
-        emailId: resendData.id,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
