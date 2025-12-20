@@ -58,6 +58,17 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
     }
   }, [initialAssessmentId]);
 
+  useEffect(() => {
+    console.log('showSuccess changed to:', showSuccess);
+  }, [showSuccess]);
+
+  useEffect(() => {
+    console.log('Component mounted. Props:', { initialAssessmentId, respondentType });
+    return () => {
+      console.log('Component unmounting...');
+    };
+  }, []);
+
   const loadAssessment = async () => {
     try {
       const { data: assessmentData, error: assessmentError } = await supabase
@@ -202,8 +213,14 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
     setError('');
 
     try {
+      console.log('Starting assessment submission...');
+      console.log('Assessment ID:', assessmentId);
+      console.log('Respondent Type:', respondentType);
+
       const categoryScores = calculateCategoryScores710(responses);
       const nippScores = calculateNIPPScores(categoryScores);
+
+      console.log('Calculated scores:', { categoryScores, nippScores });
 
       const { error } = await supabase
         .from('adhd_assessment_responses')
@@ -221,11 +238,17 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
           onConflict: 'assessment_id,respondent_type'
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
 
+      console.log('Assessment saved successfully! Showing success screen...');
       setShowSuccess(true);
+      console.log('showSuccess set to true');
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error in handleComplete:', err);
+      setError(err.message || 'An error occurred while saving your assessment. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -237,11 +260,23 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
       return;
     }
 
+    if (!assessmentId) {
+      setError('Assessment ID is missing. Please try again.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
+      console.log('Creating teacher invitation...');
       const couponCode = `ADHD710-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+
+      const childName = assessment?.child_name || childInfo.name;
+      const childAge = assessment?.child_age || parseInt(childInfo.age);
+      const childGender = assessment?.child_gender || childInfo.gender;
+
+      console.log('Child data for invitation:', { childName, childAge, childGender });
 
       const { error: couponError } = await supabase
         .from('coupon_codes')
@@ -251,18 +286,22 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
           max_uses: 1,
           recipient_email: teacherInfo.email,
           recipient_name: teacherInfo.name,
-          child_name: assessment?.child_name || childInfo.name,
-          child_age: assessment?.child_age || parseInt(childInfo.age),
-          child_gender: assessment?.child_gender || childInfo.gender,
+          child_name: childName,
+          child_age: childAge,
+          child_gender: childGender,
           caregiver_relationship: teacherInfo.relationship,
           assessment_id: assessmentId,
           expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
         });
 
-      if (couponError) throw couponError;
+      if (couponError) {
+        console.error('Coupon creation error:', couponError);
+        throw couponError;
+      }
 
       const assessmentUrl = `${window.location.origin}?assessment=${assessmentId}&respondent=caregiver&coupon=${couponCode}`;
 
+      console.log('Sending invitation email...');
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-adhd710-teacher-invitation`, {
         method: 'POST',
         headers: {
@@ -274,8 +313,8 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
           teacherEmail: teacherInfo.email,
           teacherRelationship: teacherInfo.relationship,
           parentName: respondentInfo.name,
-          childName: assessment?.child_name || childInfo.name,
-          childAge: assessment?.child_age || childInfo.age,
+          childName,
+          childAge,
           couponCode,
           assessmentUrl,
           assessmentId
@@ -283,14 +322,18 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Email send failed:', errorText);
         throw new Error('Failed to send invitation email');
       }
 
+      console.log('Teacher invitation sent successfully');
       setTeacherInfo({ name: '', email: '', relationship: 'teacher' });
       setShowInviteForm(false);
       alert('Teacher invitation sent successfully!');
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error in handleInviteTeacher:', err);
+      setError(err.message || 'Failed to send teacher invitation. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -338,6 +381,13 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
   }
 
   if (showSuccess) {
+    console.log('Rendering success screen. respondentType:', respondentType);
+    console.log('Assessment data:', assessment);
+    console.log('Child info:', childInfo);
+
+    const childName = assessment?.child_name || childInfo.name || 'the child';
+    const childAge = assessment?.child_age || childInfo.age || '';
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-xl p-8 max-w-2xl w-full">
@@ -356,7 +406,7 @@ export default function ADHD710Assessment({ assessmentId: initialAssessmentId, r
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                 <h3 className="font-semibold text-gray-900 mb-2">Next Step: Teacher/Caregiver Assessment</h3>
                 <p className="text-sm text-gray-700 mb-4">
-                  To get a complete picture of {assessment?.child_name || childInfo.name}'s behavior,
+                  To get a complete picture of {childName}'s behavior,
                   we recommend inviting a teacher or caregiver who interacts with the child regularly to complete
                   a second assessment. This comparison helps identify patterns across different settings.
                 </p>
