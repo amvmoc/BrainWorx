@@ -7,6 +7,7 @@ import { CouponRedemption } from './CouponRedemption';
 import { CareerAssessment } from './CareerAssessment';
 import ADHDAssessment from './ADHDAssessment';
 import ADHD710Assessment from './ADHD710Assessment';
+import ADHD1118Assessment from './ADHD1118Assessment';
 import { supabase } from '../lib/supabase';
 import { selfAssessmentTypes, SelfAssessmentType } from '../data/selfAssessmentQuestions';
 
@@ -181,8 +182,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
     } else if (mappedType === 'adhd1118') {
       console.log('Navigating to ADHD 11-18 Assessment');
       setShowCouponModal(false);
-      alert('ADHD 11-18 Assessment: Please contact your franchise owner to set up this dual-respondent assessment (teen + parent). They will create the assessment and send you invitation links.');
-      setStep('options');
+      setStep('adhd1118_assessment');
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === mappedType);
       console.log('Found self-assessment:', selectedAssessment);
@@ -285,6 +285,21 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
           assessmentId={adhdAssessmentId || undefined}
           respondentType={respondentType}
           onComplete={() => {
+            setStep('options');
+            onClose();
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === 'adhd1118_assessment') {
+    return (
+      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+        <ADHD1118Assessment
+          assessmentId={adhdAssessmentId || undefined}
+          respondentType="teen"
+          onClose={() => {
             setStep('options');
             onClose();
           }}

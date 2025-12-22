@@ -116,8 +116,10 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       });
       setStartADHD710Assessment(true);
     } else if (assessmentId === 'adhd1118') {
-      alert('ADHD 11-18 Assessment: This is a dual-respondent assessment (teen + parent). Please contact your franchise owner to set up this assessment. They will create it and send invitation links to both respondents.');
-      setShowCouponModal(false);
+      setADHD1118AssessmentData({
+        respondentType: 'teen'
+      });
+      setStartADHD1118Assessment(true);
     } else {
       const selectedAssessment = selfAssessmentTypes.find(type => type.id === assessmentId);
 
