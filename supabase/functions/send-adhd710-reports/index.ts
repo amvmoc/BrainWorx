@@ -606,297 +606,194 @@ Deno.serve(async (req: Request) => {
   <style>
     @page { margin: 1cm; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7fb;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 20px;
-      background: #ffffff;
     }
-    .header-section {
+    .header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 32px;
-      padding-bottom: 24px;
-      border-bottom: 2px solid #e5e7eb;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 12px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
     .logo-box {
-      width: 128px;
-      height: 48px;
-      background: #dbeafe;
+      width: 140px;
+      height: 40px;
       border-radius: 8px;
+      border: 1px dashed #9ca3af;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #2563eb;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .header-info {
-      text-align: right;
-      font-size: 14px;
-      color: #374151;
-    }
-    .header-info div {
+      font-size: 11px;
+      color: #6b7280;
       margin-bottom: 4px;
     }
+    .header-subtitle {
+      font-size: 12px;
+      color: #4b5563;
+    }
+    .header-info {
+      font-size: 11px;
+      color: #374151;
+      text-align: right;
+    }
+    .header-info div {
+      margin-bottom: 2px;
+    }
     h1 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #111827;
-      margin: 0 0 16px 0;
+      font-size: 22px;
+      margin-bottom: 8px;
+      margin-top: 16px;
     }
     h2 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #111827;
-      margin: 40px 0 12px 0;
-    }
-    .intro-text {
-      color: #374151;
-      line-height: 1.75;
-      margin-bottom: 32px;
-    }
-    .section-intro {
-      color: #374151;
-      line-height: 1.75;
-      margin-bottom: 24px;
-    }
-    .pattern-box {
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      padding: 20px;
-      background: #f9fafb;
-      margin-bottom: 24px;
-    }
-    .pattern-title {
       font-size: 18px;
-      font-weight: 700;
-      color: #111827;
-      margin: 0 0 12px 0;
+      margin-top: 16px;
+      margin-bottom: 4px;
     }
-    .pattern-scores {
+    p {
+      font-size: 13px;
       margin-bottom: 16px;
     }
-    .pattern-scores p {
+    .section-intro {
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .pattern-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: #ffffff;
+    }
+    .pattern-title {
       font-size: 14px;
-      color: #374151;
-      margin: 8px 0;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .pattern-card p {
+      font-size: 13px;
+      margin-bottom: 4px;
     }
     .progress-bar-container {
       width: 100%;
-      height: 12px;
-      background: #e5e7eb;
+      height: 8px;
       border-radius: 999px;
-      margin-bottom: 8px;
+      background-color: #e5e7eb;
       overflow: hidden;
+      margin-top: 4px;
     }
     .progress-bar {
       height: 100%;
-      border-radius: 999px;
-      transition: width 0.5s ease;
+      background-color: #4f46e5;
     }
     .progress-label {
-      font-size: 12px;
+      font-size: 10px;
       color: #6b7280;
+      margin-top: 2px;
     }
-    .pattern-description {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #6b7280;
-      font-style: italic;
-    }
-    .guidance-section {
-      border-top: 2px solid #e5e7eb;
-      padding-top: 32px;
-      margin-top: 40px;
+    .guidance-section h2 {
+      font-size: 18px;
+      margin-top: 24px;
+      margin-bottom: 8px;
     }
     .guidance-section p {
-      color: #374151;
-      line-height: 1.75;
-      margin: 16px 0;
-    }
-    .legend-box {
-      background: #eff6ff;
-      border-radius: 8px;
-      padding: 24px;
-      margin-top: 40px;
-    }
-    .legend-title {
-      font-weight: 700;
-      color: #111827;
-      margin: 0 0 12px 0;
-    }
-    .legend-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      font-size: 14px;
-    }
-    .legend-item {
-      display: flex;
-      flex-direction: column;
-    }
-    .legend-color {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 13px;
       margin-bottom: 4px;
-    }
-    .legend-swatch {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-    }
-    .legend-label {
-      font-weight: 600;
-    }
-    .legend-range {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    .footer {
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid #e5e7eb;
-      text-align: center;
-      font-size: 14px;
-      color: #6b7280;
-    }
-    .footer p {
-      margin: 8px 0;
     }
   </style>
 </head>
 <body>
-  <div class="header-section">
-    <div>
-      <div class="logo-box">BrainWorx</div>
-      <div style="font-size: 14px; color: #6b7280;">
-        <strong>BrainWorx</strong> – Neural Imprint Patterns (NIPP)<br>
-        Child Focus & Behaviour Screen (7–10 years)
-      </div>
-    </div>
-    <div class="header-info">
-      <div><strong>Child Name:</strong> ${assessment.child_name}</div>
-      <div><strong>Age:</strong> ${assessment.child_age}</div>
-      <div><strong>Parent:</strong> ${parentResponse.respondent_name}</div>
-      <div><strong>Teacher:</strong> ${teacherResponse.respondent_name}</div>
-      <div><strong>Date:</strong> ${new Date(assessment.updated_at).toLocaleDateString()}</div>
-    </div>
-  </div>
-
-  <h1>Parent Summary Report</h1>
-  <p class="intro-text">
-    This report gives a picture of how your child's focus, homework habits, energy and emotions
-    show up at home and at school. It is not a diagnosis, but a map to guide support and possible
-    next steps.
-  </p>
-
-  <h2>Focus, homework and impulse patterns</h2>
-  <p class="section-intro">
-    These patterns show how your child manages attention, organisation and self-control for
-    school-age demands.
-  </p>
-
-  ${corePatterns.map(pattern => `
-    <div class="pattern-box">
-      <h3 class="pattern-title">${pattern.code} – ${pattern.name}</h3>
-      <div class="pattern-scores">
-        <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
-        <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
-        <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
-      </div>
-      <div class="progress-bar-container">
-        <div class="progress-bar" style="width: ${pattern.percentage}%; background-color: ${getSeverityColor(pattern.combinedScore)};"></div>
-      </div>
-      <p class="progress-label">${pattern.percentage}% of maximum intensity</p>
-      <p class="pattern-description">${NIPP_PATTERN_INFO[pattern.code]?.description || ""}</p>
-    </div>
-  `).join('')}
-
-  <h2>Emotional and impact patterns</h2>
-  <p class="section-intro">
-    These patterns look at frustration, worry, resistance and how your child experiences themselves
-    and other children in this stage of school.
-  </p>
-
-  ${emotionalPatterns.map(pattern => `
-    <div class="pattern-box">
-      <h3 class="pattern-title">${pattern.code} – ${pattern.name}</h3>
-      <div class="pattern-scores">
-        <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
-        <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
-        <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
-      </div>
-      <div class="progress-bar-container">
-        <div class="progress-bar" style="width: ${pattern.percentage}%; background-color: ${getSeverityColor(pattern.combinedScore)};"></div>
-      </div>
-      <p class="progress-label">${pattern.percentage}% of maximum intensity</p>
-      <p class="pattern-description">${NIPP_PATTERN_INFO[pattern.code]?.description || ""}</p>
-    </div>
-  `).join('')}
-
-  <div class="guidance-section">
-    <h2>How to use this as a parent</h2>
-    <p>
-      <strong>•</strong> Patterns in the <strong>Moderate</strong> or <strong>High</strong> range are good places
-      to start working with your coach or a professional on practical support at home and school.
-    </p>
-    <p>
-      <strong>•</strong> A higher score does not mean your child is "lazy" or "naughty". It usually shows where
-      their brain needs more structure, routines and understanding.
-    </p>
-    <p>
-      <strong>•</strong> This report cannot diagnose ADHD. If you are concerned, please discuss these results with
-      a paediatrician, psychologist or other qualified health professional.
-    </p>
-    <p>
-      <strong>•</strong> Look at differences between home and school scores. If one setting shows much higher
-      scores than the other, it may indicate that environmental factors or specific supports in one
-      environment are helping your child succeed.
-    </p>
-  </div>
-
-  <div class="legend-box">
-    <h3 class="legend-title">Understanding the Scores</h3>
-    <div class="legend-grid">
-      <div class="legend-item">
-        <div class="legend-color">
-          <div class="legend-swatch" style="background-color: #10b981;"></div>
-          <span class="legend-label">Low / Minimal</span>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="logo-box">BrainWorx / NIPP Logo</div>
+        <div class="header-subtitle">
+          <strong>BrainWorx</strong> – Neural Imprint Patterns (NIPP)<br>
+          Child Focus & Behaviour Screen (7–10 years)
         </div>
-        <p class="legend-range">Score 1.0-1.4</p>
       </div>
-      <div class="legend-item">
-        <div class="legend-color">
-          <div class="legend-swatch" style="background-color: #f59e0b;"></div>
-          <span class="legend-label">Mild / Occasional</span>
-        </div>
-        <p class="legend-range">Score 1.5-2.4</p>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color">
-          <div class="legend-swatch" style="background-color: #ef4444;"></div>
-          <span class="legend-label">Moderate</span>
-        </div>
-        <p class="legend-range">Score 2.5-3.4</p>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color">
-          <div class="legend-swatch" style="background-color: #991b1b;"></div>
-          <span class="legend-label">High</span>
-        </div>
-        <p class="legend-range">Score 3.5-4.0</p>
+      <div class="header-info">
+        <div>Child Name: ${assessment.child_name}</div>
+        <div>Age: ${assessment.child_age}</div>
+        <div>Parent: ${parentResponse.respondent_name}</div>
+        <div>Teacher: ${teacherResponse.respondent_name}</div>
+        <div>Date: ${new Date(assessment.updated_at).toLocaleDateString()}</div>
       </div>
     </div>
-  </div>
 
-  <div class="footer">
-    <p>This report is generated by BrainWorx Neural Imprint Patterns (NIPP) Assessment System</p>
-    <p>For more information or support, please contact your BrainWorx coach</p>
+    <h1>Parent Summary Report</h1>
+    <p>
+      This report gives a picture of how your child's focus, homework habits, energy and emotions
+      show up at home and at school. It is not a diagnosis, but a map to guide support and possible
+      next steps.
+    </p>
+
+    <h2>Focus, homework and impulse patterns</h2>
+    <p class="section-intro">
+      These patterns show how your child manages attention, organisation and self-control for
+      school-age demands.
+    </p>
+
+    <div style="margin-bottom: 24px;">
+      ${corePatterns.map(pattern => `
+        <div class="pattern-card">
+          <div class="pattern-title">${pattern.code} – ${pattern.name}</div>
+          <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
+          <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
+          <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: ${pattern.percentage}%;"></div>
+          </div>
+          <div class="progress-label">${pattern.percentage}% of maximum intensity</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <h2>Emotional and impact patterns</h2>
+    <p class="section-intro">
+      These patterns look at frustration, worry, resistance and how your child experiences themselves
+      and other children in this stage of school.
+    </p>
+
+    <div style="margin-bottom: 24px;">
+      ${emotionalPatterns.map(pattern => `
+        <div class="pattern-card">
+          <div class="pattern-title">${pattern.code} – ${pattern.name}</div>
+          <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
+          <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
+          <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: ${pattern.percentage}%;"></div>
+          </div>
+          <div class="progress-label">${pattern.percentage}% of maximum intensity</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="guidance-section">
+      <h2>How to use this as a parent</h2>
+      <p>
+        <strong>•</strong> Patterns in the <strong>Moderate</strong> or <strong>High</strong> range are good places
+        to start working with your coach or a professional on practical support at home and school.
+      </p>
+      <p>
+        <strong>•</strong> A higher score does not mean your child is "lazy" or "naughty". It usually shows where
+        their brain needs more structure, routines and understanding.
+      </p>
+      <p>
+        <strong>•</strong> This report cannot diagnose ADHD. If you are concerned, please discuss these results with
+        a paediatrician, psychologist or other qualified health professional.
+      </p>
+    </div>
   </div>
 </body>
 </html>
