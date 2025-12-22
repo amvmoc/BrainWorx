@@ -7,9 +7,10 @@ import { calculateNIPPScores, getSeverityLabel710, scoreToPercentage } from '../
 
 interface ADHDAssessmentsManagementProps {
   franchiseOwnerId: string;
+  isSuperAdmin?: boolean;
 }
 
-export function ADHDAssessmentsManagement({ franchiseOwnerId }: ADHDAssessmentsManagementProps) {
+export function ADHDAssessmentsManagement({ franchiseOwnerId, isSuperAdmin = false }: ADHDAssessmentsManagementProps) {
   const [assessments, setAssessments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -34,14 +35,19 @@ export function ADHDAssessmentsManagement({ franchiseOwnerId }: ADHDAssessmentsM
 
   const loadAssessments = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('adhd_assessments')
         .select(`
           *,
           adhd_assessment_responses (*)
-        `)
-        .eq('franchise_owner_id', franchiseOwnerId)
-        .order('created_at', { ascending: false });
+        `);
+
+      // Super admins see all assessments, regular users see only their own
+      if (!isSuperAdmin) {
+        query = query.eq('franchise_owner_id', franchiseOwnerId);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
       setAssessments(data || []);

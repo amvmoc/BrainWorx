@@ -251,7 +251,7 @@ export function FranchiseDashboard({
         {currentView === 'invoices' ? (
           <InvoicesPage franchiseOwnerId={franchiseOwnerId} />
         ) : currentView === 'adhd-assessments' ? (
-          <ADHDAssessmentsManagement franchiseOwnerId={franchiseOwnerId} />
+          <ADHDAssessmentsManagement franchiseOwnerId={franchiseOwnerId} isSuperAdmin={isSuperAdmin} />
         ) : currentView === 'calendar' ? (
           <div className="space-y-6">
             <div className="flex gap-4 mb-6">
