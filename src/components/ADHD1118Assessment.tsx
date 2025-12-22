@@ -25,8 +25,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
   const [responses, setResponses] = useState<Record<string, number>>({});
   const [respondentInfo, setRespondentInfo] = useState({
     name: '',
-    email: '',
-    relationship: ''
+    email: ''
   });
   const [teenInfo, setTeenInfo] = useState({
     name: '',
@@ -80,8 +79,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
         setResponses(responseData.responses || {});
         setRespondentInfo({
           name: responseData.respondent_name || '',
-          email: responseData.respondent_email || '',
-          relationship: responseData.respondent_relationship || ''
+          email: responseData.respondent_email || ''
         });
 
         if (responseData.completed) {
@@ -142,7 +140,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
           .update({
             respondent_name: respondentInfo.name,
             respondent_email: respondentInfo.email,
-            respondent_relationship: respondentInfo.relationship
+            respondent_relationship: 'self'
           })
           .eq('id', existingResponse.id);
 
@@ -155,7 +153,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
             respondent_type: respondentType,
             respondent_name: respondentInfo.name,
             respondent_email: respondentInfo.email,
-            respondent_relationship: respondentInfo.relationship,
+            respondent_relationship: 'self',
             responses: {},
             completed: false
           });
@@ -441,28 +439,6 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
                       onChange={(e) => setRespondentInfo({ ...respondentInfo, email: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Relationship to Teen *
-                    </label>
-                    <select
-                      required
-                      value={respondentInfo.relationship}
-                      onChange={(e) => setRespondentInfo({ ...respondentInfo, relationship: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    >
-                      <option value="">Select relationship</option>
-                      {respondentType === 'teen' ? (
-                        <option value="self">Self</option>
-                      ) : (
-                        <>
-                          <option value="parent">Parent</option>
-                          <option value="guardian">Guardian</option>
-                          <option value="caregiver">Caregiver</option>
-                        </>
-                      )}
-                    </select>
                   </div>
                 </div>
               </div>
