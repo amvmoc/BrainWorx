@@ -223,7 +223,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
         return;
       }
 
-      const scores = calculateNIPPScores1118(responses);
+      const nippScores = calculateNIPPScores1118(responses);
 
       const { data: existingResponse } = await supabase
         .from('adhd_1118_assessment_responses')
@@ -237,7 +237,7 @@ export default function ADHD1118Assessment({ assessmentId: initialAssessmentId, 
           .from('adhd_1118_assessment_responses')
           .update({
             responses,
-            scores,
+            scores: { nippScores },
             completed: true,
             completed_at: new Date().toISOString()
           })
