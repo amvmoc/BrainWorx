@@ -8,6 +8,7 @@ import { CalendarManagement } from './CalendarManagement';
 import { BookingManagement } from './BookingManagement';
 import { HomePage } from './HomePage';
 import { ADHDAssessmentsManagement } from './ADHDAssessmentsManagement';
+import { ADHD1118AssessmentsManagement } from './ADHD1118AssessmentsManagement';
 import { SelfAssessmentReport } from './SelfAssessmentReport';
 import CoachReport from './coach-report/CoachReport';
 import NIP3CoachReport from './nip3/CoachReport';
@@ -36,7 +37,7 @@ interface SalesLog {
 }
 
 export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLogout }: SuperAdminDashboardProps) {
-  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'adhd-assessments' | 'invoices' | 'calendar' | 'users' | 'library' | 'coupons' | 'visitor_view'>('overview');
+  const [currentView, setCurrentView] = useState<'overview' | 'sales' | 'responses' | 'adhd-assessments' | 'adhd-1118-assessments' | 'invoices' | 'calendar' | 'users' | 'library' | 'coupons' | 'visitor_view'>('overview');
   const [calendarTab, setCalendarTab] = useState<'availability' | 'bookings'>('bookings');
   const [salesLogs, setSalesLogs] = useState<SalesLog[]>([]);
   const [responses, setResponses] = useState<any[]>([]);
@@ -487,7 +488,18 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
               }`}
             >
               <Brain size={20} />
-              ADHD Assessments
+              ADHD 7-10
+            </button>
+            <button
+              onClick={() => setCurrentView('adhd-1118-assessments')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                currentView === 'adhd-1118-assessments'
+                  ? 'bg-white text-[#0A2A5E] font-semibold'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+              }`}
+            >
+              <Brain size={20} />
+              ADHD 11-18
             </button>
             <button
               onClick={() => setCurrentView('calendar')}
@@ -878,6 +890,10 @@ export function SuperAdminDashboard({ franchiseOwnerId, franchiseOwnerName, onLo
 
         {currentView === 'adhd-assessments' && (
           <ADHDAssessmentsManagement franchiseOwnerId={franchiseOwnerId} isSuperAdmin={true} />
+        )}
+
+        {currentView === 'adhd-1118-assessments' && (
+          <ADHD1118AssessmentsManagement franchiseOwnerId={franchiseOwnerId} isSuperAdmin={true} />
         )}
 
         {currentView === 'responses' && (
