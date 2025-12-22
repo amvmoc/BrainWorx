@@ -13,16 +13,16 @@ interface RequestBody {
 }
 
 const NIPP_PATTERN_INFO: Record<string, { name: string; description: string }> = {
-  FOC: { name: "Scattered Focus", description: "Difficulty maintaining attention and concentration" },
-  HYP: { name: "High Energy", description: "Elevated activity levels and restlessness" },
-  IMP: { name: "Impulse Rush", description: "Acting without thinking, difficulty with self-control" },
-  ORG: { name: "Disorganized Thinking", description: "Challenges with planning, organizing, and task management" },
-  DIM: { name: "Academic Struggles", description: "Difficulty with learning tasks and academic performance" },
-  ANG: { name: "Emotional Anger", description: "Difficulty regulating emotions, irritability, frustration" },
-  RES: { name: "Daily Functioning Challenges", description: "Struggles with everyday tasks and routines" },
-  INWF: { name: "Inward Focus", description: "Social-emotional withdrawal, internalized stress" },
-  BURN: { name: "Burned Out", description: "Fatigue, overwhelm, difficulty sustaining effort" },
-  BULLY: { name: "Social Conflict", description: "Difficulties in peer relationships and social interactions" },
+  FOC: { name: "Scattered Focus", description: "Difficulty sustaining attention and focusing on tasks" },
+  HYP: { name: "High Gear", description: "Excessive physical activity and restlessness" },
+  IMP: { name: "Impulse Rush", description: "Acting without thinking and difficulty with self-control" },
+  ORG: { name: "Time & Order", description: "Challenges with organization and time management" },
+  DIM: { name: "Flexible Focus", description: "Inconsistent academic performance and mental fatigue" },
+  ANG: { name: "Anchored Anger", description: "Frequent emotional outbursts and frustration" },
+  RES: { name: "Resistance / Attitude", description: "Oppositional behavior and resistance to routines" },
+  INWF: { name: "Inward Focus", description: "Withdrawal and negative self-perception" },
+  BURN: { name: "Burned Out", description: "Mental exhaustion and need for recovery time" },
+  BULLY: { name: "Victim Loops", description: "Social difficulties and peer relationship challenges" },
 };
 
 function getSeverityLabel(score: number): string {
@@ -35,8 +35,12 @@ function getSeverityLabel(score: number): string {
 function getSeverityColor(score: number): string {
   if (score < 1.5) return "#10b981";
   if (score < 2.5) return "#f59e0b";
-  if (score < 3.0) return "#f97316";
-  return "#ef4444";
+  if (score < 3.0) return "#ef4444";
+  return "#991b1b";
+}
+
+function scoreToPercentage(score: number): number {
+  return Math.round((score / 4.0) * 100);
 }
 
 function generateComprehensiveCoachReport(
@@ -584,15 +588,323 @@ Deno.serve(async (req: Request) => {
         parentLabel: getSeverityLabel(parentScore),
         teacherLabel: getSeverityLabel(teacherScore),
         combinedLabel: getSeverityLabel(combinedScore),
+        percentage: scoreToPercentage(combinedScore),
       };
     });
 
     patterns.sort((a, b) => b.combinedScore - a.combinedScore);
-    const topPatterns = patterns.slice(0, 3);
 
-    const parentEmailHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#333;max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);color:white;padding:30px;border-radius:12px 12px 0 0;text-align:center}.content{background:white;padding:30px;border:1px solid #e5e7eb;border-top:none}.button{display:inline-block;background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);color:white!important;padding:14px 28px;text-decoration:none;border-radius:8px;font-weight:600;margin:20px 0}.info-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:15px;margin:20px 0;border-radius:4px}.pattern-item{margin:10px 0;padding:10px;background:#f9fafb;border-radius:6px}</style></head><body><div class="header"><div style="font-size:24px;font-weight:bold;margin-bottom:10px">BrainWorx NIPP</div><div style="font-size:14px;opacity:0.9">Assessment Complete</div></div><div class="content"><h2>Your Child's ADHD Assessment Results Are Ready</h2><p>Dear ${parentResponse.respondent_name},</p><p>The ADHD assessment for <strong>${assessment.child_name}</strong> has been completed by both you and ${teacherResponse.respondent_name}. The comprehensive report is now available.</p><div class="info-box"><strong>Top 3 Patterns Identified:</strong><br><br>${topPatterns.map(p => `<div class="pattern-item"><strong>${p.code}</strong> - Combined Score: ${p.combinedScore.toFixed(2)}/4.0</div>`).join('')}</div><p><strong>What's included in your report:</strong></p><ul><li>Detailed analysis of 10 ADHD-related patterns</li><li>Comparison of observations from home and school</li><li>Visual charts showing pattern strengths</li><li>Practical guidance for supporting your child</li><li>Recommendations for next steps</li></ul><div style="text-align:center;margin:30px 0"><a href="${resultsLink}" class="button">View Complete Report</a></div><p style="font-size:14px;color:#6b7280">Or copy and paste this link into your browser:<br><a href="${resultsLink}" style="color:#3b82f6;word-break:break-all">${resultsLink}</a></p><div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;border-radius:4px"><strong>Important:</strong> This assessment is a screening tool, not a diagnosis. We recommend discussing these results with your BrainWorx coach or a qualified healthcare professional.</div><p>Your BrainWorx coach will receive the detailed professional report and will be in touch to discuss the findings and next steps.</p><p>Best regards,<br><strong>The BrainWorx Team</strong></p></div><div style="text-align:center;color:#6b7280;font-size:12px;margin-top:30px;padding-top:20px;border-top:1px solid #e5e7eb"><p>© ${new Date().getFullYear()} BrainWorx. All rights reserved.</p></div></body></html>`;
+    const corePatterns = patterns.filter(p => p.category === "Core ADHD");
+    const emotionalPatterns = patterns.filter(p => p.category === "Emotional/Impact");
 
-    const teacherEmailHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#333;max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);color:white;padding:30px;border-radius:12px 12px 0 0;text-align:center}.content{background:white;padding:30px;border:1px solid #e5e7eb;border-top:none}.button{display:inline-block;background:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);color:white!important;padding:14px 28px;text-decoration:none;border-radius:8px;font-weight:600;margin:20px 0}</style></head><body><div class="header"><div style="font-size:24px;font-weight:bold;margin-bottom:10px">BrainWorx NIPP</div><div style="font-size:14px;opacity:0.9">Assessment Complete - Thank You</div></div><div class="content"><h2>Assessment Completed</h2><p>Dear ${teacherResponse.respondent_name},</p><p>Thank you for completing the ADHD assessment for <strong>${assessment.child_name}</strong>. Your input as ${assessment.child_name}'s teacher has been invaluable in creating a comprehensive picture of their functioning across different settings.</p><p>The assessment results have been compiled and shared with ${parentResponse.respondent_name}. The family's BrainWorx coach will use these insights to develop appropriate support strategies.</p><div style="text-align:center;margin:30px 0"><a href="${resultsLink}" class="button">View Assessment Results</a></div><p>If you have any questions about the assessment or would like to discuss the findings with ${parentResponse.respondent_name}, please feel free to reach out to them directly.</p><p>Thank you again for your time and valuable input in supporting ${assessment.child_name}'s development.</p><p>Warm regards,<br><strong>The BrainWorx Team</strong></p></div><div style="text-align:center;color:#6b7280;font-size:12px;margin-top:30px;padding-top:20px;border-top:1px solid #e5e7eb"><p>© ${new Date().getFullYear()} BrainWorx. All rights reserved.</p></div></body></html>`;
+    const generateParentReportHTML = () => {
+      return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page { margin: 1cm; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #ffffff;
+    }
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .logo-box {
+      width: 128px;
+      height: 48px;
+      background: #dbeafe;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2563eb;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .header-info {
+      text-align: right;
+      font-size: 14px;
+      color: #374151;
+    }
+    .header-info div {
+      margin-bottom: 4px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 16px 0;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin: 40px 0 12px 0;
+    }
+    .intro-text {
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .section-intro {
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .pattern-box {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 20px;
+      background: #f9fafb;
+      margin-bottom: 24px;
+    }
+    .pattern-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 12px 0;
+    }
+    .pattern-scores {
+      margin-bottom: 16px;
+    }
+    .pattern-scores p {
+      font-size: 14px;
+      color: #374151;
+      margin: 8px 0;
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .pattern-description {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #6b7280;
+      font-style: italic;
+    }
+    .guidance-section {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 32px;
+      margin-top: 40px;
+    }
+    .guidance-section p {
+      color: #374151;
+      line-height: 1.75;
+      margin: 16px 0;
+    }
+    .legend-box {
+      background: #eff6ff;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+    .legend-title {
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 12px 0;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      font-size: 14px;
+    }
+    .legend-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .legend-color {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+    .legend-label {
+      font-weight: 600;
+    }
+    .legend-range {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .footer p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-section">
+    <div>
+      <div class="logo-box">BrainWorx</div>
+      <div style="font-size: 14px; color: #6b7280;">
+        <strong>BrainWorx</strong> – Neural Imprint Patterns (NIPP)<br>
+        Child Focus & Behaviour Screen (7–10 years)
+      </div>
+    </div>
+    <div class="header-info">
+      <div><strong>Child Name:</strong> ${assessment.child_name}</div>
+      <div><strong>Age:</strong> ${assessment.child_age}</div>
+      <div><strong>Parent:</strong> ${parentResponse.respondent_name}</div>
+      <div><strong>Teacher:</strong> ${teacherResponse.respondent_name}</div>
+      <div><strong>Date:</strong> ${new Date(assessment.updated_at).toLocaleDateString()}</div>
+    </div>
+  </div>
+
+  <h1>Parent Summary Report</h1>
+  <p class="intro-text">
+    This report gives a picture of how your child's focus, homework habits, energy and emotions
+    show up at home and at school. It is not a diagnosis, but a map to guide support and possible
+    next steps.
+  </p>
+
+  <h2>Focus, homework and impulse patterns</h2>
+  <p class="section-intro">
+    These patterns show how your child manages attention, organisation and self-control for
+    school-age demands.
+  </p>
+
+  ${corePatterns.map(pattern => `
+    <div class="pattern-box">
+      <h3 class="pattern-title">${pattern.code} – ${pattern.name}</h3>
+      <div class="pattern-scores">
+        <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
+        <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
+        <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: ${pattern.percentage}%; background-color: ${getSeverityColor(pattern.combinedScore)};"></div>
+      </div>
+      <p class="progress-label">${pattern.percentage}% of maximum intensity</p>
+      <p class="pattern-description">${NIPP_PATTERN_INFO[pattern.code]?.description || ""}</p>
+    </div>
+  `).join('')}
+
+  <h2>Emotional and impact patterns</h2>
+  <p class="section-intro">
+    These patterns look at frustration, worry, resistance and how your child experiences themselves
+    and other children in this stage of school.
+  </p>
+
+  ${emotionalPatterns.map(pattern => `
+    <div class="pattern-box">
+      <h3 class="pattern-title">${pattern.code} – ${pattern.name}</h3>
+      <div class="pattern-scores">
+        <p><strong>At home:</strong> Average ${pattern.parentScore.toFixed(2)} (${pattern.parentLabel})</p>
+        <p><strong>At school:</strong> Average ${pattern.teacherScore.toFixed(2)} (${pattern.teacherLabel})</p>
+        <p><strong>Overall pattern:</strong> Average ${pattern.combinedScore.toFixed(2)} (${pattern.combinedLabel})</p>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: ${pattern.percentage}%; background-color: ${getSeverityColor(pattern.combinedScore)};"></div>
+      </div>
+      <p class="progress-label">${pattern.percentage}% of maximum intensity</p>
+      <p class="pattern-description">${NIPP_PATTERN_INFO[pattern.code]?.description || ""}</p>
+    </div>
+  `).join('')}
+
+  <div class="guidance-section">
+    <h2>How to use this as a parent</h2>
+    <p>
+      <strong>•</strong> Patterns in the <strong>Moderate</strong> or <strong>High</strong> range are good places
+      to start working with your coach or a professional on practical support at home and school.
+    </p>
+    <p>
+      <strong>•</strong> A higher score does not mean your child is "lazy" or "naughty". It usually shows where
+      their brain needs more structure, routines and understanding.
+    </p>
+    <p>
+      <strong>•</strong> This report cannot diagnose ADHD. If you are concerned, please discuss these results with
+      a paediatrician, psychologist or other qualified health professional.
+    </p>
+    <p>
+      <strong>•</strong> Look at differences between home and school scores. If one setting shows much higher
+      scores than the other, it may indicate that environmental factors or specific supports in one
+      environment are helping your child succeed.
+    </p>
+  </div>
+
+  <div class="legend-box">
+    <h3 class="legend-title">Understanding the Scores</h3>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <div class="legend-color">
+          <div class="legend-swatch" style="background-color: #10b981;"></div>
+          <span class="legend-label">Low / Minimal</span>
+        </div>
+        <p class="legend-range">Score 1.0-1.4</p>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color">
+          <div class="legend-swatch" style="background-color: #f59e0b;"></div>
+          <span class="legend-label">Mild / Occasional</span>
+        </div>
+        <p class="legend-range">Score 1.5-2.4</p>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color">
+          <div class="legend-swatch" style="background-color: #ef4444;"></div>
+          <span class="legend-label">Moderate</span>
+        </div>
+        <p class="legend-range">Score 2.5-3.4</p>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color">
+          <div class="legend-swatch" style="background-color: #991b1b;"></div>
+          <span class="legend-label">High</span>
+        </div>
+        <p class="legend-range">Score 3.5-4.0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>This report is generated by BrainWorx Neural Imprint Patterns (NIPP) Assessment System</p>
+    <p>For more information or support, please contact your BrainWorx coach</p>
+  </div>
+</body>
+</html>
+      `;
+    };
+
+    const parentEmailHtml = generateParentReportHTML();
+    const teacherEmailHtml = generateParentReportHTML();
 
     const emailPromises = [
       transporter.sendMail({

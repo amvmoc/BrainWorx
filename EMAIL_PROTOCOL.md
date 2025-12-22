@@ -85,9 +85,40 @@ This project has Gmail already configured and working across all functions. Usin
 
 **CRITICAL:** When both parent and teacher complete an ADHD 710 assessment, three emails must be sent:
 
-1. **Parent Email**: Simple summary with top 3 patterns and link to view full report
-2. **Teacher Email**: Thank you message with link to view results
+1. **Parent Email**: **FULL PARENT SUMMARY REPORT** (complete HTML report embedded in email)
+2. **Teacher Email**: **FULL PARENT SUMMARY REPORT** (same complete HTML report embedded in email)
 3. **Franchise Owner Email**: **COMPREHENSIVE COACH REPORT** (full HTML report embedded in email)
+
+**IMPORTANT:** The parent and teacher receive the FULL report in the email body itself, NOT just a link. This is the complete "Parent Summary Report" matching the format from `ADHD710ParentReport.tsx`.
+
+### Parent/Teacher Report Must Include:
+
+- Complete header with child name, age, parent, teacher, and date
+- "Parent Summary Report" title
+- Introduction explaining the report's purpose
+- **Focus, homework and impulse patterns** section with all 5 core ADHD patterns:
+  - FOC (Scattered Focus)
+  - HYP (High Gear)
+  - IMP (Impulse Rush)
+  - ORG (Time & Order)
+  - DIM (Flexible Focus)
+- Each pattern shows:
+  - At home score (parent rating)
+  - At school score (teacher rating)
+  - Overall pattern (combined average)
+  - Visual progress bar showing percentage of maximum intensity
+  - Pattern description
+- **Emotional and impact patterns** section with all 5 patterns:
+  - ANG (Anchored Anger)
+  - RES (Resistance / Attitude)
+  - INWF (Inward Focus)
+  - BURN (Burned Out)
+  - BULLY (Victim Loops)
+- "How to use this as a parent" guidance section
+- Legend showing score ranges (Low/Minimal, Mild/Occasional, Moderate, High)
+- Footer with system information
+
+The `generateParentReportHTML()` function creates this full report.
 
 ### Franchise Owner Report Must Include:
 
@@ -128,5 +159,16 @@ On 2025-12-20:
 1. The `send-adhd710-teacher-invitation` function was incorrectly created using Resend API instead of Gmail. This caused a production failure where teacher invitations could not be sent because `RESEND_API_KEY` was not configured.
 
 2. The `send-adhd710-reports` function was initially only sending a simple email notification to franchise owners with a link, instead of the comprehensive coach report embedded in the email. This was corrected to send the full detailed HTML report.
+
+On 2025-12-22:
+1. Fixed coupon redemption issue: Added mapping for `'adhd-710-caregiver'` → `'adhd710'` so teachers can successfully redeem their invitation coupons.
+
+2. Fixed parent and teacher email reports: Both parent and teacher now receive the FULL "Parent Summary Report" embedded in the email body (not just a link). This matches the format from `ADHD710ParentReport.tsx` component and includes:
+   - All 10 NIPP patterns with scores and progress bars
+   - Home vs school comparisons
+   - Guidance for parents
+   - Score legend
+
+3. Confirmed franchise owner receives the comprehensive coach report with clinical interpretation, discrepancy analysis, and coaching recommendations.
 
 This protocol document ensures these mistakes never happen again.
