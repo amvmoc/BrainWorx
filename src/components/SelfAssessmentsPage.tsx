@@ -82,7 +82,11 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       'ADHD Caregiver Assessment (50 Questions)': 'adhd-caregiver',
       'ADHD 7-10 Assessment (80 Questions)': 'adhd710',
       'Parent/Caregiver ADHD 7-10 Assessment (80 Questions)': 'adhd710',
-      'ADHD 11-18 Assessment (50 Questions)': 'adhd1118'
+      'ADHD 11-18 Assessment (50 Questions)': 'adhd1118',
+      'nipa': 'nipa',
+      'tadhd': 'adhd1118',
+      'pcadhd': 'adhd-caregiver',
+      'tcf': 'teen-career'
     };
 
     // Dynamically add all self-assessments from the data file
