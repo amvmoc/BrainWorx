@@ -269,6 +269,32 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     disclaimer: 'This is a screening tool using Neural Imprint Pattern analysis for identifying ADHD-related behavioral patterns. It does NOT constitute a clinical diagnosis. Only qualified healthcare professionals can diagnose ADHD through comprehensive clinical evaluation.'
   };
 
+  const adhd1118Card = {
+    id: 'adhd1118',
+    name: 'Teen ADHD Assessment (Ages 11-18)',
+    description: 'Advanced dual-respondent ADHD assessment for teens aged 11-18. This comprehensive screening combines teen self-assessment with parent/guardian observations using 10 Neural Imprint Patterns. Identifies core ADHD patterns (focus, organization, hyperactivity, impulsivity) and emotional impact patterns (anger, self-perception, resistance, burnout). Requires BOTH teen AND parent to complete for full analysis.',
+    icon: Users,
+    color: 'from-violet-500 to-fuchsia-600',
+    iconColor: 'text-violet-600',
+    borderColor: 'border-violet-500',
+    bgColor: 'bg-violet-50',
+    targetAudience: 'Teens (Ages 11-18)',
+    questionCount: 50,
+    assessmentType: 'Teen ADHD Dual Assessment',
+    features: [
+      'Dual-respondent system (teen + parent/guardian)',
+      '50 questions per respondent across 10 NIPP patterns',
+      'Teen self-assessment perspective included',
+      'Parent observation-based assessment',
+      'Individual reports for teen and parent',
+      'Comprehensive combined analysis report',
+      'Core ADHD patterns + emotional impact patterns',
+      'Age-appropriate language for teens'
+    ],
+    instructions: 'This assessment requires TWO separate completions: one by the teen themselves and one by a parent/guardian. The teen answers questions about their own experiences, while the parent rates based on their observations. Both assessments must be completed to generate the full comprehensive report. Each assessment takes approximately 15-20 minutes.',
+    disclaimer: 'This is a screening tool using Neural Imprint Pattern analysis for identifying ADHD-related behavioral patterns in teens. It does NOT constitute a clinical diagnosis. Only qualified healthcare professionals can diagnose ADHD through comprehensive clinical evaluation.'
+  };
+
   const assessmentCards = [
     {
       type: 'nipa',
@@ -298,6 +324,10 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     {
       type: 'adhd710',
       ...adhd710Card
+    },
+    {
+      type: 'adhd1118',
+      ...adhd1118Card
     }
   ];
 
