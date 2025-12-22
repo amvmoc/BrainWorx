@@ -16,6 +16,7 @@ import { PublicResultsView } from './components/PublicResultsView';
 import NIP3Assessment from './components/NIP3Assessment';
 import ADHD710Assessment from './components/ADHD710Assessment';
 import ADHD710PublicResults from './components/ADHD710PublicResults';
+import ADHD1118Assessment from './components/ADHD1118Assessment';
 import { supabase } from './lib/supabase';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
   const [couponCode, setCouponCode] = useState<string | null>(null);
   const [shareToken, setShareToken] = useState<string | null>(null);
   const [adhd710Route, setAdhd710Route] = useState<{ type: 'assessment' | 'results', id: string, respondentType?: 'parent' | 'caregiver' } | null>(null);
+  const [adhd1118Route, setAdhd1118Route] = useState<{ type: 'assessment' | 'results', id: string, respondentType?: 'teen' | 'parent' } | null>(null);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -69,6 +71,29 @@ function App() {
       setAdhd710Route({
         type: 'results',
         id: adhd710ResultsMatch[1]
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Check for ADHD 11-18 assessment routes
+    const adhd1118AssessmentMatch = currentPath.match(/\/adhd1118\/([a-f0-9-]+)\/(teen|parent)/);
+    if (adhd1118AssessmentMatch && adhd1118AssessmentMatch[1] && adhd1118AssessmentMatch[2]) {
+      setAdhd1118Route({
+        type: 'assessment',
+        id: adhd1118AssessmentMatch[1],
+        respondentType: adhd1118AssessmentMatch[2] as 'teen' | 'parent'
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Check for ADHD 11-18 results routes
+    const adhd1118ResultsMatch = currentPath.match(/\/adhd1118\/([a-f0-9]+)\/results/);
+    if (adhd1118ResultsMatch && adhd1118ResultsMatch[1]) {
+      setAdhd1118Route({
+        type: 'results',
+        id: adhd1118ResultsMatch[1]
       });
       setLoading(false);
       return;
@@ -171,6 +196,26 @@ function App() {
     }
   }
 
+  // Handle ADHD 11-18 routes
+  if (adhd1118Route) {
+    if (adhd1118Route.type === 'assessment' && adhd1118Route.respondentType) {
+      return (
+        <ADHD1118Assessment
+          assessmentId={adhd1118Route.id}
+          respondentType={adhd1118Route.respondentType}
+        />
+      );
+    }
+    if (adhd1118Route.type === 'results') {
+      return <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Results View Coming Soon</h2>
+          <p className="text-gray-600">ADHD 11-18 public results view is under development.</p>
+        </div>
+      </div>;
+    }
+  }
+
   if (shareToken) {
     return <PublicResultsView shareToken={shareToken} />;
   }
@@ -218,7 +263,7 @@ function App() {
   }
 
   // CRITICAL: Don't show admin dashboards if user is in public flow (coupon, get started, assessments)
-  const isInPublicFlow = showGetStarted || showSelfAssessments || showNeuralPatterns || showBooking || showNIP3 || couponCode || adhd710Route;
+  const isInPublicFlow = showGetStarted || showSelfAssessments || showNeuralPatterns || showBooking || showNIP3 || couponCode || adhd710Route || adhd1118Route;
 
   if (currentUser && franchiseData && !isInPublicFlow) {
     if (franchiseData.is_super_admin) {

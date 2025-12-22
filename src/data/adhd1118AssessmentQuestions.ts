@@ -127,7 +127,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "FOC5",
     pattern: "FOC",
-    text: "I daydream or "zone out" and only realise it when someone calls my name.",
+    text: "I daydream or 'zone out' and only realise it when someone calls my name.",
     category: "Core ADHD"
   },
 
@@ -159,7 +159,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "DIM5",
     pattern: "DIM",
-    text: "I can get "stuck" on a game, video or hobby and forget about time and responsibilities.",
+    text: "I can get 'stuck' on a game, video or hobby and forget about time and responsibilities.",
     category: "Core ADHD"
   },
 
@@ -199,7 +199,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "HYP1",
     pattern: "HYP",
-    text: "I feel restless, like there is "extra energy" in my body most of the time.",
+    text: "I feel restless, like there is 'extra energy' in my body most of the time.",
     category: "Core ADHD"
   },
   {
@@ -223,7 +223,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "HYP5",
     pattern: "HYP",
-    text: "I find it difficult to relax; my body or brain feels like it's always "on".",
+    text: "I find it difficult to relax; my body or brain feels like it's always 'on'.",
     category: "Core ADHD"
   },
 
@@ -249,7 +249,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "IMP4",
     pattern: "IMP",
-    text: "I do things "in the moment" even when I know it could get me into trouble.",
+    text: "I do things 'in the moment' even when I know it could get me into trouble.",
     category: "Core ADHD"
   },
   {
@@ -313,7 +313,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "INWF4",
     pattern: "INWF",
-    text: "I compare myself to others and feel like I'm "behind" or not good enough.",
+    text: "I compare myself to others and feel like I'm 'behind' or not good enough.",
     category: "Impact / Emotional"
   },
   {
@@ -339,7 +339,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "RES3",
     pattern: "RES",
-    text: "After being corrected many times, I feel like "why even try?".",
+    text: "After being corrected many times, I feel like 'why even try?'.",
     category: "Impact / Emotional"
   },
   {
@@ -409,7 +409,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "BULLY4",
     pattern: "BULLY",
-    text: "I sometimes believe that "life is just against me" or "nothing works out for me".",
+    text: "I sometimes believe that 'life is just against me' or 'nothing works out for me'.",
     category: "Impact / Emotional"
   },
   {
