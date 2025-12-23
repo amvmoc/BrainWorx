@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Eye, Copy, Check, X, Mail, Loader } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { selfAssessmentTypes } from '../data/selfAssessmentQuestions';
 
 interface Coupon {
   id: string;
@@ -28,49 +27,22 @@ interface Redemption {
 const getAssessmentDatabaseId = (displayName: string): string => {
   const mapping: Record<string, string> = {
     'Full Assessment (343 Questions)': 'nipa',
-    'Full ADHD Assessment (128 Questions)': 'nipa',
-    'ADHD 7-10 Assessment (80 Questions)': 'adhd710',
     'Parent/Caregiver ADHD 7-10 Assessment (80 Questions)': 'adhd710',
     'ADHD 11-18 Assessment (50 Questions)': 'adhd1118',
     'Teen Career & Future Direction': 'teen-career'
   };
 
-  // Check static mappings first
-  if (mapping[displayName]) {
-    return mapping[displayName];
-  }
-
-  // Try to find in self-assessment types
-  const assessment = selfAssessmentTypes.find(
-    a => `${a.name} (${a.questions.length} Questions)` === displayName
-  );
-
-  return assessment ? assessment.id : displayName;
+  return mapping[displayName] || displayName;
 };
 
-// Generate assessment options dynamically from selfAssessmentTypes
+// Assessment options matching the dashboard assessments tabs order
 const getAssessmentOptions = () => {
   const options = [
     { value: 'Full Assessment (343 Questions)', label: 'Full Assessment (343 Questions)' },
-    { value: 'Full ADHD Assessment (128 Questions)', label: 'Full ADHD Assessment (128 Questions)' },
     { value: 'Parent/Caregiver ADHD 7-10 Assessment (80 Questions)', label: 'Parent/Caregiver ADHD 7-10 Assessment (80 Questions)' },
     { value: 'ADHD 11-18 Assessment (50 Questions)', label: 'ADHD 11-18 Assessment (50 Questions)' },
+    { value: 'Teen Career & Future Direction', label: 'Teen Career & Future Direction' },
   ];
-
-  // Dynamically add all self-assessments
-  selfAssessmentTypes.forEach(assessment => {
-    const optionLabel = `${assessment.name} (${assessment.questions.length} Questions)`;
-    options.push({
-      value: optionLabel,
-      label: optionLabel
-    });
-  });
-
-  // Add Teen Career last
-  options.push({
-    value: 'Teen Career & Future Direction',
-    label: 'Teen Career & Future Direction'
-  });
 
   return options;
 };
