@@ -229,6 +229,10 @@ This is the **master template** for implementing any new assessment type in the 
   - [ ] completed = true
   - [ ] completed_at = now()
 - [ ] Show completion confirmation
+- [ ] **CRITICAL: Add "Book Appointment" button/link for client respondents**
+  - [ ] Link to booking calendar with franchise owner
+  - [ ] Pre-fill client information if available
+  - [ ] Make prominent and easy to find
 - [ ] Display next steps based on respondent type
 - [ ] Show links for next respondent (if applicable)
 - [ ] Option to view results (if available)
@@ -345,6 +349,10 @@ This is the **master template** for implementing any new assessment type in the 
 - [ ] Group by category if applicable
 - [ ] Show overall score if applicable
 - [ ] Include pattern descriptions
+- [ ] **Add "Book Appointment" button for client reports**
+  - [ ] Prominent call-to-action
+  - [ ] Links to franchise owner's booking calendar
+  - [ ] Pre-fills client info when possible
 - [ ] Add print styles
 - [ ] Responsive layout
 
@@ -397,6 +405,9 @@ For each report type:
   - [ ] Pattern scores section with visual bars
   - [ ] Color-coded severity indicators
   - [ ] Pattern descriptions
+  - [ ] **Prominent "Book Appointment" button/link**
+    - [ ] Links to franchise owner's booking calendar
+    - [ ] Styled as clear call-to-action
   - [ ] Footer with branding
 - [ ] Responsive design
 - [ ] Print-friendly styles
@@ -554,6 +565,9 @@ If this assessment should be available via coupons:
 - [ ] Completion calculates scores
 - [ ] Completion updates database
 - [ ] Completion message displays
+- [ ] **"Book Appointment" button appears for client respondents**
+- [ ] **Booking link works and navigates correctly**
+- [ ] **Client information pre-fills in booking form**
 
 ### 10.5 Management Interface
 - [ ] Assessments list loads
@@ -571,6 +585,8 @@ If this assessment should be available via coupons:
 - [ ] Scores calculate accurately
 - [ ] Severity labels correct
 - [ ] Color coding appropriate
+- [ ] **"Book Appointment" button displays on client reports**
+- [ ] **Booking link URL is correct and functional**
 - [ ] Coach report shows comparison
 - [ ] Reports print properly
 - [ ] Responsive on mobile
@@ -583,6 +599,8 @@ If this assessment should be available via coupons:
 - [ ] Emails send successfully
 - [ ] All recipients receive correct reports
 - [ ] HTML renders properly in email clients
+- [ ] **"Book Appointment" link works in emailed reports**
+- [ ] **Link is clickable and navigates correctly from email**
 - [ ] CORS headers present in all responses
 
 ### 10.8 Routing
@@ -689,6 +707,7 @@ Before marking complete:
 
 ## NOTES
 
+- **CRITICAL: Always include "Book Appointment" button for client respondents** - this drives conversions and follow-up engagement
 - Save time by copying from most similar existing assessment
 - Test RLS policies thoroughly - security is critical
 - Always include CORS headers in edge functions
@@ -699,6 +718,7 @@ Before marking complete:
 - Email HTML must have inline CSS (no external stylesheets)
 - Share tokens enable public access - secure appropriately
 - Franchise isolation is critical - test thoroughly
+- Booking links should pre-fill client information to reduce friction
 
 ---
 
