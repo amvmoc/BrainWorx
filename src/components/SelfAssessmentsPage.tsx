@@ -201,7 +201,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     bgColor: 'bg-[#0A2A5E]/10',
     targetAudience: 'Adults & Teens 16+',
     questionCount: 344,
-    price: 'R950',
+    price: 'R2.50',
     assessmentType: 'Full Client Assessment',
     features: [
       'Full 344-question comprehensive assessment',
@@ -226,7 +226,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     bgColor: 'bg-indigo-50',
     targetAudience: 'Children (Ages 7-10)',
     questionCount: 80,
-    price: 'R650',
+    price: 'R2.50',
     assessmentType: 'NIPP ADHD Dual Assessment',
     features: [
       'Dual-respondent system (parent + teacher)',
@@ -254,7 +254,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     bgColor: 'bg-violet-50',
     targetAudience: 'Teens (Ages 11-18)',
     questionCount: 50,
-    price: 'R650',
+    price: 'R2.50',
     assessmentType: 'Teen ADHD Self-Assessment',
     features: [
       'Teen self-assessment (no parent input required)',
@@ -284,7 +284,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       borderColor: 'border-amber-500',
       bgColor: 'bg-amber-50',
       targetAudience: 'Teens & Young Adults (Ages 15-25)',
-      price: 'R650',
+      price: 'R2.50',
       features: [
         'Neural Imprint Patterns + RIASEC interests',
         'Real workplace scenario questions',
