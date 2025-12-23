@@ -59,7 +59,7 @@ export function PaymentSuccess({ assessmentType }: PaymentSuccessProps) {
     }
 
     let attempts = 0;
-    const maxAttempts = 20; // 20 attempts = 20 seconds
+    const maxAttempts = 10; // 10 attempts = 10 seconds (reduced from 20)
     const pollInterval = 1000; // 1 second
 
     const poll = async () => {
@@ -86,7 +86,7 @@ export function PaymentSuccess({ assessmentType }: PaymentSuccessProps) {
       if (attempts < maxAttempts) {
         setTimeout(poll, pollInterval);
       } else {
-        // Give up after 20 seconds
+        // After 10 seconds, stop loading and show message
         setLoading(false);
       }
     };
@@ -223,21 +223,42 @@ export function PaymentSuccess({ assessmentType }: PaymentSuccessProps) {
           </div>
         ) : (
           <div className="text-center">
-            <div className="inline-block bg-yellow-100 rounded-full p-6 mb-6">
-              <Loader2 className="w-16 h-16 text-yellow-600 animate-spin" />
+            <div className="inline-block bg-orange-100 rounded-full p-6 mb-6">
+              <CheckCircle className="w-16 h-16 text-orange-600" />
             </div>
-            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Almost Ready!</h2>
+            <h2 className="text-2xl font-bold text-[#0A2A5E] mb-4">Payment Received!</h2>
             <p className="text-gray-700 mb-4">
-              Your payment has been received. We're generating your access code now.
+              Your payment was successful and your assessment is being prepared.
             </p>
-            <p className="text-sm text-gray-600 mb-6">
-              This usually takes less than 10 seconds...
-            </p>
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-              <p className="text-sm text-gray-700">
-                <strong>Note:</strong> If this takes longer than expected, check your email at <strong>{userEmail}</strong> for your access link.
+
+            <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6 mb-6">
+              <h3 className="font-bold text-green-800 mb-3 text-lg">Check Your Email</h3>
+              <p className="text-green-700 mb-2">
+                An email with your access code and direct link has been sent to:
+              </p>
+              <p className="text-lg font-bold text-green-900 mb-3">{userEmail}</p>
+              <p className="text-sm text-green-600">
+                The email includes a "Start Your Assessment" button - click it to begin immediately.
               </p>
             </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+              <p className="text-sm text-gray-700">
+                <strong>Don't see the email?</strong>
+              </p>
+              <ul className="text-sm text-gray-600 mt-2 space-y-1">
+                <li>• Check your spam/junk folder</li>
+                <li>• Wait 1-2 minutes for delivery</li>
+                <li>• Make sure you entered the correct email</li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => window.location.href = '/'}
+              className="w-full bg-gradient-to-r from-[#0A2A5E] to-[#3DB3E3] text-white py-4 px-6 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+            >
+              Return to Home
+            </button>
           </div>
         )}
       </div>
