@@ -5,9 +5,10 @@ import './ResultsScreen.css';
 
 interface ResultsScreenProps {
   onRestart: () => void;
+  onClose?: () => void;
 }
 
-export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
+export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart, onClose }) => {
   const { results, email, customerName } = useAssessment();
 
   if (!results) {
@@ -197,7 +198,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
         <div style={{ textAlign: 'center' }}>
           <button
-            onClick={onRestart}
+            onClick={onClose || onRestart}
             style={{
               background: 'white',
               border: '2px solid #e2e8f0',

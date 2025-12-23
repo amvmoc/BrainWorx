@@ -95,7 +95,7 @@ export default function NIP3Assessment({
             )}
 
             {currentScreen === 'results' && (
-              <ResultsScreen onRestart={handleRestart} />
+              <ResultsScreen onRestart={handleRestart} onClose={onClose} />
             )}
 
             {showAdmin && <AdminPanel onClose={toggleAdmin} />}
