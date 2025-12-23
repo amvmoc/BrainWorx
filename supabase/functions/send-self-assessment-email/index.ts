@@ -56,7 +56,8 @@ async function handleResponseIdRequest(responseId: string, recipientType: 'clien
       assessmentType,
       overallScore,
       topImprints,
-      responseId
+      responseId,
+      response.franchise_owner_id
     );
   } else {
     // Send coach report to franchise owner
@@ -90,7 +91,8 @@ async function sendClientReport(
   assessmentType: string,
   overallScore: number,
   topImprints: any[],
-  responseId: string
+  responseId: string,
+  franchiseOwnerId?: string
 ) {
   const GMAIL_USER = "payments@brainworx.co.za";
   const GMAIL_PASSWORD = "iuhzjjhughbnwsvf";
@@ -160,6 +162,23 @@ async function sendClientReport(
             <h3 style="color: #0A2A5E; margin-top: 0;">Next Steps</h3>
             <p style="margin-bottom: 0;">Schedule a consultation with a BrainWorx coach to discuss your results and create a personalized action plan.</p>
           </div>
+
+          ${franchiseOwnerId ? `
+          <div style="background: linear-gradient(135deg, #0A2A5E, #3DB3E3); color: white; padding: 24px; border-radius: 12px; margin: 30px 0; text-align: center; box-shadow: 0 4px 12px rgba(10, 42, 94, 0.3);">
+            <h2 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700;">📅 Book Your Consultation</h2>
+            <p style="margin: 0 0 20px 0; font-size: 15px; opacity: 0.95; line-height: 1.6;">
+              Ready to turn these insights into action?<br>
+              Schedule a session with your BrainWorx coach to discuss your results.
+            </p>
+            <a href="${SITE_URL}/booking/${franchiseOwnerId}?name=${encodeURIComponent(customerName)}&email=${encodeURIComponent(customerEmail)}"
+               style="display: inline-block; background: white; color: #0A2A5E; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+              Schedule Your Session
+            </a>
+            <p style="margin: 20px 0 0 0; font-size: 13px; opacity: 0.85;">
+              View available times and book your appointment
+            </p>
+          </div>
+          ` : ''}
         </div>
 
         <div class="footer">

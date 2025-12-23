@@ -597,7 +597,7 @@ Deno.serve(async (req: Request) => {
     const corePatterns = patterns.filter(p => p.category === "Core ADHD");
     const emotionalPatterns = patterns.filter(p => p.category === "Emotional/Impact");
 
-    const generateParentReportHTML = () => {
+    const generateParentReportHTML = (baseUrl: string) => {
       return `
 <!DOCTYPE html>
 <html>
@@ -794,14 +794,31 @@ Deno.serve(async (req: Request) => {
         a paediatrician, psychologist or other qualified health professional.
       </p>
     </div>
+
+    ${assessment.franchise_owner_id ? `
+    <div style="background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); color: white; padding: 24px; border-radius: 12px; margin: 32px 0; text-align: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+      <h2 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700;">📅 Next Step: Book Your Consultation</h2>
+      <p style="margin: 0 0 20px 0; font-size: 15px; opacity: 0.95; line-height: 1.6;">
+        Ready to discuss these results and create a personalized support plan for ${assessment.child_name}?<br>
+        Schedule a consultation with your BrainWorx coach to get started.
+      </p>
+      <a href="${baseUrl}/booking/${assessment.franchise_owner_id}?name=${encodeURIComponent(assessment.child_name)}&parent=${encodeURIComponent(parentResponse.respondent_name)}&email=${encodeURIComponent(parentResponse.respondent_email)}"
+         style="display: inline-block; background: white; color: #3b82f6; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;">
+        Book Appointment Now
+      </a>
+      <p style="margin: 20px 0 0 0; font-size: 13px; opacity: 0.85;">
+        Click the button above to view available times and book your session
+      </p>
+    </div>
+    ` : ''}
   </div>
 </body>
 </html>
       `;
     };
 
-    const parentEmailHtml = generateParentReportHTML();
-    const teacherEmailHtml = generateParentReportHTML();
+    const parentEmailHtml = generateParentReportHTML(baseUrl);
+    const teacherEmailHtml = generateParentReportHTML(baseUrl);
 
     const emailPromises = [
       transporter.sendMail({

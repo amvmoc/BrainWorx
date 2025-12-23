@@ -46,7 +46,8 @@ function scoreToPercentage(score: number): number {
 function generateTeenClientReport(
   assessment: any,
   teenResponse: any,
-  patterns: any[]
+  patterns: any[],
+  baseUrl: string
 ): string {
   const corePatterns = patterns.filter(p =>
     ["FOC", "HYP", "IMP", "ORG", "DIM"].includes(p.code)
@@ -244,6 +245,23 @@ function generateTeenClientReport(
         <strong>•</strong> This assessment is NOT a diagnosis. Only qualified healthcare professionals can diagnose ADHD.
       </p>
     </div>
+
+    ${assessment.franchise_owner_id ? `
+    <div style="background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); color: white; padding: 24px; border-radius: 12px; margin: 32px 0; text-align: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+      <h2 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700;">📅 Ready to Take the Next Step?</h2>
+      <p style="margin: 0 0 20px 0; font-size: 15px; opacity: 0.95; line-height: 1.6;">
+        Schedule a session with your BrainWorx coach to discuss your results<br>
+        and develop personalized strategies that work for you.
+      </p>
+      <a href="${baseUrl}/booking/${assessment.franchise_owner_id}?name=${encodeURIComponent(assessment.teen_name)}&age=${assessment.teen_age}&email=${encodeURIComponent(teenResponse.respondent_email)}"
+         style="display: inline-block; background: white; color: #3b82f6; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;">
+        Book Your Coaching Session
+      </a>
+      <p style="margin: 20px 0 0 0; font-size: 13px; opacity: 0.85;">
+        Click to view available times and schedule your appointment
+      </p>
+    </div>
+    ` : ''}
   </div>
 </body>
 </html>
@@ -742,7 +760,7 @@ Deno.serve(async (req: Request) => {
 
     patterns.sort((a, b) => b.teenScore - a.teenScore);
 
-    const teenClientHtml = generateTeenClientReport(assessment, teenResponse, patterns);
+    const teenClientHtml = generateTeenClientReport(assessment, teenResponse, patterns, baseUrl);
 
     const emailPromises = [
       transporter.sendMail({
