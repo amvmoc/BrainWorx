@@ -352,7 +352,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     <p className="text-sm text-gray-600">343 questions • Comprehensive neural imprint profile</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-[#3DB3E3]">R2.50</p>
+                    <p className="text-lg font-bold text-[#3DB3E3]">R5</p>
                   </div>
                 </div>
               </button>
@@ -371,7 +371,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     <p className="text-sm text-gray-600">80 questions per respondent • Parent + Teacher</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-indigo-500">R2.50</p>
+                    <p className="text-lg font-bold text-indigo-500">R5</p>
                   </div>
                 </div>
               </button>
@@ -390,7 +390,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     <p className="text-sm text-gray-600">50 questions • Teen self-assessment</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-violet-500">R2.50</p>
+                    <p className="text-lg font-bold text-violet-500">R5</p>
                   </div>
                 </div>
               </button>
@@ -409,7 +409,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                     <p className="text-sm text-gray-600">60 questions • Career exploration</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-amber-500">R2.50</p>
+                    <p className="text-lg font-bold text-amber-500">R5</p>
                   </div>
                 </div>
               </button>
@@ -636,9 +636,9 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                 <div className="flex justify-between items-center">
                   <p className="text-gray-600">Total Amount</p>
                   <p className="text-2xl font-bold text-[#0A2A5E]">
-                    {selectedPaymentType === 'nipa' && 'R2.50'}
-                    {selectedPaymentType === 'tadhd' && 'R2.50'}
-                    {selectedPaymentType === 'tcf' && 'R2.50'}
+                    {selectedPaymentType === 'nipa' && 'R5'}
+                    {selectedPaymentType === 'tadhd' && 'R5'}
+                    {selectedPaymentType === 'tcf' && 'R5'}
                   </p>
                 </div>
               </div>
@@ -689,7 +689,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                 >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
-                  <input required type="hidden" name="amount" value="2.50" />
+                  <input required type="hidden" name="amount" value="5" />
                   <input required type="hidden" name="item_name" maxLength={255} value="NIP" />
                   <input type="hidden" name="item_description" maxLength={255} value="NIP - Full Neural Imprint Assessment" />
                   <button
@@ -715,7 +715,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                 >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
-                  <input required type="hidden" name="amount" value="2.50" />
+                  <input required type="hidden" name="amount" value="5" />
                   <input required type="hidden" name="item_name" maxLength={255} value="ADHD Assessment" />
                   <input type="hidden" name="item_description" maxLength={255} value="ADHD Assessment" />
                   <button
@@ -741,7 +741,7 @@ export function GetStartedOptions({ onClose, franchiseCode, preselectedPaymentTy
                 >
                   <input required type="hidden" name="cmd" value="_paynow" />
                   <input required type="hidden" name="receiver" pattern="[0-9]" value="32553329" />
-                  <input required type="hidden" name="amount" value="2.50" />
+                  <input required type="hidden" name="amount" value="5" />
                   <input required type="hidden" name="item_name" maxLength={255} value="TCF" />
                   <input type="hidden" name="item_description" maxLength={255} value="TCF - Teen Career & Future Direction" />
                   <button
