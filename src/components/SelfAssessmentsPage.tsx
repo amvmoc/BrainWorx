@@ -197,7 +197,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   const nipaCard = {
     id: 'nipa',
     name: 'NIP3 - Full Neural Imprint Assessment',
-    description: 'This is our comprehensive client assessment with 344 in-depth questions. Unlike the shorter self-assessments above, NIP3 provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 20 Neural Imprint Patterns. This flagship assessment includes a professional 45-minute debrief session to help you understand and apply your results.',
+    description: 'This is our comprehensive client assessment with 344 in-depth questions. NIP3 provides a complete analysis of your cognitive patterns, emotional responses, behavioral tendencies, and life experiences across all 20 Neural Imprint Patterns. This flagship assessment includes a FREE professional 45-minute debrief session to help you understand and apply your results.',
     icon: Brain,
     color: 'from-[#0A2A5E] to-[#3DB3E3]',
     iconColor: 'text-[#0A2A5E]',
@@ -209,13 +209,13 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     assessmentType: 'Full Client Assessment',
     features: [
       'Full 344-question comprehensive assessment (NIP3)',
-      'Professional 45-minute debrief session',
+      'FREE professional 45-minute debrief session',
       'Complete profile across all 20 patterns',
       'Two-round assessment process',
       'Detailed personalized recommendations',
       'In-depth cognitive & emotional insights'
     ],
-    instructions: 'This is a comprehensive two-round assessment. Round 1 includes 343 questions covering all aspects of your neural imprint patterns. Round 2 focuses on deeper analysis. The full assessment typically takes 60-90 minutes. You can save your progress and return at any time. After completion, you will receive a detailed report and a 45-minute debrief session with a qualified practitioner.',
+    instructions: 'This is a comprehensive two-round assessment. Round 1 includes 343 questions covering all aspects of your neural imprint patterns. Round 2 focuses on deeper analysis. The full assessment typically takes 60-90 minutes. You can save your progress and return at any time. After completion, you will receive a detailed report and a FREE 45-minute debrief session with a qualified practitioner.',
     disclaimer: 'This is a self-reflection and coaching tool, not a clinical diagnostic instrument. It is designed to support personal growth and self-awareness through professional guidance.'
   };
 
@@ -248,7 +248,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
   const adhd710Card = {
     id: 'adhd710',
     name: 'Parent/Caregiver ADHD 7-10 Assessment',
-    description: 'Advanced dual-respondent ADHD assessment for children aged 7-10 using Neural Imprint Pattern (NIPP) analysis. Requires input from BOTH parent AND teacher to provide comprehensive behavioral analysis across 10 distinct patterns covering attention, hyperactivity, impulsivity, executive function, emotional regulation, social skills, academic performance, and daily functioning.',
+    description: 'Advanced dual-respondent ADHD assessment for children aged 7-10 using Neural Imprint Pattern (NIPP) analysis. Requires input from BOTH parent AND teacher to provide comprehensive behavioral analysis across 10 distinct patterns covering attention, hyperactivity, impulsivity, executive function, emotional regulation, social skills, academic performance, and daily functioning. Includes a FREE 30-minute professional assessment.',
     icon: GraduationCap,
     color: 'from-indigo-500 to-purple-600',
     iconColor: 'text-indigo-600',
@@ -256,25 +256,27 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     bgColor: 'bg-indigo-50',
     targetAudience: 'Children (Ages 7-10)',
     questionCount: 80,
+    price: 'R650',
     assessmentType: 'NIPP ADHD Dual Assessment',
     features: [
       'Dual-respondent system (parent + teacher)',
       '80 comprehensive questions across 10 NIPP patterns',
       'Individual reports with pattern-specific analysis',
       'Comprehensive combined report with NIPP scoring',
+      'FREE 30-minute professional assessment',
       'Severity ratings per neural imprint pattern',
       'Pattern-based intervention recommendations',
       'Home vs. school behavior comparison charts',
       'Detailed NIPP pattern explanations'
     ],
-    instructions: 'This assessment requires TWO separate completions: one by a parent/guardian and one by a teacher. Each person answers 80 questions (10 per pattern category) based on their observations. Both assessments must be completed to generate the full comprehensive report with NIPP analysis. Each assessment takes approximately 20-25 minutes.',
+    instructions: 'This assessment requires TWO separate completions: one by a parent/guardian and one by a teacher. Each person answers 80 questions (10 per pattern category) based on their observations. Both assessments must be completed to generate the full comprehensive report with NIPP analysis. Each assessment takes approximately 20-25 minutes. Includes a FREE 30-minute professional debrief session.',
     disclaimer: 'This is a screening tool using Neural Imprint Pattern analysis for identifying ADHD-related behavioral patterns. It does NOT constitute a clinical diagnosis. Only qualified healthcare professionals can diagnose ADHD through comprehensive clinical evaluation.'
   };
 
   const adhd1118Card = {
     id: 'adhd1118',
     name: 'ADHD 11-18 Assessment',
-    description: 'A comprehensive ADHD self-assessment for teens aged 11-18 years. This evaluation uses 10 Neural Imprint Patterns to identify core ADHD symptoms (focus, organization, hyperactivity, impulsivity) and emotional impact patterns (anger, self-perception, resistance, burnout). The teen completes this assessment themselves, reflecting on their own experiences and behaviors.',
+    description: 'A comprehensive ADHD self-assessment for teens aged 11-18 years. This evaluation uses 10 Neural Imprint Patterns to identify core ADHD symptoms (focus, organization, hyperactivity, impulsivity) and emotional impact patterns (anger, self-perception, resistance, burnout). The teen completes this assessment themselves, reflecting on their own experiences and behaviors. Includes a FREE 30-minute professional assessment.',
     icon: UserPlus,
     color: 'from-violet-500 to-fuchsia-600',
     iconColor: 'text-violet-600',
@@ -282,6 +284,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
     bgColor: 'bg-violet-50',
     targetAudience: 'Teens (Ages 11-18)',
     questionCount: 50,
+    price: 'R650',
     assessmentType: 'Teen ADHD Self-Assessment',
     features: [
       'Teen self-assessment (no parent input required)',
@@ -289,11 +292,12 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       'Core ADHD patterns analysis',
       'Emotional impact patterns identified',
       'Personalized report with pattern-specific insights',
+      'FREE 30-minute professional assessment',
       'Age-appropriate language for teens',
       'Severity ratings per neural imprint pattern',
       'Actionable recommendations for support'
     ],
-    instructions: 'This is a self-assessment designed for teens aged 11-18 to complete independently. You will answer 50 questions about your own experiences, behaviors, and feelings. The assessment covers 10 different pattern areas and takes approximately 15-20 minutes. Be honest in your responses for the most accurate results. You will receive a detailed report upon completion.',
+    instructions: 'This is a self-assessment designed for teens aged 11-18 to complete independently. You will answer 50 questions about your own experiences, behaviors, and feelings. The assessment covers 10 different pattern areas and takes approximately 15-20 minutes. Be honest in your responses for the most accurate results. You will receive a detailed report and a FREE 30-minute professional debrief session upon completion.',
     disclaimer: 'This is a screening tool using Neural Imprint Pattern analysis for identifying ADHD-related behavioral patterns in teens. It does NOT constitute a clinical diagnosis. Only qualified healthcare professionals can diagnose ADHD through comprehensive clinical evaluation.'
   };
 
@@ -310,12 +314,13 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
       borderColor: 'border-amber-500',
       bgColor: 'bg-amber-50',
       targetAudience: 'Teens & Young Adults (Ages 15-25)',
+      price: 'R650',
       features: [
         'Neural Imprint Patterns + RIASEC interests',
         'Real workplace scenario questions',
         '360° view of career fit',
         'Detailed client & coach reports',
-        'Structured feedback session included',
+        'FREE 30-minute professional debrief session',
         'Study & career path guidance'
       ]
     },
@@ -656,7 +661,7 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                   <div className="flex items-center gap-4 mt-2">
                     <span className="flex items-center gap-1 text-white/90">
                       <Clock size={16} />
-                      {selectedAssessment.questions.length} questions
+                      {selectedAssessment.questionCount || selectedAssessment.questions.length} questions
                     </span>
                     <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
                       {card.targetAudience}
@@ -1693,14 +1698,14 @@ export function SelfAssessmentsPage({ onClose, onStartPayment }: SelfAssessments
                           )}
                           <span className="flex items-center gap-1 text-white/90 whitespace-nowrap">
                             <Clock size={16} />
-                            {isSpecialType ? card.questionCount : (typeof card.type === 'object' ? card.type.questions.length : 0)} questions
+                            {isSpecialType ? card.questionCount : (typeof card.type === 'object' ? (card.type.questionCount || card.type.questions.length) : 0)} questions
                           </span>
                           <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium whitespace-nowrap">
                             {card.targetAudience}
                           </span>
-                          {isNIPA && (
+                          {(card.price || (typeof card.type === 'object' && card.type.price)) && (
                             <span className="px-3 py-1 bg-[#1FAFA3] rounded-full text-sm font-bold whitespace-nowrap">
-                              {card.price}
+                              {card.price || (typeof card.type === 'object' ? card.type.price : '')}
                             </span>
                           )}
                         </div>

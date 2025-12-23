@@ -12,6 +12,8 @@ export interface SelfAssessmentType {
   instructions: string;
   disclaimer: string;
   questions: SelfAssessmentQuestion[];
+  questionCount?: number; // Optional: for assessments with dynamic questions
+  price?: string; // Optional: pricing information
   scale: {
     min: number;
     max: number;
@@ -23,7 +25,7 @@ export interface SelfAssessmentType {
 export const careerAssessment: SelfAssessmentType = {
   id: 'teen-career',
   name: 'Teen Career & Future Direction',
-  description: 'This comprehensive assessment combines Neural Imprint Patterns, RIASEC career interests, and real workplace scenarios to give you a clear picture of where you fit and how you function best in study and work environments.',
+  description: 'This comprehensive assessment combines Neural Imprint Patterns, RIASEC career interests, and real workplace scenarios to give you a clear picture of where you fit and how you function best in study and work environments. Includes a FREE 30-minute professional debrief session.',
   instructions: `How to answer:
 • This is about YOU, not what others expect.
 • There are no right or wrong answers.
@@ -31,6 +33,7 @@ export const careerAssessment: SelfAssessmentType = {
 • Use the scale: 1 = Strongly Disagree, 5 = Strongly Agree.`,
   disclaimer: 'This is a self-reflection and coaching tool, not a clinical diagnostic instrument. It is designed to support personal growth, informed decision-making and guided conversations with qualified professionals, teachers, mentors and parents. For formal psychometric testing or psychological diagnosis, a registered psychologist should be consulted.',
   questions: [], // Questions are handled in CareerAssessment component
+  questionCount: 60, // Approximate total questions (dynamic)
   scale: {
     min: 1,
     max: 5,
