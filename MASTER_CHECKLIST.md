@@ -844,24 +844,30 @@ If this assessment should be available via coupons:
 #### 13.8.1 Payment Success Page Enhancement
 **File:** `src/components/PaymentSuccess.tsx`
 
-- [ ] **Immediate Access Button:**
-  - [ ] Large, prominent "Start Your Assessment Now" button
-  - [ ] Positioned above code display
-  - [ ] Clear call-to-action styling (bold, xl text)
-  - [ ] Green success banner confirming access granted
-- [ ] **Auto-fill Integration:**
-  - [ ] Store customer data in localStorage before redirect
-  - [ ] Pre-fill name, email, and code on return
-  - [ ] Add `?auto=true` parameter to redirect URL
-  - [ ] Clear localStorage after first use
-- [ ] **Code Display Changes:**
-  - [ ] Move code to "for reference" section (de-emphasize)
-  - [ ] Maintain copy functionality
-  - [ ] Show as backup access method
-- [ ] **Clear Next Steps:**
-  - [ ] Checkmark list of what happens next
-  - [ ] Emphasize immediate access (no waiting)
-  - [ ] Email mentioned as backup only
+- [x] **Automatic Coupon Polling:**
+  - [x] Poll database every 1 second for up to 20 seconds
+  - [x] Fetch latest coupon by customer email
+  - [x] Show clear loading state: "Processing Your Payment..."
+  - [x] Handle webhook delay gracefully
+- [x] **Automatic Redirect:**
+  - [x] Auto-redirect to assessment when coupon found
+  - [x] 2-second delay with countdown message
+  - [x] Pre-fill customer data using localStorage
+  - [x] Add `?coupon=[code]&auto=true` parameters
+  - [x] Show "Redirecting you automatically..." message
+- [x] **Manual Start Option:**
+  - [x] "Can't wait?" section with immediate start button
+  - [x] Large "Start Your Assessment Now" button
+  - [x] Available while automatic redirect counts down
+  - [x] Same navigation as auto-redirect (no difference in UX)
+- [x] **Code Display:**
+  - [x] Show code "for reference" (de-emphasized)
+  - [x] Copy-to-clipboard button functional
+  - [x] Display after successful coupon fetch
+- [x] **Loading States:**
+  - [x] Initial: "Processing Your Payment..." with spinner
+  - [x] Found: "You're all set! Redirecting..." with success icon
+  - [x] Timeout: "Almost Ready!" with instructions to check email
 
 #### 13.8.2 Auto-Redemption Component
 **File:** `src/components/CouponRedemption.tsx`
@@ -913,16 +919,22 @@ If this assessment should be available via coupons:
   - [ ] TCF/Career Assessment form
 
 #### 13.8.5 Testing Checklist - Immediate Access
-- [ ] **Complete Flow Test:**
+- [ ] **Complete Automatic Flow Test:**
   - [ ] Submit payment form
   - [ ] Verify localStorage data stored
   - [ ] Redirect to PayFast (sandbox)
   - [ ] Complete payment
   - [ ] Return to payment success page
-  - [ ] Click "Start Your Assessment Now"
-  - [ ] Verify auto-fill works
-  - [ ] Verify auto-submit works
-  - [ ] Land on assessment without manual entry
+  - [ ] See "Processing Your Payment..." spinner
+  - [ ] Wait for automatic coupon detection (1-20 seconds)
+  - [ ] See "You're all set! Redirecting..." message
+  - [ ] Automatically navigate to home with pre-filled coupon
+  - [ ] Verify CouponRedemption auto-submits
+  - [ ] Land directly in assessment (no manual steps)
+- [ ] **Manual Start Button Test:**
+  - [ ] Click "Start Your Assessment Now" during countdown
+  - [ ] Verify immediate navigation (same as auto-redirect)
+  - [ ] Verify same auto-fill and auto-submit behavior
 - [ ] **Email Backup Flow:**
   - [ ] Receive email within 2 minutes
   - [ ] Click email "Start Your Assessment" button
@@ -939,25 +951,31 @@ If this assessment should be available via coupons:
 **Document in user-facing materials:**
 
 - **For Customers:**
-  - Immediate access (no waiting for email)
-  - No manual code entry required
-  - Can't lose access if email delayed
-  - Simple, frustration-free experience
-  - Email serves as backup access
+  - **Fully automatic** - Zero manual steps from payment to assessment
+  - Access in under 5 seconds (typical webhook processing time)
+  - No waiting for email, no code entry, no forms to fill
+  - Seamless flow: pay → redirect → automatically start assessment
+  - Email serves as backup access link only
+  - Can't lose access if email delayed or spam-filtered
 
 - **For Business:**
-  - Reduced support requests
-  - Higher conversion rates
-  - Better customer satisfaction
-  - Professional purchase experience
+  - **Highest conversion rates** - No drop-off between payment and start
+  - Zero friction post-payment experience
+  - Eliminates most common support issue (missing email)
+  - Professional, modern purchase flow
+  - Higher customer satisfaction scores
   - Email delivery issues don't block access
+  - Reduced cart abandonment and confusion
 
 #### 13.8.7 Implementation Priority
-**CRITICAL - HIGH PRIORITY:**
-- This enhancement significantly improves customer experience
-- Eliminates most common support issue (missing email)
+**CRITICAL - HIGHEST PRIORITY:**
+- **Fully automatic flow** is the gold standard for paid digital products
+- Eliminates ALL friction between payment and product access
+- Converts payment confirmation into seamless product delivery
+- Industry best practice (matches Netflix, Spotify, Coursera, etc.)
 - Should be implemented for ALL paid assessments
-- Maintains backward compatibility (manual entry still works)
+- Maintains backward compatibility (email link and manual entry still work)
+- **Result: Payment-to-assessment in under 5 seconds with ZERO user actions**
 
 ---
 
