@@ -662,6 +662,8 @@ If this assessment should be available via coupons:
 | Data files | `[code]AssessmentQuestions.ts` | `careerAssessmentQuestions.ts` |
 | Edge functions | `send-[code]-reports` | `send-adhd46-reports` |
 | Routes | `/[code]/:id/:type` | `/adhd46/abc-123/parent` |
+| Payment type param | `[code]` lowercase | `nipa`, `tadhd`, `tcf` |
+| Payment success URL | `/payment-success?type=[code]&email=...` | `/payment-success?type=adhd46` |
 
 ---
 
@@ -677,8 +679,164 @@ If this assessment should be available via coupons:
 6. Email edge function (automation)
 7. Routing integration (navigation)
 8. Dashboard tabs (discoverability)
-9. Testing (verification)
-10. Documentation (knowledge transfer)
+9. Payment integration (if required for assessment)
+10. Testing (verification)
+11. Documentation (knowledge transfer)
+
+---
+
+## 13. PAYMENT INTEGRATION (PayFast) ✓
+
+**For assessments that require payment before access**
+
+### 13.1 Payment Form Setup
+**File:** `src/components/GetStartedOptions.tsx`
+
+- [ ] Add PayFast form for this assessment type
+- [ ] Required hidden fields:
+  - [ ] `cmd` = "_paynow"
+  - [ ] `receiver` = PayFast merchant ID
+  - [ ] `amount` = Assessment price
+  - [ ] `item_name` = Assessment code/name
+  - [ ] `item_description` = Full assessment name
+- [ ] Critical return/notification fields:
+  - [ ] `return_url` = `${window.location.origin}/payment-success?type=[code]&email=${encodeURIComponent(email)}`
+  - [ ] `cancel_url` = `${window.location.origin}/?payment_cancelled=true`
+  - [ ] `notify_url` = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/payfast-notify`
+- [ ] Customer information fields:
+  - [ ] `custom_str1` = Customer email
+  - [ ] `name_first` = First name
+  - [ ] `name_last` = Last name
+  - [ ] `email_address` = Email address
+- [ ] Form styling consistent with app design
+- [ ] Loading state during payment redirect
+
+### 13.2 Payment Success Page
+**File:** `src/components/PaymentSuccess.tsx`
+
+- [ ] Create PaymentSuccess component
+- [ ] Accept assessmentType prop
+- [ ] Display success confirmation:
+  - [ ] Checkmark icon
+  - [ ] Success message
+  - [ ] Assessment type purchased
+- [ ] Fetch and display coupon code:
+  - [ ] Query database for latest coupon by email
+  - [ ] Display code prominently
+  - [ ] Add copy-to-clipboard button
+- [ ] Show next steps:
+  - [ ] How to use the code
+  - [ ] "Start Assessment" button
+  - [ ] Auto-redirect with coupon pre-filled
+- [ ] Handle edge cases:
+  - [ ] Loading state while fetching code
+  - [ ] Message if code not yet generated
+  - [ ] Error handling
+- [ ] Email confirmation note
+- [ ] Responsive design
+
+### 13.3 PayFast IPN Edge Function
+**File:** `supabase/functions/payfast-notify/index.ts`
+
+- [ ] CORS headers defined (required!)
+- [ ] Handle OPTIONS preflight request
+- [ ] Parse PayFast form data:
+  - [ ] Extract payment_status
+  - [ ] Extract customer email
+  - [ ] Extract customer name
+  - [ ] Extract item information
+- [ ] Verify payment status = "COMPLETE"
+- [ ] Generate coupon code:
+  - [ ] 10 characters alphanumeric
+  - [ ] Avoid confusing characters (0, O, 1, I)
+- [ ] Insert coupon into database:
+  - [ ] code = generated code
+  - [ ] assessment_type = from item_name
+  - [ ] max_uses = 1
+  - [ ] is_active = true
+  - [ ] recipient_name = from PayFast data
+  - [ ] recipient_email = from PayFast data
+- [ ] Trigger coupon email:
+  - [ ] Call send-coupon-email function
+  - [ ] Pass all required parameters
+- [ ] Return OK response (PayFast requires this)
+- [ ] Error handling with proper logging
+- [ ] Security considerations (validate signature if required)
+
+### 13.4 Coupon Email Function
+**File:** `supabase/functions/send-coupon-email/index.ts`
+
+- [ ] Generate professional HTML email
+- [ ] Include:
+  - [ ] BrainWorx branding/logo
+  - [ ] Thank you message
+  - [ ] Coupon code prominently displayed
+  - [ ] Assessment type purchased
+  - [ ] Instructions on how to use
+  - [ ] Direct link to start assessment
+  - [ ] Support contact information
+- [ ] Inline CSS styling
+- [ ] Mobile-responsive design
+- [ ] Professional formatting
+
+### 13.5 Routing Integration
+**File:** `src/App.tsx`
+
+- [ ] Import PaymentSuccess component
+- [ ] Add /payment-success route handling:
+  - [ ] Check pathname = '/payment-success'
+  - [ ] Extract 'type' query parameter
+  - [ ] Render PaymentSuccess with type prop
+- [ ] Handle invalid payment links:
+  - [ ] Show error if type missing
+  - [ ] Provide link back to home
+- [ ] Update Vercel routing config:
+  - [ ] Add `/payment-success` route to vercel.json
+  - [ ] Map to index.html for SPA routing
+
+### 13.6 Payment Testing Checklist
+- [ ] **Form Submission:**
+  - [ ] Form submits to PayFast correctly
+  - [ ] All hidden fields populated
+  - [ ] Customer redirected to PayFast payment page
+- [ ] **Payment Success Flow:**
+  - [ ] After payment, redirects to success page
+  - [ ] Coupon code displays correctly
+  - [ ] Copy button works
+  - [ ] "Start Assessment" button navigates correctly
+  - [ ] Coupon pre-fills in redemption form
+- [ ] **Webhook Processing:**
+  - [ ] PayFast IPN received by edge function
+  - [ ] Payment status validated
+  - [ ] Coupon generated and saved to database
+  - [ ] Coupon email sent successfully
+- [ ] **Email Delivery:**
+  - [ ] Customer receives coupon email
+  - [ ] Email displays correctly in all clients
+  - [ ] Links in email work
+  - [ ] Coupon code is readable
+- [ ] **Edge Cases:**
+  - [ ] Duplicate payment handling
+  - [ ] Failed payment handling
+  - [ ] Cancelled payment returns to home
+  - [ ] Network errors handled gracefully
+  - [ ] Payment delay (webhook arrives before redirect)
+- [ ] **Security:**
+  - [ ] Payment data not exposed to client
+  - [ ] Webhook validates payment authenticity
+  - [ ] Coupons cannot be guessed
+  - [ ] Single-use coupons enforced
+
+### 13.7 Payment Integration Notes
+- **CRITICAL:** notify_url must use the full Supabase function URL
+- PayFast requires webhook response within 8 seconds
+- Test with PayFast sandbox before production
+- Webhook may arrive before user redirect - handle async
+- Keep payment amounts as test value (R5) during development
+- Store transaction IDs for reconciliation
+- Log all payment events for debugging
+- Consider payment confirmation page timeout if webhook delayed
+- Ensure HTTPS for all payment URLs (PayFast requirement)
 
 ---
 
@@ -708,6 +866,7 @@ Before marking complete:
 ## NOTES
 
 - **CRITICAL: Always include "Book Appointment" button for client respondents** - this drives conversions and follow-up engagement
+- **CRITICAL: Payment integration must include return_url, cancel_url, and notify_url** - essential for proper payment flow
 - Save time by copying from most similar existing assessment
 - Test RLS policies thoroughly - security is critical
 - Always include CORS headers in edge functions
@@ -719,9 +878,13 @@ Before marking complete:
 - Share tokens enable public access - secure appropriately
 - Franchise isolation is critical - test thoroughly
 - Booking links should pre-fill client information to reduce friction
+- PayFast webhook (IPN) runs independently of user redirect - design for async processing
+- Test payment flow thoroughly with PayFast sandbox before production
+- Customer information must be passed to PayFast for coupon generation
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 1.1
 **Last Updated:** 2024-12-23
 **Maintained By:** Development Team
+**Recent Updates:** Added Section 13 - Payment Integration (PayFast)
