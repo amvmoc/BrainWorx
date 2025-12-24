@@ -75,9 +75,12 @@ Deno.serve(async (req: Request) => {
     if (itemName === 'NIP') {
       assessmentType = 'nipa';
       assessmentDisplayName = 'Full Assessment (343 Questions)';
-    } else if (itemName === 'ADHD Assessment') {
+    } else if (itemName === 'ADHD Assessment' || itemName === 'ADHD 11-18 Assessment') {
       assessmentType = 'adhd1118';
       assessmentDisplayName = 'ADHD 11-18 Assessment (50 Questions)';
+    } else if (itemName === 'ADHD 7-10 Assessment' || itemName.includes('7-10')) {
+      assessmentType = 'adhd_7_10';
+      assessmentDisplayName = 'ADHD 7-10 Assessment';
     } else if (itemName === 'TCF') {
       assessmentType = 'tcf';
       assessmentDisplayName = 'Teen Career & Future Direction';
